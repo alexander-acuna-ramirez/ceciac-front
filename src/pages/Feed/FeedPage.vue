@@ -4,7 +4,7 @@
       <div class="col-3">
         <q-card flat>
           <q-card-section>
-            <q-item-label header> Proyectos Populares </q-item-label>
+            <q-item-label header class="text text-h6 text-bold text-primary"> Proyectos Populares </q-item-label>
           </q-card-section>
           <q-separator />
           <q-card-section>
@@ -37,7 +37,8 @@
             </q-item>
           </q-card-section>
           <q-card-section>
-            <q-btn color="primary" class="q-mt-md w-full" label="Publica un proyecto" />
+            <q-btn color="primary" to="/project/create" style="width: 100%;" class="q-mt-md w-full"
+              label="Publica un proyecto" flat />
           </q-card-section>
         </q-card>
       </div>
@@ -109,7 +110,7 @@
       <div class="col-3">
         <q-card flat>
           <q-card-section>
-            <q-item-label header> Próximos Eventos </q-item-label>
+            <q-item-label header class="text text-h6 text-bold text-primary"> Próximos Eventos </q-item-label>
           </q-card-section>
           <q-separator />
           <q-card-section>
@@ -129,7 +130,7 @@
 
         <q-card flat class="q-mt-sm">
           <q-card-section>
-            <q-item-label header> Redes Recomendadas </q-item-label>
+            <q-item-label header class="text text-h6 text-bold text-primary"> Redes Recomendadas </q-item-label>
           </q-card-section>
           <q-separator />
           <q-card-section>

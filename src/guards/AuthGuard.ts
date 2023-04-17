@@ -7,6 +7,9 @@ function authGuard(
   next: NavigationGuardNext
 ) {
   const store = useAuthStore();
+  if (!store.isAuthenticated) {
+    alert('no autenticado');
+  }
   if (to.name === 'Login' && store.isAuthenticated) {
     next({ name: 'Feed' });
   } else {

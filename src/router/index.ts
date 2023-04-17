@@ -36,7 +36,7 @@ export default route(function (/* { store, ssrContext } */) {
   });
 
   //Guards
-  Router.beforeEach(authGuard);
+  //Router.beforeEach(authGuard);
 
   return Router;
 });

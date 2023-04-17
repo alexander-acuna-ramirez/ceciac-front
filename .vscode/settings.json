@@ -8,5 +8,6 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "[vue]": {
     "editor.defaultFormatter": "Vue.volar"
-  }
+  },
+  "exportall.config.folderListener": ["/src/models", "/src/services"]
 }

@@ -1,14 +1,13 @@
 import { api } from 'src/boot/axios';
 import { AuthRequest } from 'src/models/Auth';
 
-class AuthService {
-  public login(email: string, password: string) {
+export class AuthService {
+  public async login(email: string, password: string) {
     const data: AuthRequest = {
       email: email,
       password: password,
     };
+    await api.get('sanctum/csrf-cookie');
     return api.post('/api/login', data);
   }
 }
-
-export default new AuthService();

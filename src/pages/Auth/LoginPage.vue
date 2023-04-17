@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
-import AuthService from '../../services/AuthService';
+import { AuthService } from 'src/services';
 import { useAuthStore } from 'src/stores/auth.store';
 import { useRouter } from 'vue-router';
 
+const authService = new AuthService();
 const authStore = useAuthStore();
 const router = useRouter();
 const userData = reactive({
@@ -12,7 +13,7 @@ const userData = reactive({
 });
 const onSubmit = async () => {
   try {
-    const login = await AuthService.login(userData.email, userData.password);
+    const login = await authService.login(userData.email, userData.password);
 
     authStore.setToken(login.data.data.token);
     authStore.setUser(login.data);
@@ -39,35 +40,15 @@ const onSubmit = async () => {
           <div class="flex justify-center">
             <label class="text-secondary">Ingrese a su cuenta</label>
           </div>
-          <q-input
-            v-model="userData.email"
-            type="text"
-            label="E-mail"
-            outlined
-            lazy-rules
-            :rules="[
-              (val) => (val && val.length > 0) || 'Ingrese un correo valido',
-            ]"
-          />
-          <q-input
-            v-model="userData.password"
-            type="password"
-            label="Contraseña"
-            outlined
-            lazy-rules
-            :rules="[
-              (val) =>
-                (val && val.length > 0) || 'Ingrese una contraseña valida',
-            ]"
-          />
+          <q-input v-model="userData.email" type="text" label="E-mail" outlined lazy-rules :rules="[
+            (val) => (val && val.length > 0) || 'Ingrese un correo valido',
+          ]" />
+          <q-input v-model="userData.password" type="password" label="Contraseña" outlined lazy-rules :rules="[
+            (val) =>
+              (val && val.length > 0) || 'Ingrese una contraseña valida',
+          ]" />
 
-          <q-btn
-            color="primary"
-            icon="login"
-            label="Ingresar"
-            style="width: 100%"
-            type="submit"
-          />
+          <q-btn color="primary" icon="login" label="Ingresar" style="width: 100%" type="submit" />
 
           <div class="flex justify-center">
             <span class="text-center text-secondary">
