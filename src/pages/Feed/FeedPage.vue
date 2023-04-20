@@ -1,5 +1,5 @@
 <template>
-  <q-page padding>
+  <q-page padding class="q-px-xl">
     <div class="row q-col-gutter-md">
       <div class="col-3">
         <q-card flat>

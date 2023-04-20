@@ -3,8 +3,10 @@ import { reactive } from 'vue';
 import { AuthService } from 'src/services';
 import { useAuthStore } from 'src/stores/auth.store';
 import { useRouter } from 'vue-router';
+import { useQuasar } from 'quasar';
 
 const authService = new AuthService();
+const $q = useQuasar();
 const authStore = useAuthStore();
 const router = useRouter();
 const userData = reactive({
@@ -14,12 +16,25 @@ const userData = reactive({
 const onSubmit = async () => {
   try {
     const login = await authService.login(userData.email, userData.password);
-
-    authStore.setToken(login.data.data.token);
-    authStore.setUser(login.data);
+    if (login.data.success != true) {
+      $q.notify({
+        color: 'negative',
+        message: 'Usuario o contraseña incorrecta!',
+        icon: 'report_problem',
+      });
+      return;
+    }
+    let loginData = login.data.data;
+    authStore.setToken(loginData.token)
+    authStore.setUser(loginData);
 
     router.push('/');
   } catch (e) {
+    $q.notify({
+      color: 'negative',
+      message: 'Usuario o contraseña incorrecta!',
+      icon: 'report_problem',
+    });
     console.error(e);
   }
 };

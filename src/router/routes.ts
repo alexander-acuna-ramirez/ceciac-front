@@ -4,8 +4,16 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
-    redirect: '/feed',
+    redirect: '/home',
     children: [
+      /* General Routes */
+      {
+        path: 'home',
+        name: 'HomePage',
+        component: () => import('pages/Home/HomePage.vue'),
+      },
+
+      /* App routes */
       {
         path: 'feed',
         name: 'Feed',
@@ -31,6 +39,12 @@ const routes: RouteRecordRaw[] = [
             component: () => import('pages/Projects/ProjectCreate.vue'),
           },
         ],
+      },
+
+      {
+        path: 'network-managment',
+        name: 'NetworkManagment',
+        component: () => import('pages/Network/NetworkManagement.vue'),
       },
     ],
   },
