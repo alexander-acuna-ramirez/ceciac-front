@@ -1,12 +1,13 @@
 import { defineStore } from 'pinia';
 import { useRouter } from 'vue-router';
 
-export const useAuthStore = defineStore('user', {
+export const useAuthStore = defineStore('userData', {
   state: () => ({
     token: '',
     user: {
       name: '',
       email: '',
+      network: false,
     },
   }),
   getters: {
@@ -25,6 +26,7 @@ export const useAuthStore = defineStore('user', {
       this.user = {
         name: '',
         email: '',
+        network: false,
       };
       this.token = '';
     },

@@ -1,5 +1,6 @@
 import { boot } from 'quasar/wrappers';
 import axios, { AxiosInstance } from 'axios';
+import { useAuthStore } from 'src/stores/auth.store';
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -17,6 +18,16 @@ declare module '@vue/runtime-core' {
 const api = axios.create({
   baseURL: 'https://ceciac-back.test',
   withCredentials: true,
+});
+
+// Agregar interceptor para enviar el token en cada solicitud
+api.interceptors.request.use((config) => {
+  const authStore = useAuthStore(); // Obtener instancia del store de autenticación
+  const token = authStore.getToken; // Obtener token del store
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`; // Agregar token al encabezado de la solicitud
+  }
+  return config;
 });
 
 export default boot(({ app }) => {
