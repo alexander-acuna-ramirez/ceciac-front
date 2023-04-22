@@ -1,3 +1,5 @@
+import { Country } from './Country';
+
 export interface Network {
   id?: number;
   name: string;
@@ -8,7 +10,9 @@ export interface Network {
   description: string;
   social_network: string;
   web: string;
+  country?: Country;
   description_2: string;
   created_at?: string;
   updated_at?: string;
+  deleted_at?: string;
 }

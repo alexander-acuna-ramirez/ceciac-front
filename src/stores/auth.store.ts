@@ -5,6 +5,7 @@ export const useAuthStore = defineStore('userData', {
   state: () => ({
     token: '',
     user: {
+      id: '',
       name: '',
       email: '',
       network: false,
@@ -24,6 +25,7 @@ export const useAuthStore = defineStore('userData', {
     },
     logout() {
       this.user = {
+        id: '',
         name: '',
         email: '',
         network: false,

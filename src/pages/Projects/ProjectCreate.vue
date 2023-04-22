@@ -5,9 +5,10 @@ import { QStepper } from 'quasar';
 import { useQuasar } from 'quasar';
 import SectionBanner from 'src/components/SectionBanner.vue';
 import { ProjectTypeService, ProjectService } from 'src/services';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute, RouteParams } from 'vue-router';
 
 const router = useRouter();
+const route = useRoute();
 const projectService = new ProjectService();
 const projectTypeService = new ProjectTypeService();
 const $q = useQuasar();
@@ -18,7 +19,7 @@ const project = reactive<Project>({
   description: '',
   release_date: '',
   synopsis: '',
-  network_id: 1,
+  id_network: null,
   type_id: null,
   end_date: '',
 });
@@ -43,15 +44,18 @@ async function loadProjectTypes() {
   }
 }
 async function saveProject() {
+  if (route.params.network) {
+    let { network } = route.params as RouteParams;
+    project.id_network = parseInt(network as string);
+  }
   const response = await projectService.store(project);
   const projectCreated: Project = response.data;
   router.push({
-    name: "ProjectPage",
+    name: 'ProjectPage',
     params: {
       id: projectCreated.id
     }
   });
-  console.log(response);
 }
 
 function nextStep() {
@@ -98,26 +102,26 @@ function nextStep() {
               <div class="row q-col-gutter-md">
                 <div class="col-12 col-md-6">
                   <q-input filled v-model="project.name" label="Titulo" hint="El titulo de tu proyecto" lazy-rules :rules="[
-                    (val) =>
-                      (val !== null && val !== '') ||
-                      'Por favor, ingresa el titulo',
-                  ]" />
-                </div>
-                <div class="col-12 col-md-6">
-                  <q-select filled v-model="project.type_id" :options="projectTypes" option-value="id" option-label="name"
-                    emit-value map-options label="Tipo de proyecto" :rules="[
                       (val) =>
                         (val !== null && val !== '') ||
                         'Por favor, ingresa el titulo',
                     ]" />
                 </div>
+                <div class="col-12 col-md-6">
+                  <q-select filled v-model="project.type_id" :options="projectTypes" option-value="id" option-label="name"
+                    emit-value map-options label="Tipo de proyecto" :rules="[
+                        (val) =>
+                          (val !== null && val !== '') ||
+                          'Por favor, ingresa el titulo',
+                      ]" />
+                </div>
                 <div class="col-12">
                   <q-input type="textarea" filled v-model="project.description" label="Descripción"
                     hint="Una descripción breve de tu proyecto" lazy-rules :rules="[
-                      (val) =>
-                        (val !== null && val !== '') ||
-                        'Por favor ingresa  la descripción',
-                    ]" />
+                        (val) =>
+                          (val !== null && val !== '') ||
+                          'Por favor ingresa  la descripción',
+                      ]" />
                 </div>
               </div>
             </q-form>

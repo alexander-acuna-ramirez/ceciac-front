@@ -3,5 +3,4 @@ export interface ProjectType {
   name: string;
   created_at?: string;
   updated_at?: string;
-  uuid?: string;
 }

@@ -8,7 +8,7 @@ export interface Project {
   release_date: string;
   end_date: string;
   synopsis: string;
-  network_id: number | null;
+  id_network: number | null;
   type_id: number | null;
   created_at?: string;
   updated_at?: string;
