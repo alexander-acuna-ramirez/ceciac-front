@@ -4,6 +4,11 @@ import { NetworkRepresentative, Network } from 'src/models';
 import { useAuthStore } from 'src/stores/auth.store';
 import { ref, onMounted, reactive } from 'vue';
 import ProjectsManagement from './components/ProjectsManagement.vue';
+import EventsManagement from './components/EventsManagement.vue';
+import BlogPostManagement from './components/BlogPostManagement.vue';
+
+
+
 
 const tab = ref('projects');
 const networkService = new NetworkService();
@@ -81,13 +86,11 @@ onMounted(() => {
             </q-tab-panel>
 
             <q-tab-panel name="events">
-              <div class="text-h6">Alarms</div>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              <events-management :network="network.id as number"></events-management>
             </q-tab-panel>
 
             <q-tab-panel name="posts">
-              <div class="text-h6">Movies</div>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              <blog-post-management :network="network.id as number"></blog-post-management>
             </q-tab-panel>
           </q-tab-panels>
         </q-card>

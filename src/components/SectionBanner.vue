@@ -1,5 +1,5 @@
 <template>
-    <div class="banner bg-primary">
+    <div class="banner">
 
         <h2>{{ title }}</h2>
         <img src="~assets/img/job-interview.png" alt="Quasar">
@@ -9,13 +9,17 @@
 <script setup>
 import { ref } from 'vue'
 // https://www.flaticon.com/packs/hiring-process-5
+
+defineProps({
+
+})
 const imageSrc = ref('ruta-de-la-imagen-quasar.jpg')
 const title = ref('Inicia un nuevo proyecto desde aqui')
 const ctaLink = ref('#')
 const ctaText = ref('Llamado a la acción')
 </script>
   
-<style>
+<style scoped>
 .banner {
     position: relative;
     display: flex;

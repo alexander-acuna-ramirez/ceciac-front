@@ -40,7 +40,17 @@ const routes: RouteRecordRaw[] = [
           },
         ],
       },
-
+      {
+        path: 'event',
+        name: 'Event',
+        children: [
+          {
+            path: 'create/:network?',
+            name: 'ProjectCreate',
+            component: () => import('pages/Events/EventCreate.vue'),
+          },
+        ],
+      },
       {
         path: 'network-managment',
         name: 'NetworkManagment',

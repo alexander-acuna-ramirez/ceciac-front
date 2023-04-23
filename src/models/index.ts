@@ -1,5 +1,7 @@
 export * from './Auth';
 export * from './Country';
+export * from './Event';
+export * from './File';
 export * from './Network';
 export * from './NetworkRepresentative';
 export * from './Project';

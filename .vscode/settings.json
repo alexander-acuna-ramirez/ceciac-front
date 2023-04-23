@@ -9,5 +9,10 @@
   "[vue]": {
     "editor.defaultFormatter": "Vue.volar"
   },
-  "exportall.config.folderListener": ["/src/models", "/src/services"]
+  "exportall.config.folderListener": [
+    "/src/models",
+    "/src/services",
+    "/src/composables",
+    "/src/utils"
+  ]
 }
