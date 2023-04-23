@@ -3,7 +3,7 @@ import { reactive, ref, onMounted, watch } from 'vue';
 import { ProjectType, Project } from 'src/models';
 import { QStepper } from 'quasar';
 import { useQuasar } from 'quasar';
-import SectionBanner from 'src/components/SectionBanner.vue';
+import BannerComponent from 'src/components/BannerComponent.vue';
 import { ProjectTypeService, ProjectService } from 'src/services';
 import { useRouter, useRoute, RouteParams } from 'vue-router';
 
@@ -28,7 +28,7 @@ const stepper = ref();
 const firstStepForm = ref();
 const secondStepForm = ref();
 const thirdStepForm = ref();
-const files = reactive([]);
+const files = ref(null);
 
 onMounted(() => {
   loadProjectTypes();
@@ -44,20 +44,28 @@ async function loadProjectTypes() {
   }
 }
 async function saveProject() {
+
   if (route.params.network) {
     let { network } = route.params as RouteParams;
     project.id_network = parseInt(network as string);
   }
   const response = await projectService.store(project);
   const projectCreated: Project = response.data;
+  const filesData = new FormData();
+  const dataFiles: File[] = files.value ?? [];
+  dataFiles.forEach((e) => filesData.append('project_images[]', e));
+  await projectService.uploadProjectFiles(
+    filesData,
+    projectCreated.id as number
+  );
+
   router.push({
     name: 'ProjectPage',
     params: {
-      id: projectCreated.id
-    }
+      id: projectCreated.id,
+    },
   });
 }
-
 function nextStep() {
   switch (step.value) {
     case 1:
@@ -93,10 +101,11 @@ function nextStep() {
   <q-page padding>
     <div class="row q-col-gutter-md">
       <div class="col-12 flex flex-center justify-center">
-        <section-banner style="width: 70%"></section-banner>
+        <banner-component style="width: 90%" description="Explora nuevos proyectos"
+          title="Empieza un nuevo proyecto aqui!"></banner-component>
       </div>
       <div class="col-12 flex flex-center justify-center">
-        <q-stepper v-model="step" ref="stepper" color="primary" animated flat style="width: 70%">
+        <q-stepper v-model="step" ref="stepper" color="primary" animated flat style="width: 90%">
           <q-step :name="1" title="Información Básica" icon="settings" :done="step > 1">
             <q-form ref="firstStepForm" class="q-gutter-md">
               <div class="row q-col-gutter-md">
@@ -172,12 +181,16 @@ function nextStep() {
           </q-step>
 
           <q-step :name="4" title="Multimedia" icon="photo_library">
-            <q-uploader style="width: 100%" url="http://localhost:4444/upload" label="Imagenes" multiple
-              :hide-upload-btn="true" accept=".jpg, image/*" />
+            <q-file v-model="files" label="Selecciona las imagenes relacionadas a tu proyecto" filled style="width: 100%"
+              use-chips multiple>
+              <template v-slot:prepend>
+                <q-icon name="attach_file" />
+              </template>
+            </q-file>
           </q-step>
 
           <template v-slot:navigation>
-            <q-stepper-navigation>
+            <q-stepper-navigation class="flex justify-end">
               <q-btn v-if="step > 1" flat color="primary" @click="($refs.stepper as QStepper).previous()" label="Atras"
                 class="q-ml-sm" icon="chevron_left" />
               <q-btn @click="nextStep()" color="primary" :label="step === 4 ? 'Terminar' : 'Continuar'"

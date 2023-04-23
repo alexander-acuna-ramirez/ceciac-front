@@ -7,12 +7,6 @@ import { Project } from '@models/Project';
 const projectService = new ProjectService();
 const route = useRoute();
 
-const images = ref([
-  'https://picsum.photos/id/1018/1920/1080',
-  'https://picsum.photos/id/1025/1920/1080',
-  'https://picsum.photos/id/1035/1920/1080',
-]);
-const loading = ref(false);
 const slide = ref(1);
 const project = reactive<Project>({
   name: '',
@@ -48,10 +42,8 @@ onMounted(() => {
       <div class="col-12">
         <q-carousel :swipeable="true" :autoplay="true" :vertical="true" animated v-model="slide" arrows navigation
           infinite>
-          <q-carousel-slide :name="1" img-src="https://cdn.quasar.dev/img/mountains.jpg" />
-          <q-carousel-slide :name="2" img-src="https://cdn.quasar.dev/img/parallax1.jpg" />
-          <q-carousel-slide :name="3" img-src="https://cdn.quasar.dev/img/parallax2.jpg" />
-          <q-carousel-slide :name="4" img-src="https://cdn.quasar.dev/img/quasar.jpg" />
+          <q-carousel-slide :key="idx" v-for="(file, idx) in project.files" :name="file.filename"
+            :img-src="file.fullpath" />
         </q-carousel>
       </div>
     </div>

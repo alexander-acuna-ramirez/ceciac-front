@@ -5,10 +5,11 @@ import { Event } from 'src/models/Event';
 import BannerComponent from 'src/components/BannerComponent.vue';
 import { EventService } from 'src/services';
 import { Rules } from 'src/utils';
-import { useRoute, RouteParams } from 'vue-router';
+import { useRoute, RouteParams, useRouter } from 'vue-router';
 
 const eventService = new EventService();
 const route = useRoute();
+const router = useRouter();
 const firstStepForm = ref();
 const secondStepForm = ref();
 const thirdStepForm = ref();
@@ -82,7 +83,7 @@ async function saveEvent() {
     const eventId = typeof eventCreated.id !== 'undefined' ? eventCreated.id : '';
     const response = await eventService.uploadEventFile(fileData, eventId);
 
-    console.log(res, response);
+    router.push('/event/detail/' + eventCreated.id);
 }
 </script>
 

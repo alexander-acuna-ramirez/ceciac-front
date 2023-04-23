@@ -6,6 +6,10 @@ export class ProjectService {
     return api.post('/api/v1/project', project);
   }
 
+  public uploadProjectFiles(formData: FormData, project: string | number) {
+    return api.post('/api/v1/project/upload-files/' + project, formData);
+  }
+
   public show(id: string | number) {
     return api.get('/api/v1/project/' + id);
   }

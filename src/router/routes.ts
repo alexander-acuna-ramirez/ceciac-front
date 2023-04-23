@@ -14,6 +14,40 @@ const routes: RouteRecordRaw[] = [
       },
 
       /* App routes */
+
+      {
+        path: 'project',
+        name: 'Project',
+        children: [
+          {
+            path: 'create/:network?',
+            name: 'ProjectCreate',
+            component: () => import('pages/Projects/ProjectCreate.vue'),
+          },
+          {
+            path: 'detail/:id',
+            name: 'ProjectPage',
+            component: () => import('pages/Projects/ProjectPage.vue'),
+          },
+        ],
+      },
+      {
+        path: 'event',
+        name: 'Event',
+        children: [
+          {
+            path: 'create/:network?',
+            name: 'EventCreate',
+            component: () => import('pages/Events/EventCreate.vue'),
+          },
+          {
+            path: 'detail/:id',
+            name: 'EventPage',
+            component: () => import('pages/Events/EventPage.vue'),
+          },
+        ],
+      },
+
       {
         path: 'feed',
         name: 'Feed',
@@ -25,37 +59,14 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/User/ProfilePage.vue'),
       },
       {
-        path: 'project',
-        name: 'Project',
-        children: [
-          {
-            path: ':id',
-            name: 'ProjectPage',
-            component: () => import('pages/Projects/ProjectPage.vue'),
-          },
-          {
-            path: 'create/:network?',
-            name: 'ProjectCreate',
-            component: () => import('pages/Projects/ProjectCreate.vue'),
-          },
-        ],
-      },
-      {
-        path: 'event',
-        name: 'Event',
-        children: [
-          {
-            path: 'create/:network?',
-            name: 'ProjectCreate',
-            component: () => import('pages/Events/EventCreate.vue'),
-          },
-        ],
-      },
-      {
         path: 'network-managment',
         name: 'NetworkManagment',
         component: () => import('pages/Network/NetworkManagement.vue'),
       },
+      /*{
+        path: '/:catchAll(.*)*',
+        component: () => import('pages/ErrorNotFound.vue'),
+      },*/
     ],
   },
   {

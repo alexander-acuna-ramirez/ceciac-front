@@ -12,7 +12,7 @@ const authStore = useAuthStore();
 
 
       <div style="height: 100%;">
-        <router-link to="home">
+        <router-link to="/home">
           <img src="~assets/img/ceciac-logo.png" style="height: 99%; width: auto;">
         </router-link>
       </div>

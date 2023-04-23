@@ -1,3 +1,4 @@
+import { File } from './File';
 import { Network } from './Network';
 import { ProjectType } from './ProjectType';
 
@@ -14,4 +15,5 @@ export interface Project {
   updated_at?: string;
   network?: Network;
   type?: ProjectType;
+  files?: File[];
 }
