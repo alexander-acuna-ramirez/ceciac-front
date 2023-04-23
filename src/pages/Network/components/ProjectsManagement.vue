@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { onMounted, ref, reactive } from 'vue';
+import { onMounted, ref, reactive, watch } from 'vue';
 import { ProjectService } from 'src/services/ProjectService';
 import ProjectCard from 'src/pages/Projects/components/ProjectCard.vue';
 import { Project } from '@models/Project';
+import EmptyResults from 'src/components/EmptyResults.vue';
 
 const props = defineProps({
   network: {
@@ -13,10 +14,17 @@ const props = defineProps({
 
 const projectService = new ProjectService();
 const projects = reactive<Project[]>([]);
-
-async function loadProjects(page = 1, perpage = 10) {
+const paginationData = reactive({
+  current_page: 1,
+  total: 0,
+  last_page: 0
+});
+const current = ref(1);
+async function loadProjects(page = 1, perpage = 5) {
+  projects.splice(0, projects.length);
   const response = await projectService.loadNetworkProjects(page, perpage, null, props.network);
-  projects.push(response.data);
+  projects.push(...response.data.data);
+  Object.assign(paginationData, response.data);
 }
 
 const searchTerm = ref('');
@@ -24,18 +32,36 @@ const searchTerm = ref('');
 onMounted(() => {
   loadProjects();
 });
+
+watch(current, (newX) => {
+  loadProjects(newX, 5);
+})
+
 </script>
 <template>
   <q-card flat>
     <q-card-section class="flex justify-between">
-      <q-input v-model="searchTerm" type="text" label="Buscar proyecto" filled />
+      <q-input v-model="searchTerm" type="text" label="Buscar proyecto" filled>
+        <template v-slot:append>
+          <q-icon name="search" />
+        </template>
+      </q-input>
       <div>
         <q-btn color="primary" icon="add" label="Crear"
           :to="{ name: 'ProjectCreate', params: { network: props.network } }" />
       </div>
     </q-card-section>
-    <q-card-section>
-      <project-card v-for="project in projects" :project="project" :key="project.id"></project-card>
+    <q-card-section v-if="projects.length > 0" class="row q-gutter-md">
+      <project-card v-for="project in projects" :project="project" :key="project.id"
+        class="q-col-md-4 q-col-xs-12"></project-card>
+    </q-card-section>
+    <q-card-section v-if="projects.length > 0">
+      <div class="q-pa-lg flex flex-center">
+        <q-pagination v-model="current" :max="paginationData.last_page" />
+      </div>
+    </q-card-section>
+    <q-card-section v-else>
+      <empty-results titulo="No existen projectos" descripcion="Puedes crear uno!"></empty-results>
     </q-card-section>
   </q-card>
 </template>

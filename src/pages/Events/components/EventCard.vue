@@ -1,26 +1,27 @@
 <template>
-    <router-link :to="'/project/detail/' + project.id">
-        <q-card class="my-card" flat bordered style="max-width: 290px; height: auto">
-            <q-img v-if="project.files?.length" :src="project.files[0].fullpath" :name="project.files[0].filename"
-                spinner-color="primary" spinner-size="82px" style="min-height: 220px" />
+    <router-link :to="'/event/detail/' + event.id">
+        <q-card class="my-card" flat bordered style="max-width: 290px; height: auto;">
+            <q-img v-if="event.file" :src="event.file.fullpath" :name="event.file.filename" spinner-color="primary"
+                spinner-size="82px" style="min-height: 220px;" />
             <q-img v-else src="~assets/img/app/default-image.jpg" spinner-color="primary" spinner-size="82px" />
             <q-card-section>
                 <div class="row no-wrap items-center">
                     <div class="col text-h6 ellipsis">
-                        {{ project.name }}
+                        {{ event.title }}
                     </div>
                     <div class="col-auto text-grey text-caption q-pt-md row no-wrap items-center">
-                        {{ project.type?.name }}
+                        {{ (event.is_online == 1) ? "Virtual" : "Presencial" }}
                     </div>
                 </div>
+
             </q-card-section>
 
             <q-card-section class="q-pt-none">
                 <div class="text-subtitle1">
-                    {{ project.network?.name }}
+                    {{ event.network?.name }}
                 </div>
                 <div class="text-caption text-grey text-description">
-                    {{ project.description }}
+                    {{ event.description }}
                 </div>
             </q-card-section>
 
@@ -29,22 +30,22 @@
             <q-card-actions>
                 <q-btn flat round icon="event" />
                 <q-btn flat color="primary">
-                    {{ project.release_date }} | {{ project.end_date }}
+                    {{ event.date_time }} | {{ event.end_date_time }}
                 </q-btn>
             </q-card-actions>
         </q-card>
     </router-link>
 </template>
-
+  
 <script lang="ts" setup>
-import { Project } from 'src/models';
+import { Event } from 'src/models';
 import { ref } from 'vue';
 const slide = ref(1);
 defineProps({
-    project: {
+    event: {
         required: true,
-        type: Object as () => Project,
-    },
+        type: Object as () => Event,
+    }
 });
 </script>
 <style scoped lang="scss">

@@ -1,4 +1,5 @@
 import { Country } from './Country';
+import { File } from './File';
 
 export interface Network {
   id?: number;
@@ -11,6 +12,8 @@ export interface Network {
   social_network: string;
   web: string;
   country?: Country;
+  logo?: File;
+  banner?: File;
   description_2: string;
   created_at?: string;
   updated_at?: string;

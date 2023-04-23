@@ -49,13 +49,8 @@ onMounted(() => {
     <q-page padding class="q-px-xl">
         <div class="row q-col-gutter-md">
             <div class="col-12">
-                <q-carousel :swipeable="true" :autoplay="true" :vertical="true" animated v-model="slide" arrows navigation
-                    infinite>
-                    <q-carousel-slide :name="1" img-src="https://cdn.quasar.dev/img/mountains.jpg" />
-                    <q-carousel-slide :name="2" img-src="https://cdn.quasar.dev/img/parallax1.jpg" />
-                    <q-carousel-slide :name="3" img-src="https://cdn.quasar.dev/img/parallax2.jpg" />
-                    <q-carousel-slide :name="4" img-src="https://cdn.quasar.dev/img/quasar.jpg" />
-                </q-carousel>
+                <q-img :src="event.file?.fullpath" :ratio="16 / 9" spinner-color="primary" spinner-size="82px"
+                    height="350px" style="border-radius: 5px;" />
             </div>
         </div>
         <div class="row q-col-gutter-md q-mt-sm">
@@ -71,22 +66,40 @@ onMounted(() => {
                 </q-card>
             </div>
             <div class="col-3">
+
                 <q-card flat>
                     <q-card-section>
-                        <q-list dark bordered separator style="max-width: 318px">
+                        <div class="text text-bold text-primary">
+                            Organizador
+                        </div>
+                    </q-card-section>
+                    <q-card-section>
+                        <div>
+                            <q-avatar rounded size="30px" font-size="52px" color="teal" text-color="white" class="my-img">
+                                <q-img :src="event.network?.logo?.fullpath" spinner-color="primary"
+                                    spinner-size="82px"></q-img>
+                            </q-avatar>
 
-                            <q-item clickable v-ripple>
-                                <q-item-section>
-                                    <q-item-label overline class="text-primary">Organizador</q-item-label>
-                                    <q-item-label class="text-secondary">{{ event.network?.name }}</q-item-label>
-                                </q-item-section>
-                            </q-item>
-                        </q-list>
+                            {{ event.network?.name }}
+                        </div>
                     </q-card-section>
                 </q-card>
                 <q-card flat class="q-mt-sm">
                     <q-card-section>
-                        <div class="text text-bold text-primary text-h6">
+                        <div class="text text-bold text-primary">
+                            Ubicación
+                        </div>
+                    </q-card-section>
+                    <q-card-section>
+                        <div>
+                            {{ event.location }}
+                        </div>
+                    </q-card-section>
+                </q-card>
+
+                <q-card flat class="q-mt-sm">
+                    <q-card-section>
+                        <div class="text text-bold text-primary">
                             Datos Generales
                         </div>
                     </q-card-section>
@@ -119,7 +132,7 @@ onMounted(() => {
 
                 <q-card flat class="q-mt-sm">
                     <q-card-section>
-                        <div class="text text-bold text-primary text-h6">
+                        <div class="text text-bold text-primary">
                             Tags
                         </div>
                     </q-card-section>

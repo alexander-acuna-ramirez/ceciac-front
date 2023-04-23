@@ -37,8 +37,8 @@ const eventConfig = [
 ];
 
 const eventType = [
-    { label: "Presencial", value: 1 },
-    { label: "Virtual", value: 0 },
+    { label: "Presencial", value: 0 },
+    { label: "Virtual", value: 1 },
 ];
 
 const eventFile = ref();
@@ -200,7 +200,7 @@ async function saveEvent() {
                                 </div>
 
 
-                                <div class="col-12 col-md-6" v-if="event.is_online == 1">
+                                <div class="col-12 col-md-6" v-if="event.is_online == 0">
                                     <q-input filled v-model="event.location" label="Ubicación" lazy-rules :rules="[
                                             (val) =>
                                                 (val !== null && val !== '') ||
