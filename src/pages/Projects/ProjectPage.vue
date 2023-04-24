@@ -62,15 +62,18 @@ onMounted(() => {
       <div class="col-3">
         <q-card flat>
           <q-card-section>
-            <q-list dark bordered separator style="max-width: 318px">
+            <div class="text text-bold text-primary">
+              Organizador
+            </div>
+          </q-card-section>
+          <q-card-section>
+            <div>
+              <q-avatar rounded size="30px" font-size="52px" color="teal" text-color="white" class="my-img">
+                <q-img :src="project.network?.logo?.fullpath" spinner-color="primary" spinner-size="82px"></q-img>
+              </q-avatar>
 
-              <q-item clickable v-ripple>
-                <q-item-section>
-                  <q-item-label overline class="text-primary">Organizador</q-item-label>
-                  <q-item-label class="text-secondary">{{ project.network?.name }}</q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-list>
+              {{ project.network?.name }}
+            </div>
           </q-card-section>
         </q-card>
         <q-card flat class="q-mt-sm">
