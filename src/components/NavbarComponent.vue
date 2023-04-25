@@ -7,15 +7,13 @@ const authStore = useAuthStore();
 </script>
 
 <template>
-  <q-header class="text-white bg-white q-px-xl" style="height: 80px;" height-hint="61.59">
-    <q-toolbar class="q-py-sm q-px-md" style="height: 100%;">
+  <q-header>
+    <q-toolbar class="text-white bg-white">
 
+      <router-link to="/home">
+        <img src="~assets/img/ceciac-logo.png" style="height: 80px; width: auto;">
+      </router-link>
 
-      <div style="height: 100%;">
-        <router-link to="/home">
-          <img src="~assets/img/ceciac-logo.png" style="height: 99%; width: auto;">
-        </router-link>
-      </div>
 
       <q-space />
 
@@ -30,9 +28,10 @@ const authStore = useAuthStore();
       <q-space />
 
       <div class="q-pl-sm q-gutter-sm row items-center no-wrap">
-        <q-btn color="primary" label="Iniciar Sesión" no-caps to="/login" v-if="!authStore.isAuthenticated" />
+        <q-btn color="primary" outline rounded label="Iniciar Sesión" no-caps to="/login"
+          v-if="!authStore.isAuthenticated" />
 
-        <q-btn v-else color="primary" :label="'Bienvenido/a ' + authStore.getUser.name" no-caps>
+        <q-btn v-else color="primary" :label="'Bienvenido(a) ' + authStore.getUser.name" no-caps outline rounded>
           <q-menu fit>
             <q-list style="min-width: 100px" class="text-secondary">
               <q-item clickable v-close-popup to="/network-managment" v-if="authStore.getUser.network">
