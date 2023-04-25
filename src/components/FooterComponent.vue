@@ -1,7 +1,7 @@
 <template>
     <footer class="bg-secondary text-white q-pa-xl">
         <div class="row">
-            <div class="col">
+            <div class="col-12 col-md-3">
                 <div class="flex items-center">
                     <router-link to="/" class="col-logo-img">
                         <q-img src="~assets/img/ceciac-logo.png" class="logo-img" />
@@ -12,7 +12,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col">
+            <div class="col-12 col-md-3">
                 <div class="text-h6 text-weight-bold">Important Links</div>
                 <ul class="link-list">
                     <li><router-link class="text-white" to="/about">About Us</router-link></li>
@@ -21,7 +21,7 @@
                     <li><router-link class="text-white" to="/blog">Blog</router-link></li>
                 </ul>
             </div>
-            <div class="col">
+            <div class="col-12 col-md-3">
                 <div class=" text-h6 text-weight-bold">Community</div>
                 <ul class="link-list">
                     <li><router-link class="text-white" to="/newsfeed">Newsfeed</router-link></li>
@@ -31,7 +31,7 @@
                 </ul>
             </div>
 
-            <div class="col">
+            <div class="col-12 col-md-3">
                 <div class="text-h6 text-weight-bold">Community</div>
                 <ul class="link-list">
                     <li><router-link class="text-white" to="/newsfeed">Newsfeed</router-link></li>
