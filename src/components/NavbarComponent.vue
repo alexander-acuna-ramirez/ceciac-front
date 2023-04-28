@@ -18,11 +18,12 @@ const authStore = useAuthStore();
       <q-space />
 
       <div v-if="$q.screen.gt.sm" class="q-ml-xs q-gutter-md text-body2 text-weight-bold row items-center no-wrap">
-        <router-link to="/feed" class="text-primary text-bold" style="text-decoration: none;">PORTAFOLIO</router-link>
-        <router-link to="/feed" class="text-primary text-bold" style="text-decoration: none;">NOSOTROS</router-link>
-        <router-link to="/feed" class="text-primary text-bold" style="text-decoration: none;">PROYECTOS</router-link>
-        <router-link to="/feed" class="text-primary text-bold" style="text-decoration: none;">BLOG</router-link>
-        <router-link to="/feed" class="text-primary text-bold" style="text-decoration: none;">REGISTRATE</router-link>
+        <router-link to="#" class="text-primary text-bold" style="text-decoration: none;">PORTAFOLIO</router-link>
+        <router-link to="#" class="text-primary text-bold" style="text-decoration: none;">NOSOTROS</router-link>
+        <router-link to="/explore/projects" class="text-primary text-bold"
+          style="text-decoration: none;">PROYECTOS</router-link>
+        <router-link to="#" class="text-primary text-bold" style="text-decoration: none;">BLOG</router-link>
+        <router-link to="#" class="text-primary text-bold" style="text-decoration: none;">REGISTRATE</router-link>
       </div>
 
       <q-space />

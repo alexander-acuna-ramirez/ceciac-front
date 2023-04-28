@@ -152,6 +152,13 @@
   </q-page>
 </template>
 <script setup lang="ts">
+import { ProjectType } from 'src/models';
+import { ProjectTypeService } from '@services/ProjectTypeService';
+import { onMounted, reactive } from 'vue';
+
+const projectTypeService = new ProjectTypeService();
+const projectTypes = reactive<ProjectType[]>([]);
+
 const events = [
   { id: 1, title: 'Proyecto A', date: 'Mayo 1, 2023' },
   { id: 2, title: 'Proyecto B', date: 'Junio 15, 2023' },
@@ -166,6 +173,15 @@ const networks = [
   { id: 4, name: 'Red D', category: 'Académica' },
   { id: 5, name: 'Red E', category: 'Comunitaria' },
 ];
+
+async function getProjectTypes() {
+  const response = await projectTypeService.getAll();
+  projectTypes.push(response.data);
+}
+
+onMounted(() => {
+  console.log("Please wORK")
+})
 </script>
 <style lang="scss">
 .post-card {

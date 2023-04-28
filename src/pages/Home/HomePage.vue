@@ -58,8 +58,7 @@
 
             <div style="width: 100%;" class="q-my-lg">
 
-                <Carousel :wrap-around="true" :breakpoints="breakpoints" :autoplay="3000"
-                    :items-to-show="($q.screen.lt.sm) ? 1 : 3">
+                <Carousel :wrap-around="true" :autoplay="3000" :items-to-show="($q.screen.lt.sm) ? 1 : 3">
                     <Slide v-for="slide in slides" :key="slide.id">
                         <div class="carousel__item">
                             <q-img :src="slide.src" spinner-color="primary" spinner-size="82px" style="width: 80px;" />
