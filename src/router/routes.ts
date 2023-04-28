@@ -63,6 +63,11 @@ const routes: RouteRecordRaw[] = [
         name: 'NetworkManagment',
         component: () => import('pages/Network/NetworkManagement.vue'),
       },
+      {
+        path: 'explore',
+        name: 'ExplorePage',
+        component: () => import('pages/Explore/ExplorePage.vue'),
+      },
       /*{
         path: '/:catchAll(.*)*',
         component: () => import('pages/ErrorNotFound.vue'),

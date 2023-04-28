@@ -73,11 +73,11 @@ onMounted(() => {
 
 </script>
 <template>
-  <q-page padding class="q-px-xl">
+  <q-page padding>
     <div class="row">
       <div class="flex items-center justify-between" style="width: 100%; min-height: 200px;">
         <div class="flex items-center">
-          <q-avatar rounded size="100px" font-size="52px" color="teal" text-color="white" class="my-img">
+          <q-avatar rounded size="100px" font-size="52px" class="my-img">
             <q-img :src="network.logo?.fullpath" spinner-color="primary" spinner-size="82px">
               <div class="absolute-full text-subtitle2 flex flex-center my-text" @click="openIconChange">
                 <q-icon name="photo_camera" />
@@ -110,7 +110,7 @@ onMounted(() => {
         <q-card flat class="q-pa-md">
           <q-tabs v-model="tab" dense class="text-secondary" active-color="primary" indicator-color="primary"
             align="justify">
-            <q-tab name="projects" label="Projectos" />
+            <q-tab name="projects" label="Proyectos" />
             <q-tab name="events" label="Eventos" />
             <q-tab name="posts" label="Posts" />
           </q-tabs>
@@ -145,7 +145,7 @@ onMounted(() => {
 
               <q-item v-for="member in members" :key="member.id">
                 <q-item-section avatar>
-                  <q-avatar size="50px" font-size="52px" color="teal" text-color="white">
+                  <q-avatar size="50px" font-size="52px" rounded>
                     <q-img :src="network.logo?.fullpath" spinner-color="primary" spinner-size="82px" />
                   </q-avatar>
                 </q-item-section>
