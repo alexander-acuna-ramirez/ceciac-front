@@ -20,6 +20,7 @@ const networkRepresentative = reactive<NetworkRepresentative>({
   rank: 1
 })
 const network = reactive<Network>({
+  id: 0,
   name: '',
   email: '',
   contact_name: '',

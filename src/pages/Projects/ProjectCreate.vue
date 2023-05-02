@@ -101,17 +101,17 @@ function nextStep() {
   <q-page padding>
     <div class="row q-col-gutter-md">
       <div class="col-12 flex flex-center justify-center">
-        <banner-component style="width: 90%" description="Explora nuevos proyectos"
+        <banner-component description="Explora nuevos proyectos"
           title="Empieza un nuevo proyecto aqui!"></banner-component>
       </div>
       <div class="col-12 flex flex-center justify-center">
-        <q-stepper v-model="step" ref="stepper" color="primary" animated flat style="width: 90%">
+        <q-stepper v-model="step" ref="stepper" color="primary" animated flat style="width: 100%;">
           <q-step :name="1" title="Información Básica" icon="settings" :done="step > 1">
             <q-form ref="firstStepForm" class="q-gutter-md">
               <div class="row q-col-gutter-md">
                 <div class="col-12 col-md-6">
                   <q-input filled v-model="project.name" label="Titulo" hint="El titulo de tu proyecto" lazy-rules :rules="[
-                      (val) =>
+                      (val: any) =>
                         (val !== null && val !== '') ||
                         'Por favor, ingresa el titulo',
                     ]" />
@@ -119,17 +119,18 @@ function nextStep() {
                 <div class="col-12 col-md-6">
                   <q-select filled v-model="project.type_id" :options="projectTypes" option-value="id" option-label="name"
                     emit-value map-options label="Tipo de proyecto" :rules="[
-                        (val) =>
+                        (val: any) =>
                           (val !== null && val !== '') ||
-                          'Por favor, ingresa el titulo',
+                          'Por favor, ingresa el tipo de proyecto',
                       ]" />
                 </div>
                 <div class="col-12">
                   <q-input type="textarea" filled v-model="project.description" label="Descripción"
                     hint="Una descripción breve de tu proyecto" lazy-rules :rules="[
-                        (val) =>
+                        (val: any) =>
                           (val !== null && val !== '') ||
                           'Por favor ingresa  la descripción',
+                        (val: any) => val.length <= 255 || 'La descripción no puede ser mayor a 255 caracteres.'
                       ]" />
                 </div>
               </div>
@@ -138,7 +139,62 @@ function nextStep() {
 
           <q-step :name="2" title="Definición del proyecto" icon="create_new_folder" :done="step > 2">
             <q-form ref="secondStepForm" class="q-gutter-md">
-              <q-editor v-model="project.synopsis" min-height="10rem" hint="Aqui puedes explicar todo tu proyecto" />
+              <q-editor :toolbar="[
+                  [
+                    {
+                      label: $q.lang.editor.align,
+                      icon: $q.iconSet.editor.align,
+                      fixedLabel: true,
+                      list: 'only-icons',
+                      options: ['left', 'center', 'right', 'justify']
+                    },
+                    {
+                      label: $q.lang.editor.align,
+                      icon: $q.iconSet.editor.align,
+                      fixedLabel: true,
+                      options: ['left', 'center', 'right', 'justify']
+                    }
+                  ],
+                  ['bold', 'italic', 'strike', 'underline', 'subscript', 'superscript'],
+                  ['token', 'hr', 'link', 'custom_btn'],
+                  ['fullscreen'],
+                  [
+                    {
+                      label: $q.lang.editor.formatting,
+                      icon: $q.iconSet.editor.formatting,
+                      list: 'no-icons',
+                      options: [
+                        'p',
+                        'h1',
+                        'h2',
+                        'h3',
+                        'h4',
+                        'h5',
+                        'h6',
+                        'code'
+                      ]
+                    },
+                    {
+                      label: $q.lang.editor.fontSize,
+                      icon: $q.iconSet.editor.fontSize,
+                      fixedLabel: true,
+                      fixedIcon: true,
+                      list: 'no-icons',
+                      options: [
+                        'size-1',
+                        'size-2',
+                        'size-3',
+                        'size-4',
+                        'size-5',
+                        'size-6',
+                        'size-7'
+                      ]
+                    },
+                    'removeFormat'
+                  ],
+                  ['quote', 'unordered', 'ordered', 'outdent', 'indent'],
+                  ['undo', 'redo'],
+                ]" v-model="project.synopsis" min-height="10rem" hint="Aqui puedes explicar todo tu proyecto" />
             </q-form>
           </q-step>
 

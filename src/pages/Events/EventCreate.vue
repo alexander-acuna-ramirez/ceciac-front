@@ -92,42 +92,44 @@ async function saveEvent() {
 
         <div class="row q-col-gutter-md">
             <div class="col-12 flex flex-center justify-center">
-                <banner-component style="width: 90%" :title="bannerTitle"
-                    description="Explora otro eventos similares"></banner-component>
+                <banner-component :title="bannerTitle" description="Explora otro eventos similares"></banner-component>
             </div>
             <div class="col-12 flex flex-center justify-center">
-                <q-stepper v-model="step" ref="stepper" color="primary" animated flat style="width: 90%">
+                <q-stepper v-model="step" ref="stepper" color="primary" animated flat style="width: 100%;">
                     <q-step :name="1" title="Información Básica" icon="settings" :done="step > 1">
                         <q-form ref="firstStepForm" class="q-gutter-md">
                             <div class="row q-col-gutter-md">
                                 <div class="col-12 col-md-6">
                                     <q-input filled v-model="event.title" label="Titulo" hint="El titulo de tu evento"
                                         lazy-rules :rules="[
-                                                (val) =>
+                                                (val: any) =>
                                                     (val !== null && val !== '') ||
                                                     'Por favor, ingresa el titulo',
+                                                (val: any) => val.length <= 255 || 'La descripción no puede ser mayor a 255 caracteres.'
+
                                             ]" />
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <q-select filled v-model="event.is_public" :options="eventConfig" option-value="value"
                                         option-label="label" emit-value map-options label="Tipo de evento" :rules="[
-                                                (val) =>
+                                                (val: any) =>
                                                     (val !== null && val !== '') ||
-                                                    'Por favor, ingresa el titulo',
+                                                    'Por favor, ingresa el tipo de evento',
                                             ]" />
                                 </div>
                                 <div class="col-12">
                                     <q-input type="textarea" filled v-model="event.description" label="Descripción"
                                         hint="Una descripción breve de tu evento" lazy-rules :rules="[
-                                                (val) =>
+                                                (val: any) =>
                                                     (val !== null && val !== '') ||
                                                     'Por favor ingresa  la descripción',
+                                                (val: any) => val.length <= 255 || 'La descripción no puede ser mayor a 255 caracteres.'
                                             ]" />
                                 </div>
 
                                 <div class="col-12 col-md-6">
                                     <q-input filled v-model="event.date_time" label="Inicio del evento" :rules="[
-                                            (val) =>
+                                            (val: any) =>
                                                 (val !== null && val !== '') ||
                                                 'Por favor ingresa el comienzo del evento',
                                         ]">
@@ -160,7 +162,7 @@ async function saveEvent() {
 
                                 <div class="col-12 col-md-6">
                                     <q-input filled v-model="event.end_date_time" label="Fin del evento" :rules="[
-                                            (val) =>
+                                            (val: any) =>
                                                 (val !== null && val !== '') ||
                                                 'Por favor selecciona el termino del evento',
                                         ]">
@@ -193,7 +195,7 @@ async function saveEvent() {
                                 <div class="col-12 col-md-6">
                                     <q-select filled v-model="event.is_online" :options="eventType" option-value="value"
                                         option-label="label" emit-value map-options label="Tipo de evento" :rules="[
-                                                (val) =>
+                                                (val: any) =>
                                                     (val !== null && val !== '') ||
                                                     'Por favor, ingresa el tipo de evento',
                                             ]" />
@@ -202,7 +204,7 @@ async function saveEvent() {
 
                                 <div class="col-12 col-md-6" v-if="event.is_online == 0">
                                     <q-input filled v-model="event.location" label="Ubicación" lazy-rules :rules="[
-                                            (val) =>
+                                            (val: any) =>
                                                 (val !== null && val !== '') ||
                                                 'Por favor, ingresa la ubicación',
                                         ]" />
@@ -213,7 +215,62 @@ async function saveEvent() {
 
                     <q-step :name="2" title="Definición del proyecto" icon="create_new_folder" :done="step > 2">
                         <q-form ref="secondStepForm" class="q-gutter-md">
-                            <q-editor v-model="event.event_content" min-height="10rem"
+                            <q-editor :toolbar="[
+                                    [
+                                        {
+                                            label: $q.lang.editor.align,
+                                            icon: $q.iconSet.editor.align,
+                                            fixedLabel: true,
+                                            list: 'only-icons',
+                                            options: ['left', 'center', 'right', 'justify']
+                                        },
+                                        {
+                                            label: $q.lang.editor.align,
+                                            icon: $q.iconSet.editor.align,
+                                            fixedLabel: true,
+                                            options: ['left', 'center', 'right', 'justify']
+                                        }
+                                    ],
+                                    ['bold', 'italic', 'strike', 'underline', 'subscript', 'superscript'],
+                                    ['token', 'hr', 'link', 'custom_btn'],
+                                    ['fullscreen'],
+                                    [
+                                        {
+                                            label: $q.lang.editor.formatting,
+                                            icon: $q.iconSet.editor.formatting,
+                                            list: 'no-icons',
+                                            options: [
+                                                'p',
+                                                'h1',
+                                                'h2',
+                                                'h3',
+                                                'h4',
+                                                'h5',
+                                                'h6',
+                                                'code'
+                                            ]
+                                        },
+                                        {
+                                            label: $q.lang.editor.fontSize,
+                                            icon: $q.iconSet.editor.fontSize,
+                                            fixedLabel: true,
+                                            fixedIcon: true,
+                                            list: 'no-icons',
+                                            options: [
+                                                'size-1',
+                                                'size-2',
+                                                'size-3',
+                                                'size-4',
+                                                'size-5',
+                                                'size-6',
+                                                'size-7'
+                                            ]
+                                        },
+                                        'removeFormat'
+                                    ],
+                                    ['quote', 'unordered', 'ordered', 'outdent', 'indent'],
+                                    ['undo', 'redo'],
+                                ]" v-model="event.event_content" min-height="10rem"
                                 hint="Aqui puedes explicar todo tu proyecto" />
                         </q-form>
                     </q-step>

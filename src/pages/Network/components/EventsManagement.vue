@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, reactive, watch } from 'vue';
+import { onMounted, ref, reactive, watch, toRef } from 'vue';
 import { EventService } from 'src/services';
 import EventCard from 'src/pages/Events/components/EventCard.vue';
 import { Event } from 'src/models';
@@ -21,6 +21,7 @@ const paginationData = reactive({
 });
 const current = ref(1);
 async function loadNetwork(page = 1, perpage = 5) {
+    console.log("NETWORKK", props.network)
     events.splice(0, events.length);
     const response = await eventService.loadNetworkEvents(page, perpage, null, props.network);
     events.push(...response.data.data);
@@ -30,6 +31,10 @@ async function loadNetwork(page = 1, perpage = 5) {
 const searchTerm = ref('');
 
 onMounted(() => {
+    if (props.network != 0) loadNetwork();
+});
+
+watch(toRef(props, 'network'), (newNetwork) => {
     loadNetwork();
 });
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, reactive, watch } from 'vue';
+import { onMounted, ref, reactive, watch, toRef } from 'vue';
 import { ProjectService } from 'src/services/ProjectService';
 import ProjectCard from 'src/pages/Projects/components/ProjectCard.vue';
 import { Project } from '@models/Project';
@@ -8,7 +8,7 @@ import EmptyResults from 'src/components/EmptyResults.vue';
 const props = defineProps({
   network: {
     required: true,
-    type: Number
+    type: Number,
   },
 });
 
@@ -22,6 +22,7 @@ const paginationData = reactive({
 const current = ref(1);
 async function loadProjects(page = 1, perpage = 5) {
   projects.splice(0, projects.length);
+  console.log(props.network, "NETWORK");
   const response = await projectService.loadNetworkProjects(page, perpage, null, props.network);
   projects.push(...response.data.data);
   Object.assign(paginationData, response.data);
@@ -30,6 +31,10 @@ async function loadProjects(page = 1, perpage = 5) {
 const searchTerm = ref('');
 
 onMounted(() => {
+  if (props.network != 0) loadProjects();
+});
+watch(toRef(props, 'network'), (newNetwork) => {
+  console.log(newNetwork, "network, changed")
   loadProjects();
 });
 

@@ -28,18 +28,16 @@
 
             <div class="col-12 col-sm-12 col-md-6 flex items-center justify-center">
                 <div class="flex flex-center justify-center no-wrap">
-                    <div
-                        style="height: 450px; min-width: 150px; border-radius: 15px; background-image: url('src/assets/img/app/innovation1.webp'); background-position: center; background-size: cover;">
+                    <div class="hero-decoration hero-decoration-first">
 
                     </div>
 
-                    <div class="q-mx-sm"
-                        style="height: 450px; min-width: 150px; border-radius: 15px; margin-top: 100px;  background-image: url('src/assets/img/app/innovation2.jpeg'); background-position: center; background-size: cover;">
+                    <div class="q-mx-sm hero-decoration hero-decoration-second">
 
                     </div>
 
-                    <div
-                        style="height: 450px; min-width: 150px; border-radius: 15px; background-image: url('src/assets/img/app/innovation3.jpeg'); background-position: center; background-size: cover;">
+                    <div class="hero-decoration hero-decoration-third">
+
 
                     </div>
                 </div>
@@ -95,7 +93,7 @@ import { Carousel, Slide, Navigation } from 'vue3-carousel'
 import { useQuasar } from 'quasar';
 
 const $q = useQuasar();
-import { ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 const slide = ref(1);
 const searchTerm = ref("");
 const faq = [
@@ -120,19 +118,19 @@ const faq = [
         answer: "Debes comunicarte con el personal técnico del CECIAC para solicitar soporte técnico y asistencia en caso de problemas con los recursos proporcionados."
     }
 ];
-
 const slides = [
-    { id: 1, title: 'citec', src: 'src/assets/img/app/institutions/citec.jpg' },
-    { id: 2, title: 'epsol', src: 'src/assets/img/app/institutions/epsol.jpg' },
-    { id: 3, title: 'i3lab', src: 'src/assets/img/app/institutions/i3lab.png' },
-    { id: 4, title: 'IncubaUdec', src: 'src/assets/img/app/institutions/IncubaUdeC.png' },
-    { id: 5, title: 'Incutemi', src: 'src/assets/img/app/institutions/incutemi.png' },
-    { id: 5, title: 'Innicia', src: 'src/assets/img/app/institutions/innicia.png' },
-    { id: 6, title: 'Ucsm', src: 'src/assets/img/app/institutions/ucsm.svg' },
-    { id: 7, title: 'Unam', src: 'src/assets/img/app/institutions/unam.jpg' },
-    { id: 8, title: 'Utp', src: 'src/assets/img/app/institutions/utp.png' },
+    { id: 1, title: 'citec', src: 'img/institutions/citec.jpg' },
+    { id: 2, title: 'epsol', src: 'img/institutions/epsol.jpg' },
+    { id: 3, title: 'i3lab', src: 'img/institutions/i3lab.png' },
+    { id: 4, title: 'IncubaUdec', src: 'img/institutions/IncubaUdeC.png' },
+    { id: 5, title: 'Incutemi', src: 'img/institutions/incutemi.png' },
+    { id: 6, title: 'Innicia', src: 'img/institutions/innicia.png' },
+    { id: 7, title: 'Ucsm', src: 'img/institutions/ucsm.svg' },
+    { id: 8, title: 'Unam', src: 'img/institutions/unam.jpg' },
+    { id: 9, title: 'Utp', src: 'img/institutions/utp.png' },
+];
 
-]
+
 </script>
   
 <style scoped lang="scss">
@@ -144,5 +142,27 @@ const slides = [
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.hero-decoration {
+    height: 450px;
+    min-width: 150px;
+    border-radius: 15px;
+    background-position: center;
+    background-size: cover;
+    margin-top: 50px;
+}
+
+.hero-decoration-first {
+    background-image: url('assets/img/app/innovation1.webp');
+}
+
+.hero-decoration-second {
+    background-image: url('assets/img/app/innovation2.jpeg');
+    margin-top: 100px;
+}
+
+.hero-decoration-third {
+    background-image: url('assets/img/app/innovation3.jpeg');
 }
 </style>

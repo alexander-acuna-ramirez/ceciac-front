@@ -6,19 +6,11 @@ function authGuard(
   from: RouteLocationNormalized,
   next: NavigationGuardNext
 ) {
-  const store = useAuthStore();
-  if (!store.isAuthenticated) {
-    alert('no autenticado');
+  const authStore = useAuthStore();
+  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+    next({ path: '/login' });
   }
-  if (to.name === 'Login' && store.isAuthenticated) {
-    next({ name: 'Feed' });
-  } else {
-    if (to.name !== 'Login' && !store.isAuthenticated) {
-      next({ name: 'Login' });
-    } else {
-      next();
-    }
-  }
+  next();
 }
 
 export { authGuard };

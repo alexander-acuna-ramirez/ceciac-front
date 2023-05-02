@@ -2,34 +2,40 @@
 import { ProjectType, Project } from 'src/models';
 import BannerComponent from 'src/components/BannerComponent.vue';
 import { ExploreService } from 'src/services';
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref, watch } from 'vue';
 import ProjectCard from '../Projects/components/ProjectCard.vue';
 
 const searchTerm = ref('');
 const exploreService = new ExploreService();
-const projectCategories = reactive<ProjectType[]>([])
-const projects = reactive<Project[]>([])
+const projectTypes = reactive<ProjectType[]>([]);
+const projects = reactive<Project[]>([]);
 const paginationData = reactive({
     current_page: 1,
     total: 0,
-    last_page: 0
+    last_page: 0,
 });
+const current = ref(1);
+const projectType = ref();
 
 async function getProjectTypes() {
-    const response = await exploreService.getCategories();
-    projectCategories.push(...response.data);
+    const response = await exploreService.getProjectTypes();
+    projectTypes.push(...response.data);
 }
 
-async function getProjects() {
-    const response = await exploreService.getProjects();
+async function getProjects(page = 1) {
+    const response = await exploreService.getProjects(page, searchTerm.value, projectType.value);
+    projects.splice(0, projects.length);
     projects.push(...response.data.data);
     Object.assign(paginationData, response.data);
 }
+watch(current, (val) => {
+    getProjects(val);
+})
 
 onMounted(() => {
     getProjectTypes();
     getProjects();
-})
+});
 </script>
 <template>
     <q-page padding>
@@ -49,15 +55,21 @@ onMounted(() => {
         </div>-->
         <div class="row q-mt-md">
             <div class="col-12 col-md-9">
-                <project-card v-for="project in projects" :project="project" :key="project.id"
-                    class="q-col-md-4 q-col-xs-12"></project-card>
+                <div>
+                    <div class="row q-col-gutter-md">
+                        <project-card v-for="project in projects" :project="project" :key="project.id"
+                            class="q-col-md-4 q-col-xs-12"></project-card>
+                    </div>
+                    <div class="flex flex-center q-mt-md">
+                        <q-pagination v-model="current" :max="paginationData.last_page" />
+                    </div>
+                </div>
             </div>
             <div class="col-12 col-md-3">
                 <div>
                     <q-input v-model="searchTerm" type="text" label="Buscar" filled>
-
                         <template v-slot:append>
-                            <q-icon name="search" />
+                            <q-btn color="primary" icon="search" @click="getProjects()" flat />
                         </template>
                     </q-input>
                 </div>
@@ -98,20 +110,21 @@ onMounted(() => {
                 <q-card class="q-mt-md" flat>
                     <q-card-section>
                         <div class="text-subtitle2 text-bold text-secondary">
-                            Categorias
+                            Tipos de proyectos
                         </div>
                     </q-card-section>
                     <q-card-section>
                         <q-list>
-                            <q-item clickable v-ripple v-for="(category, key) in projectCategories" :key="key">
+                            <q-item clickable v-ripple v-for="(category, key) in     projectTypes    " :key="key"
+                                @click="projectType = category.id; getProjects();" :active="projectType == category.id">
                                 <q-item-section avatar>
-                                    <q-avatar color="primary" text-color="white" size="sm">{{ category.projects_count
-                                    }}</q-avatar>
+                                    <q-avatar color="primary" text-color="white" size="sm">{{
+                                        category.projects_count
+                                        }}</q-avatar>
                                 </q-item-section>
 
                                 <q-item-section>{{ category.name }}</q-item-section>
                             </q-item>
-
                         </q-list>
                     </q-card-section>
                 </q-card>

@@ -22,6 +22,7 @@ const routes: RouteRecordRaw[] = [
           {
             path: 'create/:network?',
             name: 'ProjectCreate',
+            meta: { requiresAuth: true },
             component: () => import('pages/Projects/ProjectCreate.vue'),
           },
           {
@@ -38,6 +39,7 @@ const routes: RouteRecordRaw[] = [
           {
             path: 'create/:network?',
             name: 'EventCreate',
+            meta: { requiresAuth: true },
             component: () => import('pages/Events/EventCreate.vue'),
           },
           {
@@ -61,12 +63,24 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'network-managment',
         name: 'NetworkManagment',
+        meta: { requiresAuth: true },
         component: () => import('pages/Network/NetworkManagement.vue'),
       },
       {
         path: 'explore/projects',
         name: 'ExploreProjectsPage',
         component: () => import('pages/Explore/ExploreProjectsPage.vue'),
+      },
+      {
+        path: 'explore/events',
+        name: 'ExploreEventsPage',
+        component: () => import('pages/Explore/ExploreEventsPage.vue'),
+      },
+
+      {
+        path: '/under-construction',
+        name: 'UnderConstructionPage',
+        component: () => import('../pages/Common/UnderConstruction.vue'),
       },
       /*{
         path: '/:catchAll(.*)*',

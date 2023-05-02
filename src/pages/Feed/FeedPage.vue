@@ -153,7 +153,7 @@
 </template>
 <script setup lang="ts">
 import { ProjectType } from 'src/models';
-import { ProjectTypeService } from '@services/ProjectTypeService';
+import { ProjectTypeService } from 'src/services/ProjectTypeService';
 import { onMounted, reactive } from 'vue';
 
 const projectTypeService = new ProjectTypeService();

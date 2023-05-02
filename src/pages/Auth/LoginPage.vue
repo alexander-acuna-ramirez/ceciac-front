@@ -56,10 +56,10 @@ const onSubmit = async () => {
             <label class="text-secondary">Ingrese a su cuenta</label>
           </div>
           <q-input v-model="userData.email" type="text" label="E-mail" outlined lazy-rules :rules="[
-              (val) => (val && val.length > 0) || 'Ingrese un correo valido',
+              (val: any) => (val && val.length > 0) || 'Ingrese un correo valido',
             ]" />
           <q-input v-model="userData.password" type="password" label="Contraseña" outlined lazy-rules :rules="[
-              (val) =>
+              (val: any) =>
                 (val && val.length > 0) || 'Ingrese una contraseña valida',
             ]" />
 
