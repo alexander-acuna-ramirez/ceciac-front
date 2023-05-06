@@ -1,9 +1,20 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { defineEmits } from 'vue';
 import { useAuthStore } from 'src/stores/auth.store';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const authStore = useAuthStore();
+const emit = defineEmits(['menu-open'])
 
+function logout() {
+  authStore.logout();
+  router.push('/home');
+}
+
+function openMenu() {
+  emit('menu-open')
+}
 </script>
 
 <template>
@@ -34,7 +45,9 @@ const authStore = useAuthStore();
 
       <q-space />
 
-      <div class="q-pl-sm q-gutter-sm row items-center no-wrap">
+      <q-btn v-if="$q.screen.lt.sm" dense flat round icon="menu" color="primary" @click="openMenu" />
+
+      <div v-else class="q-pl-sm q-gutter-sm row items-center no-wrap">
         <q-btn color="primary" outline label="Iniciar Sesión" no-caps to="/login" v-if="!authStore.isAuthenticated" />
 
         <q-btn v-else color="primary" :label="'Bienvenido(a) ' + authStore.getUser.name" no-caps outline>
@@ -46,20 +59,6 @@ const authStore = useAuthStore();
                 </q-item-section>
                 <q-item-section>Gestionar Red</q-item-section>
               </q-item>
-
-              <q-item clickable v-close-popup to="/explore/projects" v-if="$q.screen.lt.sm">
-                <q-item-section avatar>
-                  <q-icon name="groups" />
-                </q-item-section>
-                <q-item-section>Proyectos</q-item-section>
-              </q-item>
-
-              <q-item clickable v-close-popup to="/explore/events" v-if="$q.screen.lt.sm">
-                <q-item-section avatar>
-                  <q-icon name="groups" />
-                </q-item-section>
-                <q-item-section>Eventos</q-item-section>
-              </q-item>
               <q-item clickable v-close-popup>
                 <q-item-section avatar>
                   <q-icon name="settings" />
@@ -67,7 +66,7 @@ const authStore = useAuthStore();
                 <q-item-section>Configuraciones</q-item-section>
               </q-item>
               <q-separator />
-              <q-item clickable v-close-popup @click="authStore.logout">
+              <q-item clickable v-close-popup @click="logout()">
                 <q-item-section avatar>
                   <q-icon name="logout" />
                 </q-item-section>
@@ -76,7 +75,6 @@ const authStore = useAuthStore();
             </q-list>
           </q-menu>
         </q-btn>
-
       </div>
     </q-toolbar>
   </q-header>
