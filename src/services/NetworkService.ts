@@ -10,6 +10,9 @@ export class NetworkService {
   public async uploadLogo(file: FormData, id: string | number) {
     return api.post('/api/v1/network/upload-logo/' + id, file);
   }
+  public async uploadBanner(file: FormData, id: string | number) {
+    return api.post('/api/v1/network/upload-banner/' + id, file);
+  }
 }
 
 //network/upload-logo/{network}

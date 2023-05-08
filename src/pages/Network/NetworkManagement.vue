@@ -42,6 +42,7 @@ async function loadNetwork() {
 }
 async function loadMembers() {
   const response = await networkService.networkMembers(network.id as number);
+  members.splice(0, members.length);
   members.push(...response.data);
   console.log(members);
 }
@@ -68,6 +69,30 @@ function openIconChange() {
   })
 }
 
+function openBannerChange() {
+  $q.dialog({
+    title: 'Banner',
+    message: 'Selecciona el banner de tu institución',
+    prompt: {
+      model: "", // << here is the magic
+      type: 'file',
+      filled: true // optional
+    },
+    cancel: true,
+    persistent: true
+  }).onOk(async (data) => {
+    const files = data as FileList;
+    const logo: File = files.item(0) ?? new File([], "");
+
+    const formData = new FormData();
+    formData.append('network_banner', logo);
+
+    await networkService.uploadBanner(formData, network.id as number);
+    await loadNetwork();
+  })
+}
+
+
 onMounted(() => {
   loadNetwork();
 });
@@ -75,59 +100,77 @@ onMounted(() => {
 </script>
 <template>
   <q-page padding>
-    <div class="row">
-      <div class="flex items-center justify-between" style="width: 100%; min-height: 200px;">
-        <div class="flex items-center">
-          <q-avatar rounded size="100px" font-size="52px" class="my-img">
-            <q-img :src="network.logo?.fullpath" spinner-color="primary" spinner-size="82px">
-              <div class="absolute-full text-subtitle2 flex flex-center my-text" @click="openIconChange">
-                <q-icon name="photo_camera" />
-              </div>
-            </q-img>
-          </q-avatar>
-          <!-- Nombre de la institución -->
-          <div class="q-ml-sm">
-            <div class="text-h4 text-secondary">
-              {{ network.name }}
-            </div>
-            <div class="text-secondary">
-              {{ network.email }}
-            </div>
+    <q-card flat style="border-radius: 15px;">
+      <div class="q-pa-sm">
+        <q-img style="border-radius: 15px;" :src="network.banner?.fullpath" :ratio="16 / 9" height="250px"
+          spinner-color="primary" spinner-size="82px" fit="cover" class="my-img">
+          <div class="absolute-full text-subtitle2 flex flex-center my-text" @click="openBannerChange">
+            <q-icon name="photo_camera" />
+          </div>
+        </q-img>
 
-            <div>
-              <small>{{ network.country?.name }}</small>
+      </div>
+      <q-card-section>
+        <div class="row">
+          <div class="flex items-center justify-between" style="width: 100%; ">
+            <div class="flex items-center">
+              <q-avatar size="120px" font-size="52px" class="my-img" style="border-radius: 15px;">
+                <q-img :src="network.logo?.fullpath" spinner-color="primary" spinner-size="82px">
+                  <div class="absolute-full text-subtitle2 flex flex-center my-text" @click="openIconChange">
+                    <q-icon name="photo_camera" />
+                  </div>
+                </q-img>
+              </q-avatar>
+              <!-- Nombre de la institución -->
+              <div class="q-ml-sm">
+                <div class="text-h4 text-secondary">
+                  {{ network.name }}
+                </div>
+                <div class="text-secondary">
+                  {{ network.email }}
+                </div>
+
+                <div class="flex items-center">
+                  <img :src="'https://flagcdn.com/w20/' + network.country?.iso.toLowerCase() + '.png'" />
+                  <small class="q-ml-sm">{{ network.country?.name }}</small>
+                </div>
+              </div>
             </div>
+            <!-- Chip para el rango de la persona -->
+            <q-chip v-if="networkRepresentative.rank == 1" icon="star" label="Administrador" color="primary" />
+            <q-chip v-if="networkRepresentative.rank == 2" icon="thumb_up" label="Gestor de contenido" color="primary" />
+            <q-chip v-if="networkRepresentative.rank == 3" icon="person" label="Miembro" color="primary" />
           </div>
         </div>
-        <!-- Chip para el rango de la persona -->
-        <q-chip v-if="networkRepresentative.rank == 1" icon="star" label="Administrador" color="primary" />
-        <q-chip v-if="networkRepresentative.rank == 2" icon="thumb_up" label="Gestor de contenido" color="primary" />
-        <q-chip v-if="networkRepresentative.rank == 3" icon="person" label="Miembro" color="primary" />
-      </div>
-    </div>
 
-    <div class="row q-col-gutter-md">
+      </q-card-section>
+    </q-card>
+
+    <div class="row q-col-gutter-md q-mt-sm">
       <div class="col-12 col-md-9">
-        <q-card flat class="q-pa-md">
-          <q-tabs v-model="tab" dense class="text-secondary" active-color="primary" indicator-color="primary"
-            align="justify">
-            <q-tab name="projects" label="Proyectos" />
-            <q-tab name="events" label="Eventos" />
-            <q-tab name="posts" label="Posts" />
+        <q-card flat style="border-radius: 15px;">
+          <q-tabs v-model="tab" class="text-secondary" active-color="primary" indicator-color="primary" align="justify">
+            <q-tab name="projects" label="Proyectos" no-caps />
+            <q-tab name="events" label="Eventos" no-caps />
+            <q-tab name="posts" label="Posts" no-caps />
+            <q-tab name="ajustes" label="Ajustes" no-caps />
           </q-tabs>
-
           <q-separator />
 
           <q-tab-panels v-model="tab">
-            <q-tab-panel name="projects">
+            <q-tab-panel name="projects" class="q-pa-none">
               <projects-management :network="network.id as number"></projects-management>
             </q-tab-panel>
 
-            <q-tab-panel name="events">
+            <q-tab-panel name="events" class="q-pa-none">
               <events-management :network="network.id as number"></events-management>
             </q-tab-panel>
 
-            <q-tab-panel name="posts">
+            <q-tab-panel name="posts" class="q-pa-none">
+              <!--<blog-post-management :network="network.id as number"></blog-post-management>-->
+              <building-page></building-page>
+            </q-tab-panel>
+            <q-tab-panel name="ajustes" class="q-pa-none">
               <!--<blog-post-management :network="network.id as number"></blog-post-management>-->
               <building-page></building-page>
             </q-tab-panel>
@@ -135,7 +178,7 @@ onMounted(() => {
         </q-card>
       </div>
       <div class="col-12 col-md-3">
-        <q-card flat>
+        <q-card flat style="border-radius: 15px;">
           <q-card-section>
             <div class="text-h6 text-primary text-bold">
               Miembros

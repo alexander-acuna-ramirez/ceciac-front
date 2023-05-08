@@ -4,3 +4,4 @@ export * from './ExploreService';
 export * from './NetworkService';
 export * from './ProjectService';
 export * from './ProjectTypeService';
+export * from './RegisterService';

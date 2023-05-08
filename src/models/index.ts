@@ -4,6 +4,8 @@ export * from './Event';
 export * from './File';
 export * from './Network';
 export * from './NetworkRepresentative';
+export * from './Profession';
 export * from './Project';
 export * from './ProjectType';
 export * from './User';
+export * from './UserProfileType';

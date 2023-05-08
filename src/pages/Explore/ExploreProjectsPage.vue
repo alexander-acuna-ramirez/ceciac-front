@@ -53,12 +53,12 @@ onMounted(() => {
                 </div>
             </div>
         </div>-->
-        <div class="row q-mt-md">
+        <div class="row q-mt-md q-col-gutter-md">
             <div class="col-12 col-md-9">
                 <div>
                     <div class="row q-col-gutter-md">
                         <project-card v-for="project in projects" :project="project" :key="project.id"
-                            class="q-col-md-4 q-col-xs-12"></project-card>
+                            class="col-12 col-sm-6 col-md-4 col-lg-3"></project-card>
                     </div>
                     <div class="flex flex-center q-mt-md">
                         <q-pagination v-model="current" :max="paginationData.last_page" />
@@ -120,7 +120,7 @@ onMounted(() => {
                                 <q-item-section avatar>
                                     <q-avatar color="primary" text-color="white" size="sm">{{
                                         category.projects_count
-                                        }}</q-avatar>
+                                    }}</q-avatar>
                                 </q-item-section>
 
                                 <q-item-section>{{ category.name }}</q-item-section>

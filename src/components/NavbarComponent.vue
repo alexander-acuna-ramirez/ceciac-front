@@ -30,17 +30,17 @@ function openMenu() {
 
       <div v-if="$q.screen.gt.sm" class="q-ml-xs q-gutter-md text-body2 text-weight-bold row items-center no-wrap">
         <router-link to="/under-construction" class="text-primary text-bold"
-          style="text-decoration: none;">PORTAFOLIO</router-link>
-        <router-link to="/under-construction" class="text-primary text-bold"
-          style="text-decoration: none;">NOSOTROS</router-link>
+          style="text-decoration: none;">Portafolio</router-link>
+        <router-link to="/our-members" class="text-primary text-bold"
+          style="text-decoration: none;">Nosotros</router-link>
         <router-link to="/explore/projects" class="text-primary text-bold"
-          style="text-decoration: none;">PROYECTOS</router-link>
+          style="text-decoration: none;">Proyectos</router-link>
         <router-link to="/explore/events" class="text-primary text-bold"
-          style="text-decoration: none;">EVENTOS</router-link>
+          style="text-decoration: none;">Eventos</router-link>
         <router-link to="/under-construction" class="text-primary text-bold"
-          style="text-decoration: none;">BLOG</router-link>
+          style="text-decoration: none;">Blog</router-link>
         <router-link to="/under-construction" class="text-primary text-bold"
-          style="text-decoration: none;">REGISTRATE</router-link>
+          style="text-decoration: none;">Registro</router-link>
       </div>
 
       <q-space />
@@ -53,7 +53,7 @@ function openMenu() {
         <q-btn v-else color="primary" :label="'Bienvenido(a) ' + authStore.getUser.name" no-caps outline>
           <q-menu fit>
             <q-list style="min-width: 100px" class="text-secondary">
-              <q-item clickable v-close-popup to="/network-managment">
+              <q-item clickable v-close-popup to="/network-managment" v-if="authStore.getUser.network">
                 <q-item-section avatar>
                   <q-icon name="groups" />
                 </q-item-section>

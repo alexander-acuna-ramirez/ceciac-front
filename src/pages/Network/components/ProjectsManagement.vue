@@ -56,18 +56,18 @@ watch(current, (newX) => {
           :to="{ name: 'ProjectCreate', params: { network: props.network } }" />
       </div>
     </q-card-section>
-    <q-card-section v-if="projects.length > 0" class="row q-gutter-md">
+    <q-card-section v-if="projects.length > 0" class="row q-col-gutter-lg ">
       <project-card v-for="project in projects" :project="project" :key="project.id"
-        class="q-col-md-4 q-col-xs-12"></project-card>
+        class="col-12 col-sm-6 col-md-4 col-lg-3"></project-card>
     </q-card-section>
-    <q-card-section v-if="projects.length > 0">
+    <q-card-section v-if="projects.length > 0 && paginationData.last_page != 1">
       <div class="q-pa-lg flex flex-center">
         <q-pagination v-model="current" :max="paginationData.last_page" />
       </div>
     </q-card-section>
-    <q-card-section v-else>
+    <q-card-section v-if="projects.length == 0">
       <empty-results titulo="No existen projectos" descripcion="Puedes crear uno!"></empty-results>
     </q-card-section>
   </q-card>
 </template>
-<style></style>
+<style lang="scss"></style>

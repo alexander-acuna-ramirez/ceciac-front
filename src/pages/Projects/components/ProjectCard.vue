@@ -1,41 +1,3 @@
-<template>
-    <router-link :to="'/project/detail/' + project.id">
-        <q-card class="my-card" flat bordered style="max-width: 290px; height: auto">
-            <q-img v-if="project.files?.length" :src="project.files[0].fullpath" :name="project.files[0].filename"
-                spinner-color="primary" spinner-size="82px" style="min-height: 220px" />
-            <q-img v-else src="~assets/img/app/default-image.jpg" spinner-color="primary" spinner-size="82px" />
-            <q-card-section>
-                <div class="row no-wrap items-center">
-                    <div class="col text-h6 ellipsis">
-                        {{ project.name }}
-                    </div>
-                    <div class="col-auto text-grey text-caption q-pt-md row no-wrap items-center">
-                        {{ project.type?.name }}
-                    </div>
-                </div>
-            </q-card-section>
-
-            <q-card-section class="q-pt-none">
-                <div class="text-subtitle1">
-                    {{ project.network?.name }}
-                </div>
-                <div class="text-caption text-grey text-description">
-                    {{ project.description }}
-                </div>
-            </q-card-section>
-
-            <q-separator />
-
-            <q-card-actions>
-                <q-btn flat round icon="event" />
-                <q-btn flat color="primary">
-                    {{ project.release_date }} | {{ project.end_date }}
-                </q-btn>
-            </q-card-actions>
-        </q-card>
-    </router-link>
-</template>
-
 <script lang="ts" setup>
 import { Project } from 'src/models';
 import { ref } from 'vue';
@@ -46,7 +8,48 @@ defineProps({
         type: Object as () => Project,
     },
 });
+
+function formatDate(date: string) {
+    const fecha = new Date("2003-07-02");
+    const fechaFormateada = fecha.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' });
+    return fechaFormateada;
+}
 </script>
+<template>
+    <div>
+        <q-card class="my-card" flat bordered>
+
+            <q-img v-if="project.files?.length" :src="project.files[0].fullpath" :name="project.files[0].filename"
+                spinner-color="primary" spinner-size="82px" style="height: 280px; " />
+            <q-img v-else src="~assets/img/app/default-image.jpg" spinner-color="primary" spinner-size="82px"
+                style="height: 280px; " />
+
+            <q-card-section class="flex justify-between">
+                <div>
+                    <div class="text-caption text-primary">
+                        {{ project.type?.name }}
+                    </div>
+
+                    <div class="text-subtitle1 text-secondary">
+                        {{ project.name }}
+                    </div>
+
+                </div>
+
+                <div class="flex items-center">
+                    <q-icon name="calendar_today" />
+                    {{ formatDate(project.release_date) }}
+                </div>
+            </q-card-section>
+
+            <q-card-actions class="q-pa-md">
+                <q-btn :to="'/project/detail/' + project.id" color="primary" label="Ver Detalles" outline
+                    style="width: 100%; border-radius: 8px;" no-caps />
+            </q-card-actions>
+        </q-card>
+    </div>
+</template>
+
 <style scoped lang="scss">
 a {
     text-decoration: none;
@@ -54,5 +57,10 @@ a {
     cursor: pointer;
     background-color: transparent;
     border: none;
+}
+
+.my-card {
+    height: auto;
+    border-radius: 15px;
 }
 </style>

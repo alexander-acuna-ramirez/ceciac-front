@@ -2,8 +2,8 @@
     <q-page padding>
         <!--HERO-->
         <section class="row" style="min-height: 450px;">
-            <div class="col-12 col-sm-12 col-md-6 q-pa-sm flex items-center">
-                <div style="text-align: center;" class="q-py-md">
+            <div class="col-12 col-sm-12 col-md-6 q-pa-sm flex items-center justify-center">
+                <div style="text-align: left; width: 80%;" class="q-py-md">
                     <small class="text-bold text-secondary text-uppercase">Inicia un nuevo proyecto aquí!</small>
                     <div class="text-h3 text-bold text-secondary ">Plataforma de integración de la
                         RED <span class="text-primary">CECIAC</span></div>
@@ -27,7 +27,7 @@
             </div>
 
             <div class="col-12 col-sm-12 col-md-6 flex items-center justify-center">
-                <div class="flex flex-center justify-center no-wrap">
+                <div class="flex flex-center justify-center no-wrap" style="width: 80%;">
                     <div class="hero-decoration hero-decoration-first">
 
                     </div>
@@ -145,12 +145,12 @@ const slides = [
 }
 
 .hero-decoration {
-    height: 450px;
+    height: 60vh;
+    width: 33.33%;
     min-width: 150px;
     border-radius: 15px;
     background-position: center;
     background-size: cover;
-    margin-top: 50px;
 }
 
 .hero-decoration-first {
