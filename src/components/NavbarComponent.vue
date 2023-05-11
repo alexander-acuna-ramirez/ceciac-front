@@ -48,9 +48,12 @@ function openMenu() {
       <q-btn v-if="$q.screen.lt.sm" dense flat round icon="menu" color="primary" @click="openMenu" />
 
       <div v-else class="q-pl-sm q-gutter-sm row items-center no-wrap">
-        <q-btn color="primary" outline label="Iniciar Sesión" no-caps to="/login" v-if="!authStore.isAuthenticated" />
+        <q-btn style="box-shadow: none;" color="primary" rounded no-caps to="/login" v-if="!authStore.isAuthenticated">
+          <small><strong>Iniciar Sesión</strong></small>
+        </q-btn>
 
-        <q-btn v-else color="primary" :label="'Bienvenido(a) ' + authStore.getUser.name" no-caps outline>
+        <q-btn v-else style="box-shadow: none;" rounded color="primary" :label="'Bienvenido(a) ' + authStore.getUser.name"
+          no-caps>
           <q-menu fit>
             <q-list style="min-width: 100px" class="text-secondary">
               <q-item clickable v-close-popup to="/network-managment" v-if="authStore.getUser.network">

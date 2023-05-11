@@ -8,6 +8,8 @@ interface Member {
     role: string,
     foto?: string,
     id?: string,
+    iso?: string,
+    country?: string,
 }
 interface NetworkCountry {
     country: string,
@@ -79,7 +81,7 @@ const members = reactive<NetworkCountry[]>([
                 institucion: "Centro de Emprendimiento e Innovación i3 lab -ESPOL",
                 role: "Miembro",
                 id: "9a333dba-ec1d-11ed-a05b-0242ac120003",
-                foto: "https://i.ibb.co/g36mx7T/9a333dba-ec1d-11ed-a05b-0242ac120003.jpg",
+                foto: "https://i.ibb.co/1qbf0vX/i3lab-13-Johanna-Pelay.jpg",
             },
             {
                 name: "Johanna Pelay Fajardo",
@@ -191,7 +193,7 @@ const selected = ref("ALL");
 const membersSelected = computed(() => {
     const data: Member[] = [];
     if (selected.value == "ALL") {
-        members.forEach((e) => data.push(...e.members))
+        members.forEach((e) => data.push(...e.members.map((m) => { return { ...m, iso: e.icon, country: e.country } })))
     }
     return data;
 })
@@ -208,48 +210,98 @@ const membersSelected = computed(() => {
                 <div class="subtitle2 text-center text-secondary q-mt-md">
                     Descubre a los especialistas de CECIAC que hacen posible la innovación y el crecimiento empresarial.
                 </div>
-                <div class="flex justify-center items-center flex-wrap">
-                    <q-chip size="sm" color="secondary" text-color="white" outline>
-                        <strong>Todos</strong>
-                    </q-chip>
+                <!--<div class="flex justify-center items-center flex-wrap">
                     <q-chip size="sm" color="secondary" text-color="white" v-for="(tag, idx) in members" :key="idx">
                         <q-avatar>
                             <img :src="tag.icon">
                         </q-avatar>
                         <strong> {{ tag.country }}</strong>
                     </q-chip>
-                </div>
+                </div>-->
             </div>
 
 
 
         </div>
 
-        <div class="row q-col-gutter-md q-mt-md flex">
-            <div class="col-12 col-sm-6 col-md-3 flex justify-center" v-for="(member, key) in membersSelected" :key="key">
-                <q-card flat style="border-radius: 15px; width: 350px;">
+        <div class="row q-col-gutter-md q-mt-md">
+            <div class="col-12 col-sm-6 col-md-4 flex justify-center" v-for="(member, key) in membersSelected" :key="key">
+                <div class="main-card-container">
+                    <q-card class="card-flip" flat>
 
-                    <q-img :src="member.foto" spinner-color="primary" spinner-size="82px" height="350px"
-                        style="border-radius: 15px;" />
-                    <q-card-section>
-                        <div class="row">
-                            <div>
-                                <div class="text-subtitle1 text-primary">
-                                    <small>{{ member.institucion }}</small>
+                        <div class="front">
+                            <q-img :src="member.foto" spinner-color="primary" spinner-size="82px" height="350px"
+                                width="100%" style="border-radius: 15px 15px 0px 0px;" />
+                            <q-card-section>
+
+                                <div>
+                                    <div class="text-subtitle2 text-primary">
+                                        <small>{{ member.institucion }}</small>
+                                    </div>
+                                    <div class="text-secondary text-bold subtitle1 flex justify-between">
+                                        <span>
+                                            {{ member.name }}
+                                        </span>
+                                        <q-chip size="sm" color="secondary" text-color="white">
+                                            <q-avatar>
+                                                <img :src="member.iso">
+                                            </q-avatar>
+                                            {{ member.country }}
+                                        </q-chip>
+                                    </div>
                                 </div>
-                                <div class="text-secondary text-bold text-h6">
-                                    {{ member.name }}
-                                </div>
-                            </div>
+                            </q-card-section>
                         </div>
-                    </q-card-section>
-                </q-card>
+                        <div class="back bg-secondary text-white" style="border-radius: 15px;">
+                            <span class="text-bold text-primary">Resumen: </span>
+                            {{ member.bio }}
+                        </div>
+
+
+                    </q-card>
+                </div>
             </div>
         </div>
 
 
     </q-page>
 </template>
-<style lang="">
-    
+<style lang="scss">
+.main-card-container {
+    position: relative;
+    height: 450px;
+    width: 350px;
+
+    border-radius: 15px;
+}
+
+.card-flip {
+    width: 100%;
+    position: absolute;
+    border-radius: 15px;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: all 0.5s ease;
+}
+
+.card-flip:hover {
+    transform: rotateY(180deg);
+}
+
+.front {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    backface-visibility: hidden;
+}
+
+.back {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    backface-visibility: hidden;
+    transform: rotateY(180deg);
+    overflow-y: scroll;
+    padding: 25px;
+}
 </style>

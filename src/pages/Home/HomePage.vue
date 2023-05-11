@@ -56,16 +56,18 @@
 
             <div style="width: 100%;" class="q-my-lg">
 
-                <Carousel :wrap-around="true" :autoplay="3000" :items-to-show="($q.screen.lt.sm) ? 1 : 3">
+                <Carousel :wrap-around="true" :items-to-show="itemsToShow" :autoplay="5000">
                     <Slide v-for="slide in slides" :key="slide.id">
                         <div class="carousel__item">
-                            <q-img :src="slide.src" spinner-color="primary" spinner-size="82px" style="width: 80px;" />
+                            <q-img :src="slide.src" spinner-color="primary" spinner-size="82px"
+                                class="carousel__item-image" />
                         </div>
                     </Slide>
                     <template #addons>
                         <Navigation />
                     </template>
                 </Carousel>
+
             </div>
 
         </section>
@@ -91,6 +93,7 @@
 import 'vue3-carousel/dist/carousel.css'
 import { Carousel, Slide, Navigation } from 'vue3-carousel'
 import { useQuasar } from 'quasar';
+import { computed } from 'vue';
 
 const $q = useQuasar();
 import { onMounted, reactive, ref } from 'vue';
@@ -120,15 +123,31 @@ const faq = [
 ];
 const slides = [
     { id: 1, title: 'citec', src: 'img/institutions/citec.jpg' },
-    { id: 2, title: 'epsol', src: 'img/institutions/epsol.jpg' },
-    { id: 3, title: 'i3lab', src: 'img/institutions/i3lab.png' },
-    { id: 4, title: 'IncubaUdec', src: 'img/institutions/IncubaUdeC.png' },
-    { id: 5, title: 'Incutemi', src: 'img/institutions/incutemi.png' },
-    { id: 6, title: 'Innicia', src: 'img/institutions/innicia.png' },
+    { id: 2, title: 'espol', src: 'img/institutions/epsol.jpg' },
+    //{ id: 3, title: 'i3lab', src: 'img/institutions/i3lab.png' },
+    //{ id: 4, title: 'IncubaUdec', src: 'img/institutions/IncubaUdeC.png' },
+    //{ id: 5, title: 'Incutemi', src: 'img/institutions/incutemi.png' },
+    //{ id: 6, title: 'Innicia', src: 'img/institutions/innicia.png' },
+
     { id: 7, title: 'Ucsm', src: 'img/institutions/ucsm.svg' },
     { id: 8, title: 'Unam', src: 'img/institutions/unam.jpg' },
-    { id: 9, title: 'Utp', src: 'img/institutions/utp.png' },
+    { id: 9, title: 'Utp', src: 'img/institutions/utp.jpg' },
+    { id: 10, title: 'Upc', src: 'img/institutions/upc.png' }
 ];
+
+const itemsToShow = computed(() => {
+    let value = 1;
+    if ($q.screen.gt.sm) {
+        value = 2;
+    }
+    if ($q.screen.gt.md) {
+        value = 3;
+    }
+    if ($q.screen.gt.lg) {
+        value = 4;
+    }
+    return value
+});
 
 
 </script>
@@ -137,11 +156,17 @@ const slides = [
 .carousel__item {
     background-color: white;
     border-radius: 5px;
-    width: 200px;
-    height: 150px;
+    width: 80%;
+    height: 250px;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 5px;
+
+    .carousel__item-image {
+        height: auto;
+        width: 50%;
+    }
 }
 
 .hero-decoration {

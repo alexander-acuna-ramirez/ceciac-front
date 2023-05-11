@@ -16,7 +16,6 @@
                 <div class="text-h6 text-weight-bold">Important Links</div>
                 <ul class="link-list">
                     <li><router-link class="text-white" to="/about">About Us</router-link></li>
-                    <li><router-link class="text-white" to="/shop">Shop</router-link></li>
                     <li><router-link class="text-white" to="/contact">Contact Us</router-link></li>
                     <li><router-link class="text-white" to="/blog">Blog</router-link></li>
                 </ul>
