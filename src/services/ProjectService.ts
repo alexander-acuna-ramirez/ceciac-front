@@ -28,4 +28,17 @@ export class ProjectService {
     }
     return api.get(url);
   }
+
+  public participate(project: string | number) {
+    return api.get('api/v1/project/participate/' + project);
+  }
+
+  public projectParticipation(project: string | number) {
+    return api.get('api/v1/project/project-participation/' + project);
+  }
 }
+
+/*
+Route::get('project/participate/{project}', [ProjectController::class, 'participate']);
+        Route::get('project/project-participation/{project}', [ProjectController::class, 'projectParticipation']);
+*/

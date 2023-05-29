@@ -61,8 +61,22 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/Feed/FeedPage.vue'),
       },
       {
-        path: 'profile',
+        path: 'profile/:user',
         name: 'Profile',
+        redirect: '',
+        children: [
+          {
+            path: 'experiences',
+            name: 'ProfileExperiences',
+            component: () =>
+              import('pages/User/components/ProfileExperiences.vue'),
+          },
+          {
+            path: '',
+            name: 'ProfileFeed',
+            component: () => import('pages/User/components/ProfileFeed.vue'),
+          },
+        ],
         component: () => import('pages/User/ProfilePage.vue'),
       },
       {

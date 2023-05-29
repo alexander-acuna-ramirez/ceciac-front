@@ -14,5 +14,6 @@
     "/src/services",
     "/src/composables",
     "/src/utils"
-  ]
+  ],
+  "vue.codeActions.enabled": false
 }

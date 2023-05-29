@@ -8,6 +8,8 @@ const projectService = new ProjectService();
 const route = useRoute();
 
 const slide = ref(1);
+
+const participating = ref(false);
 const project = reactive<Project>({
   name: '',
   description: '',
@@ -18,9 +20,6 @@ const project = reactive<Project>({
   type_id: null,
 });
 
-function participate() {
-  // Aquí se podría agregar la lógica para participar en el proyecto
-}
 async function loadProject() {
   try {
     let { id } = route.params as RouteParams;
@@ -32,35 +31,83 @@ async function loadProject() {
   }
 }
 
+async function loadParticipation() {
+  try {
+    let { id } = route.params as RouteParams;
+    const response = await projectService.projectParticipation(id as string);
+    if (response.status == 200) {
+      participating.value = true;
+    }
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function enroll() {
+  try {
+    let { id } = route.params as RouteParams;
+    const response = await projectService.participate(id as string);
+    if (response.status == 200) {
+      participating.value = true;
+    }
+  } catch (e) {
+    console.error(e);
+  } finally {
+    loadParticipation();
+  }
+}
+
 onMounted(() => {
   loadProject();
+  loadParticipation();
 });
 </script>
 <template>
-  <q-page padding class="q-px-xl">
+  <q-page padding>
     <div class="row q-col-gutter-md">
       <div class="col-12">
-        <q-carousel :swipeable="true" :autoplay="true" :vertical="true" animated v-model="slide" arrows navigation
-          infinite>
-          <q-carousel-slide :key="idx" v-for="(file, idx) in project.files" :name="file.filename"
-            :img-src="file.fullpath" />
-        </q-carousel>
+
+
+        <q-card flat class="rounded-corners">
+          <q-card-section>
+            <q-carousel :swipeable="true" :autoplay="true" :vertical="true" animated v-model="slide" arrows navigation
+              infinite>
+              <q-carousel-slide :key="idx" v-for="(file, idx) in project.files" :name="file.filename"
+                :img-src="file.fullpath" />
+            </q-carousel>
+          </q-card-section>
+          <q-card-section>
+            <div class="row q-py-md">
+              <div class="col-12">
+                <div class="text-h4 text-secondary text-bold">
+                  {{ project.name }}
+                </div>
+                <div class="text-subtitle1 text-secondary">
+                  <q-avatar rounded size="30px" font-size="52px" text-color="white" class="my-img">
+                    <q-img :src="project.network?.logo?.fullpath" spinner-color="primary" spinner-size="82px"></q-img>
+                  </q-avatar>
+                  {{ project.network?.name }}
+                </div>
+              </div>
+            </div>
+          </q-card-section>
+        </q-card>
       </div>
     </div>
     <div class="row q-col-gutter-md q-mt-sm">
 
-      <div class="col-9">
-        <q-card flat>
+      <div class="col-12 col-md-9">
+        <q-card flat class="rounded-corners">
           <q-card-section>
-            <div class="q-pa-md text-primary text-bold text-h4">
+            <!--<div class="q-pa-md text-primary text-bold text-h4">
               {{ project.name }}
-            </div>
+            </div>-->
             <div class="q-pa-md" v-html="project.synopsis"></div>
           </q-card-section>
         </q-card>
       </div>
-      <div class="col-3">
-        <q-card flat>
+      <div class="col-12 col-md-3">
+        <q-card flat class="rounded-corners">
           <q-card-section>
             <div class="text text-bold text-primary">
               Organizador
@@ -68,7 +115,7 @@ onMounted(() => {
           </q-card-section>
           <q-card-section>
             <div>
-              <q-avatar rounded size="30px" font-size="52px" color="teal" text-color="white" class="my-img">
+              <q-avatar rounded size="30px" font-size="52px" text-color="white" class="my-img">
                 <q-img :src="project.network?.logo?.fullpath" spinner-color="primary" spinner-size="82px"></q-img>
               </q-avatar>
 
@@ -76,7 +123,7 @@ onMounted(() => {
             </div>
           </q-card-section>
         </q-card>
-        <q-card flat class="q-mt-sm">
+        <q-card flat class="q-mt-sm  rounded-corners">
           <q-card-section>
             <div class="text text-bold text-primary text-h6">
               Datos Generales
@@ -108,7 +155,7 @@ onMounted(() => {
           </q-card-section>
         </q-card>
 
-        <q-card flat class="q-mt-sm">
+        <q-card flat class="q-mt-sm rounded-corners">
           <q-card-section>
             <div class="text text-bold text-primary text-h6">
               Tags
@@ -127,8 +174,10 @@ onMounted(() => {
 
           </q-card-section>
         </q-card>
-
-        <q-btn class="q-mt-md" style="width: 100%;" color="primary" label="Participar" @click="participate" />
+        <q-btn class="q-mt-md" :disable="participating" style="box-shadow: none; width: 100%;" color="primary" rounded
+          no-caps @click="enroll">
+          <strong>{{ (participating) ? 'Inscrito' : 'Participar' }}</strong>
+        </q-btn>
       </div>
     </div>
   </q-page>

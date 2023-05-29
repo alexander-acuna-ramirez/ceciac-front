@@ -28,7 +28,7 @@ const registerUser = reactive<User>({
   id_logo: null,
   id_banner: null,
   id_profession: null,
-  id_country: "",
+  id_country: '',
   email_verified_at: null,
 });
 const countries = reactive<Country[]>([]);
@@ -201,17 +201,17 @@ onMounted(() => {
           <div class="text-h4 text-secondary text-bold q-pa-sm q-mb-sm">Iniciar sesión</div>
           <div class="row">
             <q-input class="col-12" v-model="userData.email" type="text" label="E-mail" filled lazy-rules :rules="[
-              (val: any) => (val && val.length > 0) || 'Ingrese un correo válido',
-            ]">
+                (val: any) => (val && val.length > 0) || 'Ingrese un correo válido',
+              ]">
               <template v-slot:append>
                 <q-icon name="alternate_email" />
               </template>
             </q-input>
             <q-input class="col-12" v-model="userData.password" type="password" label="Contraseña" filled lazy-rules
               :rules="[
-                (val: any) =>
-                  (val && val.length > 0) || 'Ingrese una contraseña válida',
-              ]">
+                  (val: any) =>
+                    (val && val.length > 0) || 'Ingrese una contraseña válida',
+                ]">
               <template v-slot:append>
                 <q-icon name="lock" />
               </template>
@@ -322,14 +322,13 @@ form {
 
 .container {
   background-color: #fff;
-  border-radius: 10px;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
     0 10px 10px rgba(0, 0, 0, 0.22);
   position: relative;
   overflow: hidden;
-  width: 80%;
+  width: 100%;
   max-width: 100%;
-  min-height: 80%;
+  min-height: 100%;
 }
 
 .form-container {
@@ -410,8 +409,8 @@ form {
 
 @media (max-width: $breakpoint-sm-max) {
   .container {
-    width: 80%;
-    height: 95%;
+    width: 100%;
+    height: 100%;
   }
 
   .sign-up-container {
@@ -451,8 +450,8 @@ form {
 
 @media (max-width: $breakpoint-xs-max) {
   .container {
-    width: 95%;
-    height: 95%;
+    width: 100%;
+    height: 100%;
   }
 
   form {

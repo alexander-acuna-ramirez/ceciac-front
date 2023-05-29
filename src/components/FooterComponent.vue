@@ -1,6 +1,14 @@
 <template>
-    <footer class="bg-secondary text-white q-pa-xl">
-        <div class="row">
+  <footer class="bg-secondary text-white q-pa-md">
+    <div class="row">
+      <div class="col-12">
+        <div class="text-center p-3" style="color: grey; font-size: 0.75rem;">
+          ©{{ new Date().getFullYear() }} CECIAC - Todos los derechos reservados.
+        </div>
+
+      </div>
+    </div>
+    <!--<div class="row">
             <div class="col-12 col-md-3">
                 <div class="flex items-center">
                     <router-link to="/" class="col-logo-img">
@@ -39,8 +47,8 @@
                     <li><router-link class="text-white" to="/forums">Forums</router-link></li>
                 </ul>
             </div>
-        </div>
-    </footer>
+        </div>-->
+  </footer>
 </template>
 <script>
 export default {};
@@ -48,25 +56,25 @@ export default {};
 
 <style lang="scss">
 .logo-img {
-    height: 50px;
-    width: 50px;
-    height: auto;
-    margin-right: 15px;
+  height: 50px;
+  width: 50px;
+  height: auto;
+  margin-right: 15px;
 }
 
 .link-list {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 
 .link-list li {
-    margin-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .link-list li a {
-    text-decoration: none;
-    color: inherit;
-    font-weight: 500;
+  text-decoration: none;
+  color: inherit;
+  font-weight: 500;
 }
 </style>

@@ -56,6 +56,12 @@ function openMenu() {
           no-caps>
           <q-menu fit>
             <q-list style="min-width: 100px" class="text-secondary">
+              <q-item clickable v-close-popup :to="'/profile/' + authStore.getUser.id">
+                <q-item-section avatar>
+                  <q-icon name="person" />
+                </q-item-section>
+                <q-item-section>Perfil</q-item-section>
+              </q-item>
               <q-item clickable v-close-popup to="/network-managment" v-if="authStore.getUser.network">
                 <q-item-section avatar>
                   <q-icon name="groups" />
