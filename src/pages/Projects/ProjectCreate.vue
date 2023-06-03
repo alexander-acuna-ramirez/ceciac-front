@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref, onMounted, watch } from 'vue';
+import { reactive, ref, onMounted } from 'vue';
 import { ProjectType, Project } from 'src/models';
 import { QStepper } from 'quasar';
 import { useQuasar } from 'quasar';
@@ -100,13 +100,79 @@ function nextStep() {
 <template>
   <q-page padding>
     <div class="row q-col-gutter-md">
-      <div class="col-12 flex flex-center justify-center">
+      <!--<div class="col-12 flex flex-center justify-center">
         <banner-component description="Explora nuevos proyectos"
           title="Empieza un nuevo proyecto aqui!"></banner-component>
-      </div>
+      </div>-->
       <div class="col-12 flex flex-center justify-center">
-        <q-stepper v-model="step" ref="stepper" color="primary" animated flat style="width: 100%;">
-          <q-step :name="1" title="Información Básica" icon="settings" :done="step > 1">
+        <q-stepper v-model="step" ref="stepper" color="primary" animated flat style="width: 100%;"
+          class="rounded-corners">
+
+          <template v-slot:message>
+            <q-banner v-if="step === 0" class="q-px-lg">
+              <div class="text-h5 text-bold text-primary">
+                Escojamos el tipo de proyecto
+              </div>
+              <div class="text-subtitle2 text-accent">
+                Escoge el tipo de proyecto que deseas publicar a continuación
+              </div>
+            </q-banner>
+            <q-banner v-else-if="step === 1" class="q-px-lg">
+              <div class="text-h5 text-bold text-primary">
+                Escojamos el tipo de proyecto
+              </div>
+              <div class="text-subtitle2 text-accent">
+                Escoge el tipo de proyecto que deseas publicar a continuación
+              </div>
+            </q-banner>
+            <q-banner v-else-if="step === 2" class="bg-green-8 text-white q-px-lg">
+              The Ad template is disabled - this won't be displayed
+            </q-banner>
+            <q-banner v-else class="bg-blue-8 text-white q-px-lg">
+              The final step is creating the ad...
+            </q-banner>
+          </template>
+
+
+
+          <q-step :name="0" title="Información Básica" icon="settings" :done="step > 1">
+
+            <div class="row q-col-gutter-xl">
+              <div class="col-12 col-md-4">
+                <q-card class="w-full">
+                  <q-img src="~assets/img/app/projectTypes/projectType-1.webp" spinner-color="primary"
+                    spinner-size="82px">
+                    <div class="absolute-bottom text-subtitle1 text-center">
+                      Emprendimiento
+                    </div>
+                  </q-img>
+                </q-card>
+              </div>
+
+              <div class="col-12 col-md-4">
+                <q-card class="w-full">
+                  <q-img src="~assets/img/app/projectTypes/projectType-2.webp" spinner-color="primary"
+                    spinner-size="82px">
+                    <div class="absolute-bottom text-subtitle1 text-center">
+                      Innovación
+                    </div>
+                  </q-img>
+                </q-card>
+
+              </div>
+              <div class="col-12 col-md-4">
+                <q-card class="w-full">
+                  <q-img src="~assets/img/app/projectTypes/projectType-3.webp" spinner-color="primary"
+                    spinner-size="82px">
+                    <div class="absolute-bottom text-subtitle1 text-center">
+                      <strong>Investigación</strong>
+                    </div>
+                  </q-img>
+                </q-card>
+              </div>
+            </div>
+          </q-step>
+          <q-step :name="1" title="Información Básica" icon="settings" :done="step > 1" class="q-px-lg">
             <q-form ref="firstStepForm" class="q-gutter-md">
               <div class="row q-col-gutter-md">
                 <div class="col-12 col-md-6">
@@ -249,8 +315,10 @@ function nextStep() {
             <q-stepper-navigation class="flex justify-end">
               <q-btn v-if="step > 1" flat color="primary" @click="($refs.stepper as QStepper).previous()" label="Atras"
                 class="q-ml-sm" icon="chevron_left" />
-              <q-btn @click="nextStep()" color="primary" :label="step === 4 ? 'Terminar' : 'Continuar'"
-                :icon="step === 4 ? 'save' : 'chevron_right'" />
+
+              <q-btn @click="nextStep()" color="primary" :icon="step === 4 ? 'save' : 'chevron_right'" rounded>
+                <strong>{{ (step === 4) ? 'Terminar' : 'Continuar' }}</strong>
+              </q-btn>
             </q-stepper-navigation>
           </template>
         </q-stepper>

@@ -24,7 +24,6 @@ const educationDefault = reactive<Education>({
   degree: null,
   description: '',
 });
-const activity = ref('');
 const profileService = new ProfileService();
 const creationDialog = ref(false);
 function openCreationDialog() {
