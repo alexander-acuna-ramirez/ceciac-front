@@ -15,5 +15,8 @@
     "/src/composables",
     "/src/utils"
   ],
-  "vue.codeActions.enabled": false
+  "vue.codeActions.enabled": false,
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  }
 }

@@ -1,4 +1,5 @@
 export * from './AuthService';
+export * from './BlogService';
 export * from './EventService';
 export * from './ExploreService';
 export * from './NetworkService';
@@ -6,3 +7,4 @@ export * from './ProfileService';
 export * from './ProjectService';
 export * from './ProjectTypeService';
 export * from './RegisterService';
+export * from './TagService';

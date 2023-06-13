@@ -37,6 +37,27 @@ const routes: RouteRecordRaw[] = [
           },
         ],
       },
+
+      {
+        path: 'blog',
+        name: 'Blog',
+        children: [
+          {
+            path: 'create/:network?',
+            name: 'PostCreate',
+            meta: { requiresAuth: true },
+            component: () => import('pages/Blog/PostCreate.vue'),
+          },
+
+          {
+            path: 'detail/:id',
+            name: 'PostPage',
+            component: () => import('pages/Blog/PostPage.vue'),
+          },
+
+        ],
+      },
+
       {
         path: 'event',
         name: 'Event',
@@ -101,16 +122,26 @@ const routes: RouteRecordRaw[] = [
         name: 'UnderConstructionPage',
         component: () => import('../pages/Common/UnderConstruction.vue'),
       },
-      /*{
-        path: '/:catchAll(.*)*',
-        component: () => import('pages/ErrorNotFound.vue'),
-      },*/
     ],
   },
   {
     path: '/login',
     name: 'Login',
     component: () => import('../pages/Auth/LoginPage.vue'),
+  },
+  {
+    path: '/recover-password',
+    name: 'RecoverPassword',
+    component: () => import('../pages/Auth/RecoverPassword.vue'),
+  },
+
+  {
+    path: '/change-password',
+    name: 'ResetPassword',
+    component: () => import('../pages/Auth/ResetPassword.vue'),
+    props: (route) => ({
+      token: route.query.token || '',
+    }),
   },
   {
     path: '/:catchAll(.*)*',

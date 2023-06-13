@@ -6,3 +6,19 @@ body {
 .rounded-corners {
   border-radius: 15px !important;
 }
+
+.containerPage {
+  width: 80%;
+}
+
+@media (max-width: $breakpoint-md-min) {
+  .containerPage {
+    width: 95%;
+  }
+}
+
+@media (min-width: $breakpoint-md-max) {
+  .containerPage {
+    width: 60%;
+  }
+}

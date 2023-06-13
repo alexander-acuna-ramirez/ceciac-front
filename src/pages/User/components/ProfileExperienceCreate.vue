@@ -103,17 +103,17 @@ function filterFn(val: string, update: any) {
         <q-form @submit="save">
           <div class="row q-col-gutter-sm">
             <q-input :rules="[Rules.required]" placeholder="Ej. Ingeniero de Sistemas" class="col-md-6 col-12"
-              v-model="experience.title" label="Titulo" filled />
+              v-model="experience.title" label="Titulo" outlined />
 
             <q-input :rules="[Rules.required]" class="col-md-6 col-12" v-model="experience.company"
-              label="Nombre de la empresa" filled />
+              label="Nombre de la empresa" outlined />
             <q-input :rules="[Rules.required]" rows="2" class="col-12" v-model="experience.description" type="textarea"
-              label="Descripción del cargo" filled />
+              label="Descripción del cargo" outlined />
 
             <q-input :rules="[Rules.required]" placeholder="Ej. 123 Main St, Anytown USA 12345" class="col-12"
-              v-model="experience.location" label="Ubicación" filled />
+              v-model="experience.location" label="Ubicación" outlined />
 
-            <q-input class="col-12 col-md-6" filled v-model="experience.start_date" mask="date"
+            <q-input class="col-12 col-md-6" outlined v-model="experience.start_date" mask="date"
               :rules="['date', Rules.required]" label="Fecha de inicio">
               <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
@@ -128,7 +128,7 @@ function filterFn(val: string, update: any) {
               </template>
             </q-input>
 
-            <q-input class="col-12 col-md-6" label="Fecha de finalización" filled v-model="experience.end_date"
+            <q-input class="col-12 col-md-6" label="Fecha de finalización" outlined v-model="experience.end_date"
               mask="date">
               <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
@@ -142,7 +142,7 @@ function filterFn(val: string, update: any) {
                 </q-icon>
               </template>
             </q-input>
-            <q-select class="col-12" filled v-model="experience.skills" use-input use-chips multiple input-debounce="0"
+            <q-select class="col-12" outlined v-model="experience.skills" use-input use-chips multiple input-debounce="0"
               @new-value="createValue" :options="jobSkills" @filter="filterFn" hint="Skills seleccionadas: " counter />
           </div>
 

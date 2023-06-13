@@ -11,6 +11,8 @@ export const Rules = {
     'El archivo es demasiado grande, el tamaño máximo permitido es de 1 MB.',
   minLength: (value: string, length: number) =>
     value.length >= length || `La longitud mínima es de ${length} caracteres.`,
+  maxLength: (value: string) =>
+    value.length <= 255 || `La longitud maxima es de 255 caracteres.`,
   orcid: (val: string) => {
     if (val && val.trim() !== '') {
       const regex = /^(?:\d{4}-){3}\d{3}[0-9X]$/;

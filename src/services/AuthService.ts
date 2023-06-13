@@ -10,4 +10,16 @@ export class AuthService {
     await api.get('sanctum/csrf-cookie');
     return api.post('/api/login', data);
   }
+
+  public async recoverPassword(email: string) {
+    return api.post('api/v1/recover-password', { email });
+  }
+
+  public async checkToken(token: string) {
+    return api.get('api/v1/check-recover-token?token=' + token);
+  }
+
+  public async resetPassword(password: string, token: string) {
+    return api.post('api/v1/reset-password?token=' + token, { password });
+  }
 }

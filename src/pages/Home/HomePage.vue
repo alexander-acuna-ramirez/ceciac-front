@@ -14,7 +14,7 @@
                     </div>
 
                     <div>
-                        <q-input v-model="searchTerm" type="text" label="Comenzar a buscar" filled>
+                        <q-input v-model="searchTerm" type="text" label="Comenzar a buscar" outlined>
                             <template v-slot:prepend>
                                 <q-icon name="search" />
                             </template>

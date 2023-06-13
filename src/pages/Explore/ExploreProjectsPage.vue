@@ -39,11 +39,11 @@ onMounted(() => {
 </script>
 <template>
     <q-page padding>
-        <div class="row">
-            <banner-component title="Explora, inspira y crea con nosotros"
-                description="Encuentra proyectos innovadores, eventos únicos y posts interesantes en nuestra plataforma!"></banner-component>
-        </div>
-        <!--<div class="row">
+    <div class="row">
+        <banner-component title="Explora, inspira y crea con nosotros"
+            description="Encuentra proyectos innovadores, eventos únicos y posts interesantes en nuestra plataforma!"></banner-component>
+    </div>
+    <!--<div class="row">
             <div class="col-12">
                 <div class="text-h4 text-primary text-bold">
                     Explora nuevos proyectos
@@ -53,21 +53,21 @@ onMounted(() => {
                 </div>
             </div>
         </div>-->
-        <div class="row q-mt-md q-col-gutter-md">
-            <div class="col-12 col-md-9">
-                <div>
-                    <div class="row q-col-gutter-md">
-                        <project-card v-for="project in projects" :project="project" :key="project.id"
-                            class="col-12 col-sm-6 col-md-4 col-lg-3"></project-card>
-                    </div>
-                    <div class="flex flex-center q-mt-md">
-                        <q-pagination v-model="current" :max="paginationData.last_page" />
-                    </div>
+    <div class="row q-mt-md q-col-gutter-md">
+        <div class="col-12 col-md-9">
+            <div>
+                <div class="row q-col-gutter-md">
+                    <project-card v-for="project in projects" :project="project" :key="project.id"
+                        class="col-12 col-sm-6 col-md-4 col-lg-3"></project-card>
+                </div>
+                <div class="flex flex-center q-mt-md">
+                    <q-pagination v-model="current" :max="paginationData.last_page" />
                 </div>
             </div>
-            <div class="col-12 col-md-3">
-                <div>
-                    <q-input v-model="searchTerm" type="text" label="Buscar" filled>
+        </div>
+        <div class="col-12 col-md-3">
+            <div>
+                    <q-input v-model="searchTerm" type="text" label="Buscar" outlined>
                         <template v-slot:append>
                             <q-btn color="primary" icon="search" @click="getProjects()" flat />
                         </template>
@@ -76,36 +76,36 @@ onMounted(() => {
 
                 <!--<q-card class="q-mt-md" flat>
 
-                    <q-card-section>
-                        <q-list>
-                            <q-item clickable v-ripple disable>
-                                <q-item-section avatar>
-                                    <q-avatar color="primary" text-color="white" icon="feed" rounded />
-                                </q-item-section>
+                        <q-card-section>
+                            <q-list>
+                                <q-item clickable v-ripple disable>
+                                    <q-item-section avatar>
+                                        <q-avatar color="primary" text-color="white" icon="feed" rounded />
+                                    </q-item-section>
 
-                                <q-item-section>Posts</q-item-section>
-                            </q-item>
+                                    <q-item-section>Posts</q-item-section>
+                                </q-item>
 
-                            <q-item clickable v-ripple>
-                                <q-item-section avatar>
-                                    <q-avatar color="primary" text-color="white" icon="event" rounded />
-                                </q-item-section>
+                                <q-item clickable v-ripple>
+                                    <q-item-section avatar>
+                                        <q-avatar color="primary" text-color="white" icon="event" rounded />
+                                    </q-item-section>
 
-                                <q-item-section>Eventos</q-item-section>
-                            </q-item>
+                                    <q-item-section>Eventos</q-item-section>
+                                </q-item>
 
-                            <q-item clickable v-ripple>
-                                <q-item-section avatar>
-                                    <q-avatar rounded color="primary" text-color="white" icon="tips_and_updates" />
-                                </q-item-section>
+                                <q-item clickable v-ripple>
+                                    <q-item-section avatar>
+                                        <q-avatar rounded color="primary" text-color="white" icon="tips_and_updates" />
+                                    </q-item-section>
 
-                                <q-item-section>Proyectos</q-item-section>
-                            </q-item>
+                                    <q-item-section>Proyectos</q-item-section>
+                                </q-item>
 
 
-                        </q-list>
-                    </q-card-section>
-                </q-card>-->
+                            </q-list>
+                        </q-card-section>
+                    </q-card>-->
 
                 <q-card class="q-mt-md" flat>
                     <q-card-section>

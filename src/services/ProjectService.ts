@@ -36,6 +36,10 @@ export class ProjectService {
   public projectParticipation(project: string | number) {
     return api.get('api/v1/project/project-participation/' + project);
   }
+
+  public storeProjectTags(project: string | number, tags: number[]) {
+    return api.post('api/v1/project/tags/' + project, { tags });
+  }
 }
 
 /*

@@ -1,4 +1,6 @@
 export * from './Auth';
+export * from './BlogCategory';
+export * from './BlogPost';
 export * from './Country';
 export * from './Education';
 export * from './Event';
@@ -9,5 +11,6 @@ export * from './NetworkRepresentative';
 export * from './Profession';
 export * from './Project';
 export * from './ProjectType';
+export * from './Tag';
 export * from './User';
 export * from './UserProfileType';

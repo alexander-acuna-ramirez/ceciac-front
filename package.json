@@ -11,6 +11,7 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
+    "@ballcat/vue-cropper": "^1.0.5",
     "@egjs/vue3-flicking": "^4.10.7",
     "@quasar/extras": "^1.0.0",
     "@vueuse/core": "^9.13.0",
@@ -19,6 +20,8 @@
     "pinia-plugin-persistedstate": "^3.1.0",
     "quasar": "^2.6.0",
     "vue": "^3.0.0",
+    "vue-advanced-cropper": "^2.8.8",
+    "vue-picture-cropper": "^0.6.1",
     "vue-router": "^4.0.0",
     "vue3-carousel": "^0.3.0"
   },

@@ -1,19 +1,25 @@
 <script setup lang="ts">
-import { reactive, ref, onMounted } from 'vue';
-import { ProjectType, Project } from 'src/models';
+import { reactive, ref, onMounted, watch } from 'vue';
+import { ProjectType, Project, Tag } from 'src/models';
 import { QStepper } from 'quasar';
 import { useQuasar } from 'quasar';
-import BannerComponent from 'src/components/BannerComponent.vue';
-import { ProjectTypeService, ProjectService } from 'src/services';
+//import BannerComponent from 'src/components/BannerComponent.vue';
+import { ProjectTypeService, ProjectService, TagService } from 'src/services';
 import { useRouter, useRoute, RouteParams } from 'vue-router';
+import { useToolbarConfig } from 'src/composables/useToolbarConfig';
+import { Rules } from 'src/utils';
 
 const router = useRouter();
 const route = useRoute();
 const projectService = new ProjectService();
 const projectTypeService = new ProjectTypeService();
+const tagService = new TagService();
 const $q = useQuasar();
 const projectTypes = reactive<ProjectType[]>([]);
+const tags = reactive<Tag[]>([]);
 const step = ref(1);
+const toolbarConfig = useToolbarConfig();
+
 const project = reactive<Project>({
   name: '',
   description: '',
@@ -24,14 +30,18 @@ const project = reactive<Project>({
   end_date: '',
 });
 
+const projectTags = ref(null)
+
 const stepper = ref();
 const firstStepForm = ref();
 const secondStepForm = ref();
 const thirdStepForm = ref();
-const files = ref(null);
+const files = reactive<File[]>([]);
 
 onMounted(() => {
   loadProjectTypes();
+  loadTags();
+  project.release_date = defaultReleaseDate();
 });
 
 async function loadProjectTypes() {
@@ -43,6 +53,19 @@ async function loadProjectTypes() {
     console.error(e);
   }
 }
+
+async function loadTags() {
+  try {
+    const response = await tagService.get();
+    const data: Tag[] = response.data;
+    tags.push(...data);
+
+    console.log(data);
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 async function saveProject() {
 
   if (route.params.network) {
@@ -52,12 +75,14 @@ async function saveProject() {
   const response = await projectService.store(project);
   const projectCreated: Project = response.data;
   const filesData = new FormData();
-  const dataFiles: File[] = files.value ?? [];
+  const dataFiles: File[] = files;
   dataFiles.forEach((e) => filesData.append('project_images[]', e));
   await projectService.uploadProjectFiles(
     filesData,
     projectCreated.id as number
   );
+  let tagsId: number[] = projectTags.value ?? [];
+  await projectService.storeProjectTags(projectCreated.id as number, tagsId);
 
   router.push({
     name: 'ProjectPage',
@@ -66,6 +91,7 @@ async function saveProject() {
     },
   });
 }
+
 function nextStep() {
   switch (step.value) {
     case 1:
@@ -95,234 +121,185 @@ function nextStep() {
       break;
   }
 }
+function optionsFn(date: string) {
+  const defaultDate = defaultReleaseDate();
+  return date >= defaultDate;
+}
+
+function optionsEndFn(date: string) {
+  const defaultDate = project.release_date;
+  return date >= defaultDate;
+}
+
+function defaultReleaseDate() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  return `${year}/${month}/${day}`;
+}
+
+function addFile(filesData: readonly File[]) {
+  files.push(...filesData);
+}
+function removeFile(filesData: readonly File[]) {
+  filesData.forEach(fileToRemove => {
+    const index = files.findIndex(file => file === fileToRemove);
+    if (index !== -1) {
+      files.splice(index, 1);
+    }
+  });
+}
+
+watch(
+  () => project.release_date,
+  () => {
+    project.end_date = '';
+  }
+);
 </script>
 
 <template>
-  <q-page padding>
-    <div class="row q-col-gutter-md">
-      <!--<div class="col-12 flex flex-center justify-center">
-        <banner-component description="Explora nuevos proyectos"
-          title="Empieza un nuevo proyecto aqui!"></banner-component>
-      </div>-->
-      <div class="col-12 flex flex-center justify-center">
-        <q-stepper v-model="step" ref="stepper" color="primary" animated flat style="width: 100%;"
-          class="rounded-corners">
+  <q-page padding class="flex justify-center items-center">
+    <q-stepper vertical v-model="step" ref="stepper" color="primary" animated flat
+      class="rounded-corners stepperContainer">
+      <template v-slot:message>
+        <q-banner v-if="step === 1" class="q-px-lg">
+          <div class="text-h5 text-bold text-primary">
+            Comencemos el proyecto
+          </div>
+          <div class="text-subtitle2 text-accent">
+            Comencemos definiendo los datos basicos del proyecto
+          </div>
+        </q-banner>
 
-          <template v-slot:message>
-            <q-banner v-if="step === 0" class="q-px-lg">
-              <div class="text-h5 text-bold text-primary">
-                Escojamos el tipo de proyecto
-              </div>
-              <div class="text-subtitle2 text-accent">
-                Escoge el tipo de proyecto que deseas publicar a continuación
-              </div>
-            </q-banner>
-            <q-banner v-else-if="step === 1" class="q-px-lg">
-              <div class="text-h5 text-bold text-primary">
-                Escojamos el tipo de proyecto
-              </div>
-              <div class="text-subtitle2 text-accent">
-                Escoge el tipo de proyecto que deseas publicar a continuación
-              </div>
-            </q-banner>
-            <q-banner v-else-if="step === 2" class="bg-green-8 text-white q-px-lg">
-              The Ad template is disabled - this won't be displayed
-            </q-banner>
-            <q-banner v-else class="bg-blue-8 text-white q-px-lg">
-              The final step is creating the ad...
-            </q-banner>
-          </template>
+        <q-banner v-else-if="step === 2" class="q-px-lg">
+          <div class="text-h5 text-bold text-primary">
+            Definamos el proyecto
+          </div>
+          <div class="text-subtitle2 text-accent">
+            Definamos los datos del proyecto en el siguiente editor
+          </div>
+        </q-banner>
+        <q-banner v-else-if="step === 3" class="q-px-lg">
+          <div class="text-h5 text-bold text-primary">
+            Programemos su proyecto
+          </div>
+          <div class="text-subtitle2 text-accent">
+            Definamos las fechas en las que se llevara a cabo
+          </div>
+        </q-banner>
+        <q-banner v-else class="q-px-lg">
+          <div class="text-h5 text-bold text-primary">
+            Seleccionemos los recursos de su proyecto
+          </div>
+          <div class="text-subtitle2 text-accent">
+            Seleccione las imagenes que describiran su proyecto
+          </div>
+        </q-banner>
+      </template>
 
-
-
-          <q-step :name="0" title="Información Básica" icon="settings" :done="step > 1">
-
-            <div class="row q-col-gutter-xl">
-              <div class="col-12 col-md-4">
-                <q-card class="w-full">
-                  <q-img src="~assets/img/app/projectTypes/projectType-1.webp" spinner-color="primary"
-                    spinner-size="82px">
-                    <div class="absolute-bottom text-subtitle1 text-center">
-                      Emprendimiento
-                    </div>
-                  </q-img>
-                </q-card>
-              </div>
-
-              <div class="col-12 col-md-4">
-                <q-card class="w-full">
-                  <q-img src="~assets/img/app/projectTypes/projectType-2.webp" spinner-color="primary"
-                    spinner-size="82px">
-                    <div class="absolute-bottom text-subtitle1 text-center">
-                      Innovación
-                    </div>
-                  </q-img>
-                </q-card>
-
-              </div>
-              <div class="col-12 col-md-4">
-                <q-card class="w-full">
-                  <q-img src="~assets/img/app/projectTypes/projectType-3.webp" spinner-color="primary"
-                    spinner-size="82px">
-                    <div class="absolute-bottom text-subtitle1 text-center">
-                      <strong>Investigación</strong>
-                    </div>
-                  </q-img>
-                </q-card>
-              </div>
+      <q-step :name="1" title="Información Básica" icon="settings" :done="step > 1">
+        <q-form ref="firstStepForm" class="q-gutter-md">
+          <div class="row q-col-gutter-md">
+            <div class="col-12 col-md-6">
+              <q-input v-model="project.name" label="Titulo" hint="El titulo de tu proyecto" lazy-rules outlined
+                :rules="[Rules.required, Rules.maxLength]" />
             </div>
-          </q-step>
-          <q-step :name="1" title="Información Básica" icon="settings" :done="step > 1" class="q-px-lg">
-            <q-form ref="firstStepForm" class="q-gutter-md">
-              <div class="row q-col-gutter-md">
-                <div class="col-12 col-md-6">
-                  <q-input filled v-model="project.name" label="Titulo" hint="El titulo de tu proyecto" lazy-rules :rules="[
-                      (val: any) =>
-                        (val !== null && val !== '') ||
-                        'Por favor, ingresa el titulo',
-                    ]" />
-                </div>
-                <div class="col-12 col-md-6">
-                  <q-select filled v-model="project.type_id" :options="projectTypes" option-value="id" option-label="name"
-                    emit-value map-options label="Tipo de proyecto" :rules="[
-                        (val: any) =>
-                          (val !== null && val !== '') ||
-                          'Por favor, ingresa el tipo de proyecto',
-                      ]" />
-                </div>
-                <div class="col-12">
-                  <q-input type="textarea" filled v-model="project.description" label="Descripción"
-                    hint="Una descripción breve de tu proyecto" lazy-rules :rules="[
-                        (val: any) =>
-                          (val !== null && val !== '') ||
-                          'Por favor ingresa  la descripción',
-                        (val: any) => val.length <= 255 || 'La descripción no puede ser mayor a 255 caracteres.'
-                      ]" />
-                </div>
-              </div>
-            </q-form>
-          </q-step>
+            <div class="col-12 col-md-6">
+              <q-select outlined v-model="project.type_id" :options="projectTypes" option-value="id" option-label="name"
+                emit-value map-options label="Tipo de proyecto" :rules="[Rules.required]" />
+            </div>
+            <div class="col-12">
+              <q-input outlined type="textarea" v-model="project.description" label="Descripción"
+                hint="Una descripción breve de tu proyecto" lazy-rules :rules="[Rules.required, Rules.maxLength]" />
+            </div>
+            <div class="col-12">
+              <q-select label="Tags" outlined v-model="projectTags" use-input use-chips multiple input-debounce="0"
+                :options="tags" option-value="id" option-label="name" emit-value map-options :rules="[Rules.required]" />
+            </div>
+          </div>
+        </q-form>
+      </q-step>
 
-          <q-step :name="2" title="Definición del proyecto" icon="create_new_folder" :done="step > 2">
-            <q-form ref="secondStepForm" class="q-gutter-md">
-              <q-editor :toolbar="[
-                  [
-                    {
-                      label: $q.lang.editor.align,
-                      icon: $q.iconSet.editor.align,
-                      fixedLabel: true,
-                      list: 'only-icons',
-                      options: ['left', 'center', 'right', 'justify']
-                    },
-                    {
-                      label: $q.lang.editor.align,
-                      icon: $q.iconSet.editor.align,
-                      fixedLabel: true,
-                      options: ['left', 'center', 'right', 'justify']
-                    }
-                  ],
-                  ['bold', 'italic', 'strike', 'underline', 'subscript', 'superscript'],
-                  ['token', 'hr', 'link', 'custom_btn'],
-                  ['fullscreen'],
-                  [
-                    {
-                      label: $q.lang.editor.formatting,
-                      icon: $q.iconSet.editor.formatting,
-                      list: 'no-icons',
-                      options: [
-                        'p',
-                        'h1',
-                        'h2',
-                        'h3',
-                        'h4',
-                        'h5',
-                        'h6',
-                        'code'
-                      ]
-                    },
-                    {
-                      label: $q.lang.editor.fontSize,
-                      icon: $q.iconSet.editor.fontSize,
-                      fixedLabel: true,
-                      fixedIcon: true,
-                      list: 'no-icons',
-                      options: [
-                        'size-1',
-                        'size-2',
-                        'size-3',
-                        'size-4',
-                        'size-5',
-                        'size-6',
-                        'size-7'
-                      ]
-                    },
-                    'removeFormat'
-                  ],
-                  ['quote', 'unordered', 'ordered', 'outdent', 'indent'],
-                  ['undo', 'redo'],
-                ]" v-model="project.synopsis" min-height="10rem" hint="Aqui puedes explicar todo tu proyecto" />
-            </q-form>
-          </q-step>
+      <q-step :name="2" title="Definición del proyecto" icon="create_new_folder" :done="step > 2">
+        <q-form ref="secondStepForm">
+          <q-editor :toolbar="toolbarConfig.toolbarConfig" v-model="project.synopsis" min-height="10prem"
+            hint="Aqui puedes explicar todo tu proyecto" outlined />
+        </q-form>
+      </q-step>
 
-          <q-step :name="3" title="Cronograma" icon="calendar_month" :done="step > 3">
-            <q-form class="q-gutter-md" ref="thirdStepForm">
-              <div class="row q-col-gutter-md">
-                <div class="col-12 col-md-6">
-                  <q-input filled v-model="project.release_date" mask="date" label="Fecha de lanzamiento"
-                    :rules="['date']">
-                    <template v-slot:append>
-                      <q-icon name="event" class="cursor-pointer">
-                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                          <q-date v-model="project.release_date">
-                            <div class="row items-center justify-end">
-                              <q-btn v-close-popup label="Close" color="primary" flat />
-                            </div>
-                          </q-date>
-                        </q-popup-proxy>
-                      </q-icon>
-                    </template>
-                  </q-input>
-                </div>
-                <div class="col-12 col-md-6">
-                  <q-input filled v-model="project.end_date" mask="date" :rules="['date']" label="Fecha de culminación">
-                    <template v-slot:append>
-                      <q-icon name="event" class="cursor-pointer">
-                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                          <q-date v-model="project.end_date">
-                            <div class="row items-center justify-end">
-                              <q-btn v-close-popup label="Close" color="primary" flat />
-                            </div>
-                          </q-date>
-                        </q-popup-proxy>
-                      </q-icon>
-                    </template>
-                  </q-input>
-                </div>
-              </div>
-            </q-form>
-          </q-step>
+      <q-step :name="3" title="Cronograma" icon="calendar_month" :done="step > 3">
+        <q-form class="q-gutter-md" ref="thirdStepForm">
+          <div class="row q-col-gutter-md">
+            <div class="col-12 col-md-6">
+              <q-input outlined v-model="project.release_date" mask="date" label="Fecha de lanzamiento" :rules="['date']">
+                <template v-slot:append>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                      <q-date v-model="project.release_date" :options="optionsFn">
+                        <div class="row items-center justify-end">
+                          <q-btn v-close-popup label="Close" color="primary" flat />
+                        </div>
+                      </q-date>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
+            </div>
+            <div class="col-12 col-md-6">
+              <q-input outlined v-model="project.end_date" mask="date" :rules="['date']" label="Fecha de culminación">
+                <template v-slot:append>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                      <q-date v-model="project.end_date" :options="optionsEndFn">
+                        <div class="row items-center justify-end">
+                          <q-btn v-close-popup label="Close" color="primary" flat />
+                        </div>
+                      </q-date>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
+            </div>
+          </div>
+        </q-form>
+      </q-step>
 
-          <q-step :name="4" title="Multimedia" icon="photo_library">
-            <q-file v-model="files" label="Selecciona las imagenes relacionadas a tu proyecto" filled style="width: 100%"
-              use-chips multiple>
-              <template v-slot:prepend>
-                <q-icon name="attach_file" />
-              </template>
-            </q-file>
-          </q-step>
+      <q-step :name="4" title="Multimedia" icon="photo_library">
+        <q-uploader flat bordered label="Imagenes del proyecto" multiple accept=".jpg, image/*" max-file-size="2048000"
+          :hide-upload-btn="true" style="width: 100%; height: 450px;" @added="addFile" @removed="removeFile" />
+      </q-step>
 
-          <template v-slot:navigation>
-            <q-stepper-navigation class="flex justify-end">
-              <q-btn v-if="step > 1" flat color="primary" @click="($refs.stepper as QStepper).previous()" label="Atras"
-                class="q-ml-sm" icon="chevron_left" />
+      <template v-slot:navigation>
+        <q-stepper-navigation class="flex justify-end">
+          <q-btn v-if="step > 1" flat color="primary" @click="($refs.stepper as QStepper).previous()" label="Atras"
+            class="q-ml-sm" icon="chevron_left" />
 
-              <q-btn @click="nextStep()" color="primary" :icon="step === 4 ? 'save' : 'chevron_right'" rounded>
-                <strong>{{ (step === 4) ? 'Terminar' : 'Continuar' }}</strong>
-              </q-btn>
-            </q-stepper-navigation>
-          </template>
-        </q-stepper>
-      </div>
-    </div>
+          <q-btn @click="nextStep()" color="primary" :icon="step === 4 ? 'save' : 'chevron_right'" rounded>
+            <strong>{{ step === 4 ? 'Terminar' : 'Continuar' }}</strong>
+          </q-btn>
+        </q-stepper-navigation>
+      </template>
+    </q-stepper>
   </q-page>
 </template>
+
+<style lang="scss" scoped>
+.stepperContainer {
+  width: 60%;
+}
+
+
+@media (max-width: $breakpoint-md-min) {
+  .stepperContainer {
+    width: 95%;
+  }
+}
+
+@media (min-width: $breakpoint-md-max) {
+  .stepperContainer {
+    width: 60%;
+  }
+}
+</style>

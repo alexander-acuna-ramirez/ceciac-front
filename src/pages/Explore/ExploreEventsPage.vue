@@ -38,11 +38,11 @@ onMounted(() => {
 </script>
 <template>
     <q-page padding>
-        <div class="row">
-            <banner-component title="Explora, inspira y crea con nosotros"
-                description="Encuentra proyectos innovadores, eventos únicos y posts interesantes en nuestra plataforma!"></banner-component>
-        </div>
-        <!--<div class="row">
+    <div class="row">
+        <banner-component title="Explora, inspira y crea con nosotros"
+            description="Encuentra proyectos innovadores, eventos únicos y posts interesantes en nuestra plataforma!"></banner-component>
+    </div>
+    <!--<div class="row">
             <div class="col-12">
                 <div class="text-h4 text-primary text-bold">
                     Explora nuevos proyectos
@@ -52,25 +52,25 @@ onMounted(() => {
                 </div>
             </div>
         </div>-->
-        <div class="row q-mt-md q-col-gutter-md">
-            <div class="col-12 col-md-3">
-                <q-card flat>
-                    <q-card-section class="row q-col-gutter-md">
+    <div class="row q-mt-md q-col-gutter-md">
+        <div class="col-12 col-md-3">
+            <q-card flat>
+                <q-card-section class="row q-col-gutter-md">
                         <div class="col-12 col-md-12">
-                            <q-input v-model="searchData.searchTerm" type="text" label="Buscar" filled>
+                            <q-input v-model="searchData.searchTerm" type="text" label="Buscar" outlined>
                             </q-input>
 
                             <q-btn style="width: 100%;" color="primary" icon="filter_alt" label="Filtrar"
                                 @click="getEvents()" class="q-mt-md" />
                         </div>
                         <!--
-                        <div class="col-12 col-md-2">
-                            <q-input label="Fecha de Inicio" filled v-model="searchData.start_date" mask="date">
-                                <template v-slot:append>
-                                    <q-icon name="event" class="cursor-pointer">
-                                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                            <q-date v-model="dateData.from">
-                                                <div class="row items-center justify-end">
+                            <div class="col-12 col-md-2">
+                                <q-input label="Fecha de Inicio" outlined v-model="searchData.start_date" mask="date">
+                                    <template v-slot:append>
+                                        <q-icon name="event" class="cursor-pointer">
+                                            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                                <q-date v-model="dateData.from">
+                                                    <div class="row items-center justify-end">
                                                     <q-btn v-close-popup label="Close" color="primary" flat />
                                                 </div>
                                             </q-date>
@@ -80,7 +80,7 @@ onMounted(() => {
                             </q-input>
                         </div>
                         <div class="col-12 col-md-2">
-                            <q-input label="Fecha de Inicio" filled v-model="searchData.end_date" mask="date">
+                            <q-input label="Fecha de Inicio" outlined v-model="searchData.end_date" mask="date">
                                 <template v-slot:append>
                                     <q-icon name="event" class="cursor-pointer">
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -94,61 +94,61 @@ onMounted(() => {
                                 </template>
                             </q-input>
                         </div>-->
-                    </q-card-section>
-                </q-card>
-            </div>
-            <div class="col-12 col-md-9">
-                <div>
-                    <div class="row q-col-gutter-md">
-                        <event-card v-for="event in events" :event="event" :key="event.id"
-                            class="q-col-md-4 q-col-xs-12"></event-card>
-                    </div>
-                    <div class="flex flex-center q-mt-md">
-                        <q-pagination v-model="current" :max="paginationData.last_page" />
-                    </div>
+                </q-card-section>
+            </q-card>
+        </div>
+        <div class="col-12 col-md-9">
+            <div>
+                <div class="row q-col-gutter-md">
+                    <event-card v-for="event in events" :event="event" :key="event.id"
+                        class="q-col-md-4 q-col-xs-12"></event-card>
+                </div>
+                <div class="flex flex-center q-mt-md">
+                    <q-pagination v-model="current" :max="paginationData.last_page" />
                 </div>
             </div>
-            <!--<div class="col-12 col-md-3">
+        </div>
+        <!--<div class="col-12 col-md-3">
                 <div>
-                    <q-input v-model="searchData.searchTerm" type="text" label="Buscar" filled>
-                        <template v-slot:append>
-                            <q-btn color="primary" icon="search" @click="getEvents()" flat />
-                        </template>
-                    </q-input>
-                </div>
-
-                <div class="q-mt-md flex row">
-                    <div class="col-12 col-md-6">
-                        <q-input filled v-model="dateData.from" mask="date" :rules="['date']">
+                    <q-input v-model="searchData.searchTerm" type="text" label="Buscar" outlined>
                             <template v-slot:append>
-                                <q-icon name="event" class="cursor-pointer">
-                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                        <q-date v-model="dateData.from">
-                                            <div class="row items-center justify-end">
-                                                <q-btn v-close-popup label="Close" color="primary" flat />
-                                            </div>
-                                        </q-date>
-                                    </q-popup-proxy>
-                                </q-icon>
-                            </template>
-                        </q-input>
-                        <q-input filled v-model="dateData.from" mask="date" :rules="['date']">
-                            <template v-slot:append>
-                                <q-icon name="event" class="cursor-pointer">
-                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                        <q-date v-model="dateData.from">
-                                            <div class="row items-center justify-end">
-                                                <q-btn v-close-popup label="Close" color="primary" flat />
-                                            </div>
-                                        </q-date>
-                                    </q-popup-proxy>
-                                </q-icon>
+                                <q-btn color="primary" icon="search" @click="getEvents()" flat />
                             </template>
                         </q-input>
                     </div>
-                </div>
 
-            </div>-->
+                    <div class="q-mt-md flex row">
+                        <div class="col-12 col-md-6">
+                            <q-input outlined v-model="dateData.from" mask="date" :rules="['date']">
+                                <template v-slot:append>
+                                    <q-icon name="event" class="cursor-pointer">
+                                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                            <q-date v-model="dateData.from">
+                                                <div class="row items-center justify-end">
+                                                    <q-btn v-close-popup label="Close" color="primary" flat />
+                                                </div>
+                                            </q-date>
+                                        </q-popup-proxy>
+                                    </q-icon>
+                                </template>
+                            </q-input>
+                            <q-input outlined v-model="dateData.from" mask="date" :rules="['date']">
+                                <template v-slot:append>
+                                    <q-icon name="event" class="cursor-pointer">
+                                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                            <q-date v-model="dateData.from">
+                                                <div class="row items-center justify-end">
+                                                    <q-btn v-close-popup label="Close" color="primary" flat />
+                                                </div>
+                                            </q-date>
+                                        </q-popup-proxy>
+                                    </q-icon>
+                                </template>
+                            </q-input>
+                        </div>
+                    </div>
+
+                </div>-->
         </div>
     </q-page>
 </template>

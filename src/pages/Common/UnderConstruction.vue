@@ -8,7 +8,7 @@
                     experiencia.
                 </div>
                 <div>
-                    <q-input v-model="email" type="text" label="Tu correo" filled>
+                    <q-input v-model="email" type="text" label="Tu correo" outlined>
 
                         <template v-slot:append>
                             <q-btn color="primary" icon="send" flat />

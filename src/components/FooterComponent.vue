@@ -2,7 +2,7 @@
   <footer class="bg-secondary text-white q-pa-md">
     <div class="row">
       <div class="col-12">
-        <div class="text-center p-3" style="color: grey; font-size: 0.75rem;">
+        <div class="text-center p-3 text-accent" style="font-size: 0.9rem;">
           ©{{ new Date().getFullYear() }} CECIAC - Todos los derechos reservados.
         </div>
 

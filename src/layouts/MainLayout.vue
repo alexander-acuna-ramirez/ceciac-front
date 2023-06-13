@@ -12,7 +12,7 @@ function handleMenu() {
 }
 </script>
 <template>
-  <q-layout view="lHh lpR fFf" style="background-color: #eff4fb">
+  <q-layout view="lHh lpR fFf" style="background-color: #F6F7F8">
 
     <navbar-component @menu-open="handleMenu()"></navbar-component>
     <q-drawer v-model="leftDrawerOpen" side="left" overlay behavior="mobile" bordered>
@@ -96,19 +96,19 @@ function handleMenu() {
           <q-item clickable v-ripple active-class="my-menu-link">
             <q-item-section avatar>
               <q-icon name="help" />
-            </q-item-section>
+          </q-item-section>
 
-            <q-item-section>Help</q-item-section>
-          </q-item>
-        </q-list>
-      </div>
-    </q-drawer>
-    <q-page-container>
-      <router-view />
-      <footer-component></footer-component>
-    </q-page-container>
+          <q-item-section>Help</q-item-section>
+        </q-item>
+      </q-list>
+    </div>
+  </q-drawer>
+  <q-page-container>
+    <router-view />
+    <footer-component></footer-component>
+  </q-page-container>
 
-    <!--<q-footer class="bg-primary text-white q-pa-md">
+  <!--<q-footer class="bg-primary text-white q-pa-md">
       <div class="row">
         <div class="col">
           <div class="flex items-center">
@@ -137,19 +137,19 @@ function handleMenu() {
             <li><a href="#">Friends</a></li>
             <li><a href="#">Forums</a></li>
           </ul>
-        </div>
+          </div>
 
-        <div class="col">
-          <div class="text-weight-bold">Community</div>
-          <ul>
-            <li><a href="#">Newsfeed</a></li>
-            <li><a href="#">Groups</a></li>
-            <li><a href="#">Friends</a></li>
-            <li><a href="#">Forums</a></li>
-              </ul>
-              </div>
-              </div>
-            </q-footer>-->
+          <div class="col">
+            <div class="text-weight-bold">Community</div>
+            <ul>
+              <li><a href="#">Newsfeed</a></li>
+              <li><a href="#">Groups</a></li>
+              <li><a href="#">Friends</a></li>
+              <li><a href="#">Forums</a></li>
+                </ul>
+                </div>
+                </div>
+              </q-footer>-->
   </q-layout>
 </template>
 <style scoped lang="scss"></style>

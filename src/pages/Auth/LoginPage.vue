@@ -124,70 +124,27 @@ onMounted(() => {
 </script>
 
 <template>
-  <!---
-  <div class="row" style="height: 100vh">
-    <div class="col-md-7">
-      <q-img src="~assets/img/network.jpeg" style="width: 100%; height: 100%" />
-    </div>
-    <div class="col-12 col-sm-12 col-md-5 flex justify-center items-center">
-      <div style="min-width: 70%" class="q-pa-xl">
-        <div class="text-h4 text-center text-secondary text-bold">
-          BIENVENIDO
-        </div>
-
-        <q-form @submit="onSubmit" class="q-gutter-y-md">
-          <div class="flex justify-center">
-            <label class="text-secondary text-subtitle2">Ingrese a su cuenta</label>
-          </div>
-          <q-input v-model="userData.email" type="text" label="E-mail" outlined lazy-rules :rules="[
-            (val: any) => (val && val.length > 0) || 'Ingrese un correo valido',
-          ]">
-            <template v-slot:append>
-              <q-icon name="alternate_email" />
-            </template>
-          </q-input>
-          <q-input v-model="userData.password" type="password" label="Contraseña" outlined lazy-rules :rules="[
-            (val: any) =>
-              (val && val.length > 0) || 'Ingrese una contraseña valida',
-          ]">
-            <template v-slot:append>
-              <q-icon name="lock" />
-            </template>
-          </q-input>
-
-          <q-btn color="primary" icon="login" label="Ingresar" style="width: 100%" type="submit" />
-
-          <div class="flex justify-center">
-            <span class="text-center text-secondary">
-              Red CECIAC - © Copyright {{ new Date().getFullYear() }}
-            </span>
-          </div>
-        </q-form>
-      </div>
-    </div>
-  </div>-->
-
   <div style="height: 100vh" class="auth-container">
     <div :class="{ container: true, 'right-panel-active': panel }" id="container">
       <div class="form-container sign-up-container">
         <q-form @submit="register">
           <div class="text-h4 text-secondary text-bold q-pa-sm q-mb-sm">Crear cuenta</div>
           <div class="row q-col-gutter-sm">
-            <q-input class="col-12 col-md-6" dense v-model="registerUser.name" type="text" label="Nombre" filled
+            <q-input class="col-12 col-md-6" dense v-model="registerUser.name" type="text" label="Nombre" outlined
               lazy-rules :rules="[Rules.required]" />
-            <q-input class="col-12 col-md-6" dense v-model="registerUser.lastname" type="text" label="Apellidos" filled
+            <q-input class="col-12 col-md-6" dense v-model="registerUser.lastname" type="text" label="Apellidos" outlined
               lazy-rules :rules="[Rules.required]" />
-            <q-input class="col-12" dense v-model="registerUser.email" type="text" label="E-mail" filled
+            <q-input class="col-12" dense v-model="registerUser.email" type="text" label="E-mail" outlined
               :rules="[Rules.email]" />
-            <q-input class="col-12" dense v-model="registerUser.password" type="password" label="Contraseña" filled
+            <q-input class="col-12" dense v-model="registerUser.password" type="password" label="Contraseña" outlined
               :rules="[Rules.required]" />
-            <q-select class="col-12 col-sm-12 col-md-6" dense filled v-model="registerUser.id_country"
+            <q-select class="col-12 col-sm-12 col-md-6" dense outlined v-model="registerUser.id_country"
               :options="countries" label="Pais" emit-value map-options option-value="id" option-label="name"
               :rules="[Rules.required]" />
-            <q-select class="col-12 col-sm-12 col-md-6" dense filled v-model="registerUser.id_profession"
+            <q-select class="col-12 col-sm-12 col-md-6" dense outlined v-model="registerUser.id_profession"
               :options="professions" label="Profesión" emit-value map-options option-value="id" option-label="name"
               :rules="[Rules.required]" />
-            <q-select class="col-12" dense label="¿Qué eres?" filled v-model="userProfileTypesSelection" use-input
+            <q-select class="col-12" dense label="¿Qué eres?" outlined v-model="userProfileTypesSelection" use-input
               use-chips multiple input-debounce="0" :options="userProfileTypes" option-value="id" option-label="name"
               emit-value map-options :rules="[Rules.required]" />
           </div>
@@ -200,26 +157,29 @@ onMounted(() => {
         <q-form @submit="onSubmit">
           <div class="text-h4 text-secondary text-bold q-pa-sm q-mb-sm">Iniciar sesión</div>
           <div class="row">
-            <q-input class="col-12" v-model="userData.email" type="text" label="E-mail" filled lazy-rules :rules="[
-                (val: any) => (val && val.length > 0) || 'Ingrese un correo válido',
-              ]">
+            <q-input class="col-12" v-model="userData.email" type="text" label="E-mail" outlined lazy-rules :rules="[
+              (val: any) => (val && val.length > 0) || 'Ingrese un correo válido',
+            ]">
               <template v-slot:append>
                 <q-icon name="alternate_email" />
               </template>
             </q-input>
-            <q-input class="col-12" v-model="userData.password" type="password" label="Contraseña" filled lazy-rules
+            <q-input class="col-12" v-model="userData.password" type="password" label="Contraseña" outlined lazy-rules
               :rules="[
-                  (val: any) =>
-                    (val && val.length > 0) || 'Ingrese una contraseña válida',
-                ]">
+                (val: any) =>
+                  (val && val.length > 0) || 'Ingrese una contraseña válida',
+              ]">
               <template v-slot:append>
                 <q-icon name="lock" />
               </template>
             </q-input>
           </div>
 
-          <a href="#" @click="changeForm">¿No tienes cuenta? Registrate Aqui!</a>
-          <button type="submit" class="bg-primary">Iniciar sesión</button>
+
+          <span class="text-subtitle2">¿Olvidaste tu contraseña? <router-link to="/recover-password"
+              class="text-secondary">Recuperala
+              Aquí</router-link></span>
+          <button type="submit" class="bg-primary q-mt-sm">Iniciar sesión</button>
         </q-form>
       </div>
       <div class="overlay-container">
