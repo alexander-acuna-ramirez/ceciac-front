@@ -37,7 +37,7 @@
                 <q-img src="~assets/img/app/user/user-profile-default.jpg" spinner-color="primary" spinner-size="82px"
                   height="100%">
                   <div v-if="editProfile" class="absolute-full text-subtitle2 flex flex-center my-text"
-                    style="height: 100%;">
+                    style="height: 100%;" @click="openLogoChange">
                     <q-icon name="photo_camera" />
                   </div>
                 </q-img>

@@ -49,17 +49,19 @@ onMounted(() => {
 <template>
   <q-card>
     <q-card-section class="flex justify-end">
-      <q-btn color="primary" icon="add" label="Crear" :to="'/blog/create/' + props.network" rounded />
+      <q-btn color="primary" icon="add" :to="'/blog/create/' + props.network" rounded>
+        <strong>Crear</strong>
+      </q-btn>
     </q-card-section>
     <q-card-section>
-      <q-card-section v-if="posts.length > 0" class="gallery">
+      <div v-if="posts.length > 0" class="gallery">
         <post-card v-for="post in posts" :post="post" :key="post.id" class="q-col-md-4 q-col-xs-12"></post-card>
-      </q-card-section>
-      <q-card-section v-if="posts.length > 0">
+      </div>
+      <div v-if="posts.length > 0 && paginationData.last_page != 1">
         <div class="q-pa-lg flex flex-center">
           <q-pagination v-model="paginationData.current_page" :max="paginationData.last_page" />
         </div>
-      </q-card-section>
+      </div>
     </q-card-section>
   </q-card>
 </template>
@@ -67,7 +69,17 @@ onMounted(() => {
 .gallery {
   display: grid;
   gap: 3rem;
-  grid-auto-rows: 22rem;
+  grid-auto-rows: 27rem;
   grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+}
+
+
+@media (max-width: $breakpoint-md-min) {
+  .gallery {
+    display: grid;
+    gap: 1rem;
+    grid-auto-rows: 30rem;
+    grid-template-columns: 1fr;
+  }
 }
 </style>

@@ -40,7 +40,8 @@ onMounted(() => {
     <q-page padding>
     <div class="row">
         <banner-component title="Explora, inspira y crea con nosotros"
-            description="Encuentra proyectos innovadores, eventos únicos y posts interesantes en nuestra plataforma!"></banner-component>
+            description="Encuentra proyectos innovadores, eventos únicos y posts interesantes en nuestra plataforma!"
+            class="border-corners"></banner-component>
     </div>
     <!--<div class="row">
             <div class="col-12">
@@ -64,12 +65,12 @@ onMounted(() => {
                                 @click="getEvents()" class="q-mt-md" />
                         </div>
                         <!--
-                            <div class="col-12 col-md-2">
-                                <q-input label="Fecha de Inicio" outlined v-model="searchData.start_date" mask="date">
-                                    <template v-slot:append>
-                                        <q-icon name="event" class="cursor-pointer">
-                                            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                                <q-date v-model="dateData.from">
+                                    <div class="col-12 col-md-2">
+                                        <q-input label="Fecha de Inicio" outlined v-model="searchData.start_date" mask="date">
+                                            <template v-slot:append>
+                                                <q-icon name="event" class="cursor-pointer">
+                                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                                        <q-date v-model="dateData.from">
                                                     <div class="row items-center justify-end">
                                                     <q-btn v-close-popup label="Close" color="primary" flat />
                                                 </div>
@@ -99,9 +100,8 @@ onMounted(() => {
         </div>
         <div class="col-12 col-md-9">
             <div>
-                <div class="row q-col-gutter-md">
-                    <event-card v-for="event in events" :event="event" :key="event.id"
-                        class="q-col-md-4 q-col-xs-12"></event-card>
+                <div class="gallery">
+                    <event-card v-for="event in events" :event="event" :key="event.id"></event-card>
                 </div>
                 <div class="flex flex-center q-mt-md">
                     <q-pagination v-model="current" :max="paginationData.last_page" />
@@ -111,45 +111,62 @@ onMounted(() => {
         <!--<div class="col-12 col-md-3">
                 <div>
                     <q-input v-model="searchData.searchTerm" type="text" label="Buscar" outlined>
-                            <template v-slot:append>
-                                <q-btn color="primary" icon="search" @click="getEvents()" flat />
-                            </template>
-                        </q-input>
-                    </div>
+                                    <template v-slot:append>
+                                        <q-btn color="primary" icon="search" @click="getEvents()" flat />
+                                    </template>
+                                </q-input>
+                            </div>
 
-                    <div class="q-mt-md flex row">
-                        <div class="col-12 col-md-6">
-                            <q-input outlined v-model="dateData.from" mask="date" :rules="['date']">
-                                <template v-slot:append>
-                                    <q-icon name="event" class="cursor-pointer">
-                                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                            <q-date v-model="dateData.from">
-                                                <div class="row items-center justify-end">
-                                                    <q-btn v-close-popup label="Close" color="primary" flat />
-                                                </div>
-                                            </q-date>
-                                        </q-popup-proxy>
-                                    </q-icon>
-                                </template>
-                            </q-input>
-                            <q-input outlined v-model="dateData.from" mask="date" :rules="['date']">
-                                <template v-slot:append>
-                                    <q-icon name="event" class="cursor-pointer">
-                                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                            <q-date v-model="dateData.from">
-                                                <div class="row items-center justify-end">
-                                                    <q-btn v-close-popup label="Close" color="primary" flat />
-                                                </div>
-                                            </q-date>
-                                        </q-popup-proxy>
-                                    </q-icon>
-                                </template>
-                            </q-input>
-                        </div>
-                    </div>
+                            <div class="q-mt-md flex row">
+                                <div class="col-12 col-md-6">
+                                    <q-input outlined v-model="dateData.from" mask="date" :rules="['date']">
+                                        <template v-slot:append>
+                                            <q-icon name="event" class="cursor-pointer">
+                                                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                                    <q-date v-model="dateData.from">
+                                                        <div class="row items-center justify-end">
+                                                            <q-btn v-close-popup label="Close" color="primary" flat />
+                                                        </div>
+                                                    </q-date>
+                                                </q-popup-proxy>
+                                            </q-icon>
+                                        </template>
+                                    </q-input>
+                                    <q-input outlined v-model="dateData.from" mask="date" :rules="['date']">
+                                        <template v-slot:append>
+                                            <q-icon name="event" class="cursor-pointer">
+                                                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                                    <q-date v-model="dateData.from">
+                                                        <div class="row items-center justify-end">
+                                                            <q-btn v-close-popup label="Close" color="primary" flat />
+                                                        </div>
+                                                    </q-date>
+                                                </q-popup-proxy>
+                                            </q-icon>
+                                        </template>
+                                    </q-input>
+                                </div>
+                            </div>
 
-                </div>-->
+                        </div>-->
         </div>
     </q-page>
 </template>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.gallery {
+    display: grid;
+    gap: 3rem;
+    grid-auto-rows: 27rem;
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+}
+
+
+@media (max-width: $breakpoint-md-min) {
+    .gallery {
+        display: grid;
+        gap: 1rem;
+        grid-auto-rows: 30rem;
+        grid-template-columns: 1fr;
+    }
+}
+</style>

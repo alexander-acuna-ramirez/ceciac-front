@@ -21,7 +21,6 @@ const paginationData = reactive({
 });
 const current = ref(1);
 async function loadNetwork(page = 1, perpage = 5) {
-    console.log("NETWORKK", props.network)
     events.splice(0, events.length);
     const response = await eventService.loadNetworkEvents(page, perpage, null, props.network);
     events.push(...response.data.data);
@@ -56,8 +55,8 @@ watch(current, (newX) => {
                     :to="{ name: 'EventCreate', params: { network: props.network } }" rounded />
             </div>
         </q-card-section>
-        <q-card-section v-if="events.length > 0" class="row q-gutter-md">
-            <event-card v-for="event in events" :event="event" :key="event.id" class="q-col-md-4 q-col-xs-12"></event-card>
+        <q-card-section v-if="events.length > 0" class="gallery">
+            <event-card v-for="event in events" :event="event" :key="event.id"></event-card>
         </q-card-section>
         <q-card-section v-if="events.length > 0">
             <div class="q-pa-lg flex flex-center">
@@ -69,4 +68,21 @@ watch(current, (newX) => {
         </q-card-section>
     </q-card>
 </template>
-<style></style>
+<style scoped lang="scss">
+.gallery {
+    display: grid;
+    gap: 3rem;
+    grid-auto-rows: 27rem;
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+}
+
+
+@media (max-width: $breakpoint-md-min) {
+    .gallery {
+        display: grid;
+        gap: 1rem;
+        grid-auto-rows: 30rem;
+        grid-template-columns: 1fr;
+    }
+}
+</style>

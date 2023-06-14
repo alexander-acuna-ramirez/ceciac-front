@@ -129,8 +129,9 @@ onMounted(() => {
       </div>
       <q-card-section>
         <div class="row">
-          <div class="flex items-center justify-between" style="width: 100%">
-            <div class="flex items-center">
+          <div class="flex items-center justify-between institutionData" style="width: 100%">
+            <div class="flex institutionData">
+
               <q-avatar v-if="network.logo" size="120px" font-size="52px" class="my-img" style="border-radius: 15px">
                 <q-img :src="network.logo?.fullpath" spinner-color="primary" spinner-size="82px" @click="openIconChange">
                   <div class="absolute-full text-subtitle2 flex flex-center my-text" @click="openIconChange">
@@ -151,10 +152,10 @@ onMounted(() => {
 
               <!-- Nombre de la institución -->
               <div class="q-ml-sm">
-                <div class="text-h4 text-secondary">
+                <div class="text-h4 text-secondary institutionName">
                   {{ network.name }}
                 </div>
-                <div class="text-secondary">
+                <div class="text-secondary institutionName">
                   {{ network.email }}
                 </div>
 
@@ -164,7 +165,7 @@ onMounted(() => {
                     network.country?.iso.toLowerCase() +
                     '.png'
                   " />
-                  <small class="q-ml-sm">{{ network.country?.name }}</small>
+                  <small class="q-ml-sm ">{{ network.country?.name }}</small>
                 </div>
               </div>
             </div>
@@ -206,14 +207,14 @@ onMounted(() => {
       <div class="col-12 col-md-3">
         <q-card flat style="border-radius: 15px">
           <q-card-section>
-            <div class="text-h6 text-primary">Miembros</div>
+            <div class="text-subtitle1 text-primary text-bold">Miembros</div>
           </q-card-section>
           <q-card-section class="row items-center">
             <q-list>
               <q-item v-for="member in members" :key="member.id">
                 <q-item-section avatar>
                   <q-avatar size="50px" font-size="52px" rounded>
-                    <q-img :src="network.logo?.fullpath" spinner-color="primary" spinner-size="82px" />
+                    <q-img :src="member.user?.logo?.fullpath" spinner-color="primary" spinner-size="82px" />
                   </q-avatar>
                 </q-item-section>
 
@@ -291,5 +292,19 @@ onMounted(() => {
   visibility: visible;
   opacity: 1;
   transition: 0.3s;
+}
+
+
+@media (max-width: $breakpoint-md-min) {
+  .institutionName {
+    text-align: center;
+  }
+
+  .institutionData {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
 }
 </style>
