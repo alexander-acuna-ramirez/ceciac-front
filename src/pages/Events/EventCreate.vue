@@ -124,7 +124,7 @@ async function saveEvent() {
                 <q-form ref="firstStepForm" class="q-gutter-md">
                     <div class="row q-col-gutter-md">
                         <div class="col-12 col-md-6">
-                            <q-input outlined v-model="event.title" label="Titulo" hint="El titulo de tu evento" lazy-rules
+                            <q-input filled v-model="event.title" label="Titulo" hint="El titulo de tu evento" lazy-rules
                                 :rules="[
                                     (val: any) =>
                                         (val !== null && val !== '') ||
@@ -134,7 +134,7 @@ async function saveEvent() {
                                 ]" />
                         </div>
                         <div class="col-12 col-md-6">
-                            <q-select outlined v-model="event.is_public" :options="eventConfig" option-value="value"
+                            <q-select filled v-model="event.is_public" :options="eventConfig" option-value="value"
                                 option-label="label" emit-value map-options label="Tipo de evento" :rules="[
                                     (val: any) =>
                                         (val !== null && val !== '') ||
@@ -142,7 +142,7 @@ async function saveEvent() {
                                 ]" />
                         </div>
                         <div class="col-12">
-                            <q-input type="textarea" outlined v-model="event.description" label="Descripción"
+                            <q-input type="textarea" filled v-model="event.description" label="Descripción"
                                 hint="Una descripción breve de tu evento" lazy-rules :rules="[
                                     (val: any) =>
                                         (val !== null && val !== '') ||
@@ -152,7 +152,7 @@ async function saveEvent() {
                         </div>
 
                         <div class="col-12 col-md-6">
-                            <q-input outlined v-model="event.date_time" label="Inicio del evento" :rules="[
+                            <q-input filled v-model="event.date_time" label="Inicio del evento" :rules="[
                                 (val: any) =>
                                     (val !== null && val !== '') ||
                                     'Por favor ingresa el comienzo del evento',
@@ -185,7 +185,7 @@ async function saveEvent() {
 
 
                         <div class="col-12 col-md-6">
-                            <q-input outlined v-model="event.end_date_time" label="Fin del evento" :rules="[
+                            <q-input filled v-model="event.end_date_time" label="Fin del evento" :rules="[
                                 (val: any) =>
                                     (val !== null && val !== '') ||
                                     'Por favor selecciona el termino del evento',
@@ -217,17 +217,17 @@ async function saveEvent() {
                         </div>
 
                         <div class="col-12 col-md-6">
-                            <q-select outlined v-model="event.is_online" :options="eventType" option-value="value"
-                                option-label="label" emit-value map-options label="Tipo de evento" :rules="[
+                            <q-select filled v-model="event.is_online" :options="eventType" option-value="value"
+                                option-label="label" emit-value map-options label="Modalidad" :rules="[
                                     (val: any) =>
                                         (val !== null && val !== '') ||
-                                        'Por favor, ingresa el tipo de evento',
+                                        'Por favor, ingresa la modalidad evento',
                                 ]" />
                         </div>
 
 
                         <div class="col-12 col-md-6" v-if="event.is_online == 0">
-                            <q-input outlined v-model="event.location" label="Ubicación" lazy-rules :rules="[
+                            <q-input filled v-model="event.location" label="Ubicación" lazy-rules :rules="[
                                 (val: any) =>
                                     (val !== null && val !== '') ||
                                     'Por favor, ingresa la ubicación',
@@ -246,7 +246,7 @@ async function saveEvent() {
 
             <q-step :name="3" title="Cronograma" icon="calendar_month" :done="step > 3">
                 <q-form ref="thirdStepForm" class="q-gutter-md">
-                    <q-file outlined v-model="eventFile" label="Imagen del proyecto"
+                    <q-file filled v-model="eventFile" label="Imagen del proyecto"
                         :rules="[Rules.required, Rules.fileType, Rules.fileSize]" />
                 </q-form>
             </q-step>

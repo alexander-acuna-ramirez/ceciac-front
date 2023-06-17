@@ -53,17 +53,17 @@ async function resetDialog() {
         <q-form @submit="save">
           <div class="row q-col-gutter-sm">
             <q-input :rules="[Rules.required]" placeholder="Ej. Universidad Católica de Santa María"
-              class="col-md-6 col-12" v-model="education.school" label="Institución" outlined />
+              class="col-md-6 col-12" v-model="education.school" label="Institución" filled />
 
             <q-input :rules="[Rules.required]" class="col-md-6 col-12" v-model="education.field_of_study"
-              label="Campo de estudio" outlined />
+              label="Campo de estudio" filled />
             <q-input :rules="[Rules.required]" rows="2" class="col-12" v-model="education.description" type="textarea"
-              label="Descripción" outlined />
+              label="Descripción" filled />
 
             <q-input :rules="[Rules.required]" placeholder="Ej. Bachiller en educación" class="col-12"
-              v-model="education.degree" label="Grado" outlined />
+              v-model="education.degree" label="Grado" filled />
 
-            <q-input class="col-12 col-md-6" outlined v-model="education.start_date" mask="date"
+            <q-input class="col-12 col-md-6" filled v-model="education.start_date" mask="date"
               :rules="['date', Rules.required]" label="Fecha de inicio">
               <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
@@ -78,8 +78,8 @@ async function resetDialog() {
               </template>
             </q-input>
 
-            <q-input :rules="[]" class="col-12 col-md-6" label="Fecha de finalización" outlined
-              v-model="education.end_date" mask="date">
+            <q-input :rules="[]" class="col-12 col-md-6" label="Fecha de finalización" filled v-model="education.end_date"
+              mask="date">
               <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
                   <q-popup-proxy cover transition-show="scale" transition-hide="scale">

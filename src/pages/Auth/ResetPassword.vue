@@ -82,14 +82,14 @@ onMounted(() => {
             <q-separator />
             <q-card-section v-if="resetStatus == 0">
                 <q-form ref="passwordForm" class="row q-col-gutter-md">
-                    <q-input class="col-12" v-model="password" type="password" label="Contraseña" outlined lazy-rules
+                    <q-input class="col-12" v-model="password" type="password" label="Contraseña" filled lazy-rules
                         :rules="[Rules.required]">
                         <template v-slot:append>
                             <q-icon name="lock" />
                         </template>
                     </q-input>
 
-                    <q-input class="col-12" v-model="confirmPassword" type="password" label="Confirmar Contraseña" outlined
+                    <q-input class="col-12" v-model="confirmPassword" type="password" label="Confirmar Contraseña" filled
                         lazy-rules :rules="[Rules.required, (val) => val == password || 'Las contraseñas no coinciden']">
                     </q-input>
                 </q-form>

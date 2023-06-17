@@ -149,18 +149,17 @@
         <q-card-section>
           <q-form @submit="saveBasicInfo">
             <div class="row q-col-gutter-sm">
-              <q-input class="col-12 " dense v-model="userData.name" type="text" label="Nombre" outlined lazy-rules
+              <q-input class="col-12 " dense v-model="userData.name" type="text" label="Nombre" filled lazy-rules
                 :rules="[Rules.required]" />
-              <q-input class="col-12 " dense v-model="userData.lastname" type="text" label="Apellidos" outlined lazy-rules
+              <q-input class="col-12 " dense v-model="userData.lastname" type="text" label="Apellidos" filled lazy-rules
                 :rules="[Rules.required]" />
-              <q-select class="col-12 col-sm-12 col-md-6" dense outlined v-model="userData.id_country"
-                :options="countries" label="Pais" emit-value map-options option-value="id" option-label="name"
-                :rules="[Rules.required]" />
-              <q-select class="col-12 col-sm-12 col-md-6" dense outlined v-model="userData.id_profession"
+              <q-select class="col-12 col-sm-12 col-md-6" dense filled v-model="userData.id_country" :options="countries"
+                label="Pais" emit-value map-options option-value="id" option-label="name" :rules="[Rules.required]" />
+              <q-select class="col-12 col-sm-12 col-md-6" dense filled v-model="userData.id_profession"
                 :options="professions" label="Profesión" emit-value map-options option-value="id" option-label="name"
                 :rules="[Rules.required]" />
               <q-input rows="2" placeholder="Ej. Ingeniero de Sistemas | Analista de datos" class="col-12"
-                v-model="userData.professional_summary" type="textarea" label="Titular" outlined />
+                v-model="userData.professional_summary" type="textarea" label="Titular" filled />
             </div>
 
 
@@ -186,11 +185,11 @@
         <q-card-section>
           <q-form @submit="updateAboutMe">
             <div class="row q-col-gutter-sm">
-              <q-select class="col-12" label="¿Qué eres?" outlined v-model="userProfileTypesSelection" use-input use-chips
+              <q-select class="col-12" label="¿Qué eres?" filled v-model="userProfileTypesSelection" use-input use-chips
                 multiple input-debounce="0" :options="userProfileTypes" option-value="id" option-label="name" emit-value
                 map-options :rules="[Rules.required]" />
 
-              <q-input mask="NNNN-NNNN-NNNN-NNNN" outlined class="col-12 col-md-6" v-model="userData.orcid_code"
+              <q-input mask="NNNN-NNNN-NNNN-NNNN" filled class="col-12 col-md-6" v-model="userData.orcid_code"
                 label="Código Orcid" :rules="[Rules.orcid]">
                 <template v-slot:append>
                   <q-avatar>
@@ -199,7 +198,7 @@
                 </template>
               </q-input>
 
-              <q-input :rules="[Rules.optionalLinkedin]" outlined class="col-12 col-md-6" v-model="userData.linkedin"
+              <q-input :rules="[Rules.optionalLinkedin]" filled class="col-12 col-md-6" v-model="userData.linkedin"
                 label="Linkedin">
                 <template v-slot:append>
                   <q-avatar>
@@ -209,7 +208,7 @@
               </q-input>
 
               <q-input rows="2" placeholder="Ej. Ingeniero de Sistemas | Analista de datos" class="col-12"
-                v-model="userData.summary" type="textarea" label="Acerca de mí" outlined />
+                v-model="userData.summary" type="textarea" label="Acerca de mí" filled />
 
 
 
@@ -278,7 +277,7 @@ function openBannerChange() {
     prompt: {
       model: '',
       type: 'file',
-      outlined: true,
+      filled: true,
     },
     cancel: true,
     persistent: true
@@ -298,7 +297,7 @@ function openLogoChange() {
     prompt: {
       model: '',
       type: 'file',
-      outlined: true,
+      filled: true,
     },
     cancel: true,
     persistent: true

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { Event, Network } from 'src/models';
+import { BlogCategory, BlogPost, Network } from 'src/models';
 import { useQuasar } from 'quasar';
 import { ExploreService, BlogService, NetworkService } from 'src/services';
 import { onMounted, reactive, ref, watch } from 'vue';
-import EventCard from '../Events/components/EventCard.vue';
+import PostCard from 'src/pages/Blog/components/PostCard.vue';
 
 interface FilterOption {
     label: string,
@@ -12,36 +12,10 @@ interface FilterOption {
 }
 const $q = useQuasar();
 const exploreService = new ExploreService();
+const blogService = new BlogService();
 const networkService = new NetworkService();
-const events = reactive<Event[]>([]);
-const optionsCategory = reactive<FilterOption[]>([
-    {
-        label: 'Presencial',
-        value: 1,
-        disable: false
-    },
-    {
-        label: 'Virtual',
-        value: 0,
-        disable: false
-    },
-
-]);
-
-const optionsModality = reactive<FilterOption[]>([
-    {
-        label: 'Privado',
-        value: 1,
-        disable: false
-    },
-    {
-        label: 'Publico',
-        value: 0,
-        disable: false
-    },
-
-]);
-
+const events = reactive<BlogPost[]>([]);
+const optionsCategory = reactive<FilterOption[]>([]);
 
 const paginationData = reactive({
     current_page: 1,
@@ -106,14 +80,13 @@ const searchData = reactive({
     start_date: '',
     end_date: '',
     searchTerm: '',
-    is_public: [],
-    is_online: [],
+    category: [],
     institutions: [],
 });
-async function getEvents(page = 1) {
+async function getPosts(page = 1) {
     $q.loading.show();
     try {
-        const response = await exploreService.getEvents({
+        const response = await exploreService.getBlog({
             page,
             perpage: paginationData.perpage,
             ...searchData
@@ -128,6 +101,16 @@ async function getEvents(page = 1) {
     }
 }
 
+async function getCategories() {
+    const response = await blogService.getCategories();
+    const categories: BlogCategory[] = response.data;
+
+    optionsCategory.push(...categories.map((e) => {
+        return {
+            label: e.name, value: e.id, disable: false
+        }
+    }));
+}
 
 async function getNetworks() {
     const response = await networkService.getNetworks();
@@ -139,37 +122,37 @@ function clearFilters() {
         start_date: '',
         end_date: '',
         searchTerm: '',
-        is_public: [],
-        is_online: [],
+        category: [],
         institutions: [],
     });
-    getEvents(1);
+    getPosts(1);
 }
 
 
 const institutionSelected = ref<Network | null>(null)
 
 watch(current, (val) => {
-    getEvents(val);
+    getPosts(val);
 });
 watch(() => searchData.searchTerm, (term) => {
     if (term.length >= 5 || term.length == 0 || term == null || term == undefined) {
-        getEvents(1);
+        getPosts(1);
     }
-    //getEvents(1);
+    //getPosts(1);
 });
 watch(() => paginationData.perpage, (page) => {
-    getEvents(1);
+    getPosts(1);
 });
 watch(() => paginationData.sortBy, (sortBy) => {
-    getEvents(1);
+    getPosts(1);
 });
 watch(() => paginationData.sortOrder, (sortOrder) => {
-    getEvents(1);
+    getPosts(1);
 })
 
 onMounted(() => {
-    getEvents();
+    getPosts();
+    getCategories();
     getNetworks();
 });
 </script>
@@ -181,18 +164,7 @@ onMounted(() => {
 
                     <q-card-section>
                         <span class="text-subtitle1 text-accent text-bold">Categorias</span>
-                        <q-option-group v-model="searchData.is_online" type="checkbox" :options="optionsCategory">
-                            <template v-slot:label="opt">
-                                <div class="row items-center">
-                                    <span class="text-subtitle2 text-accent">{{ opt.label }}</span>
-                                </div>
-                            </template>
-                        </q-option-group>
-                    </q-card-section>
-
-                    <q-card-section>
-                        <span class="text-subtitle1 text-accent text-bold">Modalidad</span>
-                        <q-option-group v-model="searchData.is_public" type="checkbox" :options="optionsModality">
+                        <q-option-group v-model="searchData.category" type="checkbox" :options="optionsCategory">
                             <template v-slot:label="opt">
                                 <div class="row items-center">
                                     <span class="text-subtitle2 text-accent">{{ opt.label }}</span>
@@ -270,7 +242,7 @@ onMounted(() => {
                             <strong>Limpiar Filtros</strong>
                         </q-btn>
 
-                        <q-btn color="primary" @click="getEvents(1)" rounded>
+                        <q-btn color="primary" @click="getPosts(1)" rounded>
                             <strong>Filtrar</strong>
                         </q-btn>
 
@@ -309,7 +281,7 @@ onMounted(() => {
                     </div>
                     <div class="gallery q-mt-md">
 
-                        <event-card v-for="event in events" :event="event" :key="event.id"></event-card>
+                        <post-card v-for="event in events" :post="event" :key="event.id"></post-card>
                     </div>
                     <div class="flex flex-center q-mt-md" v-if="paginationData.last_page > 1">
                         <q-pagination v-model="current" :max="paginationData.last_page" />

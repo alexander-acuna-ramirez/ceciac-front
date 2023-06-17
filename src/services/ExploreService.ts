@@ -10,28 +10,59 @@ export class ExploreService {
     return api.get('/api/v1/explore/types');
   }
 
-  public getProjects(page = 1, searchTerm = '', type_id = '') {
-    let endpoint = '/api/v1/explore/projects?page=' + page;
-    if (searchTerm != '' && searchTerm != null) {
-      endpoint += '&searchTerm=' + searchTerm;
-    }
+  public getProjects({ page = 1, perpage = 10, sortBy = 'name', sortOrder = 'desc', start_date = '', end_date = '', searchTerm = '', category = [], institutions = [] } = {}) {
+    const queryParams = new URLSearchParams({
+      page: page.toString(),
+      perpage: perpage.toString(),
+      sortBy,
+      sortOrder,
+      start_date,
+      end_date,
+      searchTerm,
+      institutions: institutions.join(','),
+      category: category.join(',')
+    });
 
-    if (type_id != '' && type_id != null) {
-      endpoint += '&type_id=' + type_id;
-    }
-
+    const endpoint = `/api/v1/explore/projects?${queryParams.toString()}`;
     return api.get(endpoint);
   }
 
-  public getEvents(page = 1, start_date = '', end_date = '', searchTerm = '') {
-    const queryParams = new URLSearchParams();
 
-    queryParams.append('page', page.toString());
-    queryParams.append('start_date', start_date);
-    queryParams.append('end_date', end_date);
-    queryParams.append('searchTerm', searchTerm);
+  public getEvents({ page = 1, perpage = 10, sortBy = 'title', sortOrder = 'desc', start_date = '', end_date = '', searchTerm = '', is_public = [], is_online = [], institutions = [] } = {}) {
+    const queryParams = new URLSearchParams({
+      page: page.toString(),
+      perpage: perpage.toString(),
+      sortBy,
+      sortOrder,
+      start_date,
+      end_date,
+      searchTerm,
+      institutions: institutions.join(','),
+      is_public: is_public.join(','),
+      is_online: is_online.join(','),
+    });
 
     const endpoint = `/api/v1/explore/events?${queryParams.toString()}`;
+    return api.get(endpoint);
+  }
+
+
+
+
+  public getBlog({ page = 1, perpage = 10, sortBy = 'title', sortOrder = 'desc', start_date = '', end_date = '', searchTerm = '', category = [], institutions = [] } = {}) {
+    const queryParams = new URLSearchParams({
+      page: page.toString(),
+      perpage: perpage.toString(),
+      sortBy,
+      sortOrder,
+      start_date,
+      end_date,
+      searchTerm,
+      institutions: institutions.join(','),
+      category: category.join(',')
+    });
+
+    const endpoint = `/api/v1/explore/blog?${queryParams.toString()}`;
     return api.get(endpoint);
   }
 }

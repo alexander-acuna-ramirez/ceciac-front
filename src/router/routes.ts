@@ -116,6 +116,11 @@ const routes: RouteRecordRaw[] = [
         name: 'ExploreEventsPage',
         component: () => import('pages/Explore/ExploreEventsPage.vue'),
       },
+      {
+        path: 'explore/blog',
+        name: 'ExploreBlogPage',
+        component: () => import('pages/Explore/ExploreBlogPage.vue'),
+      },
 
       {
         path: '/under-construction',

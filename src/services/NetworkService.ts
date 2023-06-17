@@ -13,6 +13,9 @@ export class NetworkService {
   public async uploadBanner(file: FormData, id: string | number) {
     return api.post('/api/v1/network/upload-banner/' + id, file);
   }
+  public async getNetworks() {
+    return api.get('api/v1/networks');
+  }
 }
 
 //network/upload-logo/{network}

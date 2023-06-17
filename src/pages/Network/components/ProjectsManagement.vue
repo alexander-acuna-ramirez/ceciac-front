@@ -46,7 +46,7 @@ watch(current, (newX) => {
 <template>
   <q-card flat>
     <q-card-section class="flex justify-between">
-      <q-input v-model="searchTerm" type="text" label="Buscar proyecto" outlined>
+      <q-input v-model="searchTerm" type="text" label="Buscar proyecto" filled>
         <template v-slot:append>
           <q-icon name="search" />
         </template>
@@ -57,9 +57,8 @@ watch(current, (newX) => {
         </q-btn>
       </div>
     </q-card-section>
-    <q-card-section v-if="projects.length > 0" class="row q-col-gutter-lg ">
-      <project-card v-for="project in projects" :project="project" :key="project.id"
-        class="col-12 col-sm-6 col-md-4 col-lg-3"></project-card>
+    <q-card-section v-if="projects.length > 0" class="gallery">
+      <project-card v-for="project in projects" :project="project" :key="project.id"></project-card>
     </q-card-section>
     <q-card-section v-if="projects.length > 0 && paginationData.last_page != 1">
       <div class="q-pa-lg flex flex-center">
@@ -71,4 +70,21 @@ watch(current, (newX) => {
     </q-card-section>
   </q-card>
 </template>
-<style lang="scss"></style>
+<style lang="scss" scoped>
+.gallery {
+  display: grid;
+  gap: 3rem;
+  grid-auto-rows: 27rem;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+}
+
+
+@media (max-width: $breakpoint-md-min) {
+  .gallery {
+    display: grid;
+    gap: 1rem;
+    grid-auto-rows: 30rem;
+    grid-template-columns: 1fr;
+  }
+}
+</style>

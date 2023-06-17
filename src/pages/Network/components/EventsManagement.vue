@@ -45,7 +45,7 @@ watch(current, (newX) => {
 <template>
     <q-card flat>
         <q-card-section class="flex justify-between">
-            <q-input v-model="searchTerm" type="text" label="Buscar proyecto" outlined>
+            <q-input v-model="searchTerm" type="text" label="Buscar proyecto" filled>
                 <template v-slot:append>
                     <q-icon name="search" />
                 </template>

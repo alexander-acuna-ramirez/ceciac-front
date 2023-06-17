@@ -142,22 +142,22 @@ onMounted(() => {
                 <q-form ref="firstStepForm" class="q-gutter-md">
                     <div class="row q-col-gutter-md">
                         <div class="col-12 col-md-6">
-                            <q-input outlined v-model="blogPost.title" label="Titulo" hint="El titulo de tu evento"
-                                lazy-rules :rules="[Rules.required, Rules.maxLength]" />
+                            <q-input filled v-model="blogPost.title" label="Titulo" hint="El titulo de tu evento" lazy-rules
+                                :rules="[Rules.required, Rules.maxLength]" />
                         </div>
                         <div class="col-12 col-md-6">
-                            <q-select outlined v-model="blogPost.id_category" :options="categories" option-value="id"
+                            <q-select filled v-model="blogPost.id_category" :options="categories" option-value="id"
                                 option-label="name" emit-value map-options label="Categorias" :rules="[Rules.required]" />
                         </div>
                         <div class="col-12">
-                            <q-input outlined v-model="blogPost.short_description" label="Descripción" type="textarea"
+                            <q-input filled v-model="blogPost.short_description" label="Descripción" type="textarea"
                                 lazy-rules
                                 :rules="[Rules.required, (value) => value.length <= 150 || 'La descripción no puede ser mayor a 150 caracteres']" />
                         </div>
                         <div class="col-12">
-                            <q-select label="Tags" outlined v-model="postTags" use-input use-chips multiple
-                                input-debounce="0" :options="tags" option-value="id" option-label="name" emit-value
-                                map-options :rules="[Rules.required]" />
+                            <q-select label="Tags" filled v-model="postTags" use-input use-chips multiple input-debounce="0"
+                                :options="tags" option-value="id" option-label="name" emit-value map-options
+                                :rules="[Rules.required]" />
                         </div>
                     </div>
                 </q-form>
@@ -172,7 +172,7 @@ onMounted(() => {
 
             <q-step :name="3" title="Imagenes" icon="create_new_folder" :done="step > 3">
 
-                <q-file v-model="postFile" label="Imagen del Post" outlined :rules="[Rules.required]" accept=".jpg, image/*"
+                <q-file v-model="postFile" label="Imagen del Post" filled :rules="[Rules.required]" accept=".jpg, image/*"
                     max-file-size="20480000" />
             </q-step>
 

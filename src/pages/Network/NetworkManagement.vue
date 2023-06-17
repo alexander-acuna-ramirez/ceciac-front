@@ -250,7 +250,7 @@ onMounted(() => {
         <q-card-section>
           <q-stepper flat v-model="cropStepperStep" ref="stepper" color="primary" animated>
             <q-step :name="1" title="Seleccionar imagen" icon="settings" :done="cropStepperStep > 1">
-              <q-file v-model="fileCrop" outlined label="Imagen" accept=".jpg, image/*" max-file-size="2048000" />
+              <q-file v-model="fileCrop" filled label="Imagen" accept=".jpg, image/*" max-file-size="2048000" />
               <div class="q-mt-sm flex justify-end">
                 <q-btn color="primary" @click="nextCropStep"> Siguiente </q-btn>
               </div>

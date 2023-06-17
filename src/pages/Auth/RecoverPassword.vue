@@ -24,7 +24,7 @@ async function sendRecoverRequest() {
 
             <q-separator />
             <q-card-section>
-                <q-input v-model="email" type="text" label="E-mail" outlined lazy-rules v-if="!step">
+                <q-input v-model="email" type="text" label="E-mail" filled lazy-rules v-if="!step">
                     <template v-slot:append>
                         <q-icon name="alternate_email" />
                     </template>

@@ -130,21 +130,21 @@ onMounted(() => {
         <q-form @submit="register">
           <div class="text-h4 text-secondary text-bold q-pa-sm q-mb-sm">Crear cuenta</div>
           <div class="row q-col-gutter-sm">
-            <q-input class="col-12 col-md-6" dense v-model="registerUser.name" type="text" label="Nombre" outlined
+            <q-input class="col-12 col-md-6" dense v-model="registerUser.name" type="text" label="Nombre" filled
               lazy-rules :rules="[Rules.required]" />
-            <q-input class="col-12 col-md-6" dense v-model="registerUser.lastname" type="text" label="Apellidos" outlined
+            <q-input class="col-12 col-md-6" dense v-model="registerUser.lastname" type="text" label="Apellidos" filled
               lazy-rules :rules="[Rules.required]" />
-            <q-input class="col-12" dense v-model="registerUser.email" type="text" label="E-mail" outlined
+            <q-input class="col-12" dense v-model="registerUser.email" type="text" label="E-mail" filled
               :rules="[Rules.email]" />
-            <q-input class="col-12" dense v-model="registerUser.password" type="password" label="Contraseña" outlined
+            <q-input class="col-12" dense v-model="registerUser.password" type="password" label="Contraseña" filled
               :rules="[Rules.required]" />
-            <q-select class="col-12 col-sm-12 col-md-6" dense outlined v-model="registerUser.id_country"
+            <q-select class="col-12 col-sm-12 col-md-6" dense filled v-model="registerUser.id_country"
               :options="countries" label="Pais" emit-value map-options option-value="id" option-label="name"
               :rules="[Rules.required]" />
-            <q-select class="col-12 col-sm-12 col-md-6" dense outlined v-model="registerUser.id_profession"
+            <q-select class="col-12 col-sm-12 col-md-6" dense filled v-model="registerUser.id_profession"
               :options="professions" label="Profesión" emit-value map-options option-value="id" option-label="name"
               :rules="[Rules.required]" />
-            <q-select class="col-12" dense label="¿Qué eres?" outlined v-model="userProfileTypesSelection" use-input
+            <q-select class="col-12" dense label="¿Qué eres?" filled v-model="userProfileTypesSelection" use-input
               use-chips multiple input-debounce="0" :options="userProfileTypes" option-value="id" option-label="name"
               emit-value map-options :rules="[Rules.required]" />
           </div>
@@ -157,14 +157,14 @@ onMounted(() => {
         <q-form @submit="onSubmit">
           <div class="text-h4 text-secondary text-bold q-pa-sm q-mb-sm">Iniciar sesión</div>
           <div class="row">
-            <q-input class="col-12" v-model="userData.email" type="text" label="E-mail" outlined lazy-rules :rules="[
+            <q-input class="col-12" v-model="userData.email" type="text" label="E-mail" filled lazy-rules :rules="[
               (val: any) => (val && val.length > 0) || 'Ingrese un correo válido',
             ]">
               <template v-slot:append>
                 <q-icon name="alternate_email" />
               </template>
             </q-input>
-            <q-input class="col-12" v-model="userData.password" type="password" label="Contraseña" outlined lazy-rules
+            <q-input class="col-12" v-model="userData.password" type="password" label="Contraseña" filled lazy-rules
               :rules="[
                 (val: any) =>
                   (val && val.length > 0) || 'Ingrese una contraseña válida',

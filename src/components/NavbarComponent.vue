@@ -37,10 +37,8 @@ function openMenu() {
           style="text-decoration: none;">Proyectos</router-link>
         <router-link to="/explore/events" class="text-primary text-bold"
           style="text-decoration: none;">Eventos</router-link>
-        <router-link to="/under-construction" class="text-primary text-bold"
-          style="text-decoration: none;">Blog</router-link>
-        <router-link to="/under-construction" class="text-primary text-bold"
-          style="text-decoration: none;">Registro</router-link>
+        <router-link to="/explore/blog" class="text-primary text-bold" style="text-decoration: none;">Blog</router-link>
+        <router-link to="/login" class="text-primary text-bold" style="text-decoration: none;">Registro</router-link>
       </div>
 
       <q-space />

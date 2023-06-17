@@ -203,19 +203,19 @@ watch(
         <q-form ref="firstStepForm" class="q-gutter-md">
           <div class="row q-col-gutter-md">
             <div class="col-12 col-md-6">
-              <q-input v-model="project.name" label="Titulo" hint="El titulo de tu proyecto" lazy-rules outlined
+              <q-input v-model="project.name" label="Titulo" hint="El titulo de tu proyecto" lazy-rules filled
                 :rules="[Rules.required, Rules.maxLength]" />
             </div>
             <div class="col-12 col-md-6">
-              <q-select outlined v-model="project.type_id" :options="projectTypes" option-value="id" option-label="name"
+              <q-select filled v-model="project.type_id" :options="projectTypes" option-value="id" option-label="name"
                 emit-value map-options label="Tipo de proyecto" :rules="[Rules.required]" />
             </div>
             <div class="col-12">
-              <q-input outlined type="textarea" v-model="project.description" label="Descripción"
+              <q-input filled type="textarea" v-model="project.description" label="Descripción"
                 hint="Una descripción breve de tu proyecto" lazy-rules :rules="[Rules.required, Rules.maxLength]" />
             </div>
             <div class="col-12">
-              <q-select label="Tags" outlined v-model="projectTags" use-input use-chips multiple input-debounce="0"
+              <q-select label="Tags" filled v-model="projectTags" use-input use-chips multiple input-debounce="0"
                 :options="tags" option-value="id" option-label="name" emit-value map-options :rules="[Rules.required]" />
             </div>
           </div>
@@ -225,7 +225,7 @@ watch(
       <q-step :name="2" title="Definición del proyecto" icon="create_new_folder" :done="step > 2">
         <q-form ref="secondStepForm">
           <q-editor :toolbar="toolbarConfig.toolbarConfig" v-model="project.synopsis" min-height="10prem"
-            hint="Aqui puedes explicar todo tu proyecto" outlined />
+            hint="Aqui puedes explicar todo tu proyecto" filled />
         </q-form>
       </q-step>
 
@@ -233,7 +233,7 @@ watch(
         <q-form class="q-gutter-md" ref="thirdStepForm">
           <div class="row q-col-gutter-md">
             <div class="col-12 col-md-6">
-              <q-input outlined v-model="project.release_date" mask="date" label="Fecha de lanzamiento" :rules="['date']">
+              <q-input filled v-model="project.release_date" mask="date" label="Fecha de lanzamiento" :rules="['date']">
                 <template v-slot:append>
                   <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -248,7 +248,7 @@ watch(
               </q-input>
             </div>
             <div class="col-12 col-md-6">
-              <q-input outlined v-model="project.end_date" mask="date" :rules="['date']" label="Fecha de culminación">
+              <q-input filled v-model="project.end_date" mask="date" :rules="['date']" label="Fecha de culminación">
                 <template v-slot:append>
                   <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">

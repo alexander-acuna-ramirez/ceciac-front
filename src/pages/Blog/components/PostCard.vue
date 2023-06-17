@@ -27,8 +27,9 @@
                     <div class="col text-subtitle2 text-accent">
                         {{ post.network?.name }}
                     </div>
-                    <div class="text-subtitle2  text-accent">
-                        Hace 12 horas
+                    <div class="text-subtitle2  text-accent" v-if="post.created_at">
+
+                        {{ Functions.getTimeElapsed(post.created_at) }}
                     </div>
                 </div>
             </div>
@@ -40,6 +41,7 @@
 <script lang="ts" setup>
 import { BlogPost } from 'src/models';
 import { ref } from 'vue';
+import { Functions } from 'src/utils';
 const slide = ref(1);
 defineProps({
     post: {
