@@ -4,6 +4,7 @@ import { useQuasar } from 'quasar';
 import { ExploreService, BlogService, NetworkService } from 'src/services';
 import { onMounted, reactive, ref, watch } from 'vue';
 import ProjectCard from '../Projects/components/ProjectCard.vue';
+import { useRoute } from 'vue-router';
 
 interface FilterOption {
     label: string,
@@ -16,7 +17,7 @@ const blogService = new BlogService();
 const networkService = new NetworkService();
 const projects = reactive<Project[]>([]);
 const optionsCategory = reactive<FilterOption[]>([]);
-
+const route = useRoute();
 const paginationData = reactive({
     current_page: 1,
     total: 0,
@@ -151,6 +152,9 @@ watch(() => paginationData.sortOrder, (sortOrder) => {
 })
 
 onMounted(() => {
+    if (route.query.searchTerm) {
+        searchData.searchTerm = route.query.searchTerm as string;
+    }
     getPosts();
     getCategories();
     getNetworks();

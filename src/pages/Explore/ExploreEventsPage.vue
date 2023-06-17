@@ -4,6 +4,7 @@ import { useQuasar } from 'quasar';
 import { ExploreService, BlogService, NetworkService } from 'src/services';
 import { onMounted, reactive, ref, watch } from 'vue';
 import EventCard from '../Events/components/EventCard.vue';
+import { useRoute } from 'vue-router';
 
 interface FilterOption {
     label: string,
@@ -11,6 +12,7 @@ interface FilterOption {
     disable: boolean
 }
 const $q = useQuasar();
+const route = useRoute();
 const exploreService = new ExploreService();
 const networkService = new NetworkService();
 const events = reactive<Event[]>([]);
@@ -169,6 +171,9 @@ watch(() => paginationData.sortOrder, (sortOrder) => {
 })
 
 onMounted(() => {
+    if (route.query.searchTerm) {
+        searchData.searchTerm = route.query.searchTerm as string;
+    }
     getEvents();
     getNetworks();
 });

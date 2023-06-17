@@ -43,9 +43,8 @@ function openMenu() {
 
       <q-space />
 
-      <q-btn v-if="$q.screen.lt.sm" dense flat round icon="menu" color="primary" @click="openMenu" />
 
-      <div v-else class="q-pl-sm q-gutter-sm row items-center no-wrap">
+      <div class="q-pl-sm q-gutter-sm row items-center no-wrap" v-if="$q.screen.gt.sm">
         <q-btn style="box-shadow: none;" color="primary" rounded no-caps to="/login" v-if="!authStore.isAuthenticated">
           <small><strong>Iniciar Sesión</strong></small>
         </q-btn>
@@ -53,7 +52,7 @@ function openMenu() {
         <q-btn v-else style="box-shadow: none;" rounded color="primary" :label="'Bienvenido(a) ' + authStore.getUser.name"
           no-caps>
           <q-menu fit>
-            <q-list style="min-width: 100px" class="text-secondary">
+            <q-list style="min-width: 100px" class="text-accent">
               <q-item clickable v-close-popup :to="'/profile/' + authStore.getUser.id">
                 <q-item-section avatar>
                   <q-icon name="person" />
@@ -83,6 +82,8 @@ function openMenu() {
           </q-menu>
         </q-btn>
       </div>
+
+      <q-btn v-else dense flat round icon="menu" color="primary" @click="openMenu" />
     </q-toolbar>
   </q-header>
 </template>

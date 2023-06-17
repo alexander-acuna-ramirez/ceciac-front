@@ -3,6 +3,7 @@ import { BlogCategory, BlogPost, Network } from 'src/models';
 import { useQuasar } from 'quasar';
 import { ExploreService, BlogService, NetworkService } from 'src/services';
 import { onMounted, reactive, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import PostCard from 'src/pages/Blog/components/PostCard.vue';
 
 interface FilterOption {
@@ -11,6 +12,7 @@ interface FilterOption {
     disable: boolean
 }
 const $q = useQuasar();
+const route = useRoute();
 const exploreService = new ExploreService();
 const blogService = new BlogService();
 const networkService = new NetworkService();
@@ -151,6 +153,9 @@ watch(() => paginationData.sortOrder, (sortOrder) => {
 })
 
 onMounted(() => {
+    if (route.query.searchTerm) {
+        searchData.searchTerm = route.query.searchTerm as string;
+    }
     getPosts();
     getCategories();
     getNetworks();

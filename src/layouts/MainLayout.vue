@@ -17,7 +17,7 @@ function handleMenu() {
     <navbar-component @menu-open="handleMenu()"></navbar-component>
     <q-drawer v-model="leftDrawerOpen" side="left" overlay behavior="mobile" bordered>
       <div class="q-pa-md" style="max-width: 95%; margin: auto;">
-        <q-list padding class="rounded-borders text-secondary">
+        <q-list padding class="rounded-borders text-accent">
 
           <q-item clickable v-ripple active-class="my-menu-link" v-if="authStore.isAuthenticated">
             <q-item-section avatar>
@@ -32,7 +32,7 @@ function handleMenu() {
               <q-icon name="folder" />
             </q-item-section>
 
-            <q-item-section class="text-subtitle1">PORTAFOLIO</q-item-section>
+            <q-item-section class="text-subtitle1">Portafolio</q-item-section>
           </q-item>
 
           <q-item clickable v-ripple active-class="my-menu-link">
@@ -40,7 +40,7 @@ function handleMenu() {
               <q-icon name="group" />
             </q-item-section>
 
-            <q-item-section>NOSOTROS</q-item-section>
+            <q-item-section>Nosotros</q-item-section>
           </q-item>
 
           <q-item clickable v-ripple active-class="my-menu-link">
@@ -48,7 +48,7 @@ function handleMenu() {
               <q-icon name="list" />
             </q-item-section>
 
-            <q-item-section>PROYECTOS</q-item-section>
+            <q-item-section>Proyectos</q-item-section>
           </q-item>
 
           <q-item clickable v-ripple active-class="my-menu-link">
@@ -56,7 +56,7 @@ function handleMenu() {
               <q-icon name="event" />
             </q-item-section>
 
-            <q-item-section>EVENTOS</q-item-section>
+            <q-item-section>Eventos</q-item-section>
           </q-item>
 
           <q-item clickable v-ripple active-class="my-menu-link">
@@ -64,7 +64,7 @@ function handleMenu() {
               <q-icon name="topic" />
             </q-item-section>
 
-            <q-item-section>BLOG</q-item-section>
+            <q-item-section>Blog</q-item-section>
           </q-item>
 
           <q-item clickable v-ripple active-class="my-menu-link">
@@ -72,7 +72,7 @@ function handleMenu() {
               <q-icon name="window" />
             </q-item-section>
 
-            <q-item-section>REGISTRO</q-item-section>
+            <q-item-section>Registro</q-item-section>
           </q-item>
 
           <q-separator spaced />
@@ -82,33 +82,33 @@ function handleMenu() {
               <q-icon name="login" />
             </q-item-section>
 
-            <q-item-section>INICIAR SESIÓN</q-item-section>
+            <q-item-section>Iniciar Sesión</q-item-section>
           </q-item>
           <q-item clickable v-ripple active-class="my-menu-link" v-else>
             <q-item-section avatar>
               <q-icon name="logout" />
             </q-item-section>
 
-            <q-item-section>CERRAR SESIÓN</q-item-section>
+            <q-item-section>Cerrar Sesión</q-item-section>
           </q-item>
 
 
           <q-item clickable v-ripple active-class="my-menu-link">
             <q-item-section avatar>
               <q-icon name="help" />
-          </q-item-section>
+            </q-item-section>
 
-          <q-item-section>Help</q-item-section>
-        </q-item>
-      </q-list>
-    </div>
-  </q-drawer>
-  <q-page-container>
-    <router-view />
-    <footer-component></footer-component>
-  </q-page-container>
+            <q-item-section>Help</q-item-section>
+          </q-item>
+        </q-list>
+      </div>
+    </q-drawer>
+    <q-page-container>
+      <router-view />
+      <footer-component></footer-component>
+    </q-page-container>
 
-  <!--<q-footer class="bg-primary text-white q-pa-md">
+    <!--<q-footer class="bg-primary text-white q-pa-md">
       <div class="row">
         <div class="col">
           <div class="flex items-center">

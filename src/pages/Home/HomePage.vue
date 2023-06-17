@@ -13,13 +13,18 @@
                         en Universidades Consorcio GESIT
                     </div>
 
-                    <div>
-                        <q-input v-model="searchTerm" type="text" label="Comenzar a buscar" filled>
+                    <div class="row q-col-gutter-md">
+                        <q-select v-model="contentType" :options="options" outlined label="¿Que Buscas?"
+                            option-label="label" option-value="value" class="col-12 col-md-3" map-options emit-value
+                            filled />
+                        <q-input v-model="searchTerm" type="text" label="Comenzar a buscar" filled class="col-12 col-md-9">
                             <template v-slot:prepend>
                                 <q-icon name="search" />
                             </template>
                             <template v-slot:append>
-                                <q-btn color="primary" label="Buscar" />
+                                <q-btn color="primary" class="q-ml-sm" @click="searchData()">
+                                    <strong>Buscar</strong>
+                                </q-btn>
                             </template>
                         </q-input>
                     </div>
@@ -93,10 +98,11 @@
 import 'vue3-carousel/dist/carousel.css'
 import { Carousel, Slide, Navigation } from 'vue3-carousel'
 import { useQuasar } from 'quasar';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const $q = useQuasar();
-import { onMounted, reactive, ref } from 'vue';
+const router = useRouter();
 const slide = ref(1);
 const searchTerm = ref("");
 const faq = [
@@ -135,6 +141,21 @@ const slides = [
     { id: 10, title: 'Upc', src: 'img/institutions/upc.png' }
 ];
 
+const options = [
+    {
+        label: "Proyectos",
+        value: 1
+    },
+    {
+        label: "Eventos",
+        value: 2
+    },
+    {
+        label: "Blog",
+        value: 3
+    }
+];
+
 const itemsToShow = computed(() => {
     let value = 1;
     if ($q.screen.gt.sm) {
@@ -149,6 +170,25 @@ const itemsToShow = computed(() => {
     return value
 });
 
+const contentType = ref(1);
+function searchData() {
+
+    switch (contentType.value) {
+
+        case 1:
+            router.push('/explore/projects?searchTerm=' + searchTerm.value)
+            break;
+        case 2:
+            router.push('/explore/events?searchTerm=' + searchTerm.value)
+            break;
+        case 3:
+            router.push('/explore/blog?searchTerm=' + searchTerm.value)
+            break;
+
+        default:
+            break;
+    }
+}
 
 </script>
   

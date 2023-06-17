@@ -176,17 +176,16 @@ const members = reactive<NetworkCountry[]>([
                 foto: "https://i.ibb.co/XX2fgL1/224ee74e-6b1f-47ad-b111-117f43b7403e.jpg"
             },
             {
-                name: "Oscar Christian Medina Carpio",
-                email: "zoila.castillo@utp.ac.pa",
-                bio: "Ingeniero Biotecnólogo capacitado en energías renovables (biogás) por la empresa Snowleopard Project en Alemania y Kepler (energía y ecogestión) en España con experiencia en la construcción y manejo de plantas de biodigestión anaerobia y biofiltración de biogás a nivel industrial, me desempeño como Gerente General y Gestor de Innovación en la empresa SCENTINET S.A.C. Creador de la plataforma científica Mycelium Touch para la caracterización morfológica de hongos filamentosos y del modelo estratégico para la identificación de oportunidades de innovación Scentinet. Cuento con habilidades en el análisis de redes empresariales y buen manejo de modelos estratégicos, con experiencia en la formulación y gestión de proyectos de investigación e innovación, fundador del equipo de investigación INGbioproductores (Desarrollo de Productos Biotecnológicos). Soy el coordinador de la Incubadora de Empresas INNICIA y consultor en I+D+i de la empresa biotecnológica IBS (Industria Biotecnológica del Sur) en el desarrollo de controladores biológicos. ​",
+                name: "José Huerta Delgado",
+                email: "jhuertad@ucsm.edu.pe",
+                bio: "Magister en Administración y Dirección de Proyectos en UPC, certificado CAPM - PMI.  Actualmente trabajando en formulación, gestión de proyectos, docencia  en UCSM, Coordinador de Incubadora INNICIA y coordinador de innovación abierta en el proyecto DER 2.0 de Arequipa. Titulado con felicitaciones públicas de la Escuela Profesional de Ingeniería Comercial con especialidad de Economía de la Universidad Católica de Santa María. Especializado en Gestión de Proyectos con enfoque PMI de la Pontificia Universidad Católica del Perú​",
                 institucion: "Incubadora de Empresas INNICIA",
                 role: "Miembro",
-                id: "f0656ee1-95f5-4422-b84f-7cb5f7ed258c",
-                foto: "https://i.ibb.co/mCKx2TN/f0656ee1-95f5-4422-b84f-7cb5f7ed258c.jpg",
+                id: "3a87452b-73f6-4c4d-91c2-6d981f8d3b3d",
+                foto: "https://i.ibb.co/0qZNTDy/3a87452b-73f6-4c4d-91c2-6d981f8d3b3d.png",
             },
         ],
     },
-
 ]);
 const selected = ref("ALL");
 
@@ -224,14 +223,14 @@ const membersSelected = computed(() => {
 
         </div>
 
-        <div class="row q-col-gutter-md q-mt-md">
-            <div class="col-12 col-sm-6 col-md-4 flex justify-center" v-for="(member, key) in membersSelected" :key="key">
+        <div class="gallery">
+            <div v-for="(member, key) in membersSelected" :key="key">
                 <div class="main-card-container">
                     <q-card class="card-flip" flat>
 
                         <div class="front">
-                            <q-img :src="member.foto" spinner-color="primary" spinner-size="82px" height="350px"
-                                width="100%" style="border-radius: 15px 15px 0px 0px;" />
+                            <q-img :src="member.foto" spinner-color="primary" spinner-size="82px" height="75%" width="100%"
+                                style="border-radius: 15px 15px 0px 0px;" />
                             <q-card-section>
 
                                 <div>
@@ -269,8 +268,8 @@ const membersSelected = computed(() => {
 <style lang="scss">
 .main-card-container {
     position: relative;
-    height: 450px;
-    width: 350px;
+    height: 100%;
+    width: 100%;
 
     border-radius: 15px;
 }
@@ -301,7 +300,24 @@ const membersSelected = computed(() => {
     position: absolute;
     backface-visibility: hidden;
     transform: rotateY(180deg);
-    overflow-y: scroll;
+
     padding: 25px;
+}
+
+.gallery {
+    display: grid;
+    gap: 5rem;
+    grid-auto-rows: 35rem;
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+}
+
+
+@media (max-width: $breakpoint-md-min) {
+    .gallery {
+        display: grid;
+        gap: 1rem;
+        grid-auto-rows: 30rem;
+        grid-template-columns: 1fr;
+    }
 }
 </style>
