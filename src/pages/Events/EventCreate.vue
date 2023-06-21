@@ -162,7 +162,7 @@ async function saveEvent() {
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                                             <q-date v-model="event.date_time" mask="YYYY-MM-DD HH:mm">
                                                 <div class="row items-center justify-end">
-                                                    <q-btn v-close-popup label="Close" color="primary" flat />
+                                                    <q-btn unelevated v-close-popup label="Close" color="primary" flat />
                                                 </div>
                                             </q-date>
                                         </q-popup-proxy>
@@ -174,7 +174,7 @@ async function saveEvent() {
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                                             <q-time v-model="event.date_time" mask="YYYY-MM-DD HH:mm" format24h>
                                                 <div class="row items-center justify-end">
-                                                    <q-btn v-close-popup label="Close" color="primary" flat />
+                                                    <q-btn unelevated v-close-popup label="Close" color="primary" flat />
                                                 </div>
                                             </q-time>
                                         </q-popup-proxy>
@@ -195,7 +195,7 @@ async function saveEvent() {
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                                             <q-date v-model="event.end_date_time" mask="YYYY-MM-DD HH:mm">
                                                 <div class="row items-center justify-end">
-                                                    <q-btn v-close-popup label="Close" color="primary" flat />
+                                                    <q-btn unelevated v-close-popup label="Close" color="primary" flat />
                                                 </div>
                                             </q-date>
                                         </q-popup-proxy>
@@ -207,7 +207,7 @@ async function saveEvent() {
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                                             <q-time v-model="event.end_date_time" mask="YYYY-MM-DD HH:mm" format24h>
                                                 <div class="row items-center justify-end">
-                                                    <q-btn v-close-popup label="Close" color="primary" flat />
+                                                    <q-btn unelevated v-close-popup label="Close" color="primary" flat />
                                                 </div>
                                             </q-time>
                                         </q-popup-proxy>
@@ -254,10 +254,11 @@ async function saveEvent() {
 
             <template v-slot:navigation>
                 <q-stepper-navigation class="flex justify-end">
-                    <q-btn v-if="step > 1" flat color="primary" @click="($refs.stepper as QStepper).previous()"
+                    <q-btn unelevated v-if="step > 1" flat color="primary" @click="($refs.stepper as QStepper).previous()"
                         label="Atras" class="q-ml-sm" icon="chevron_left" />
 
-                    <q-btn @click="nextStep()" color="primary" :icon="step === 4 ? 'save' : 'chevron_right'" rounded>
+                    <q-btn unelevated @click="nextStep()" color="primary" :icon="step === 4 ? 'save' : 'chevron_right'"
+                        rounded>
                         <strong>{{ step === 4 ? 'Terminar' : 'Continuar' }}</strong>
                     </q-btn>
                 </q-stepper-navigation>

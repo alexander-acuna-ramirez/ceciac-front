@@ -13,20 +13,25 @@
                         en Universidades Consorcio GESIT
                     </div>
 
-                    <div class="row q-col-gutter-md">
-                        <q-select v-model="contentType" :options="options" outlined label="¿Que Buscas?"
-                            option-label="label" option-value="value" class="col-12 col-md-3" map-options emit-value
-                            filled />
-                        <q-input v-model="searchTerm" type="text" label="Comenzar a buscar" filled class="col-12 col-md-9">
-                            <template v-slot:prepend>
-                                <q-icon name="search" />
-                            </template>
-                            <template v-slot:append>
-                                <q-btn color="primary" class="q-ml-sm" @click="searchData()">
-                                    <strong>Buscar</strong>
-                                </q-btn>
-                            </template>
-                        </q-input>
+                    <div>
+                        <q-form @submit.prevent="searchData" @reset="onReset" class="row q-col-gutter-md">
+
+                            <q-select v-model="contentType" :options="options" outlined label="¿Que Buscas?"
+                                option-label="label" option-value="value" class="col-12 col-md-3" map-options emit-value
+                                filled />
+                            <q-input v-model="searchTerm" type="text" label="Comenzar a buscar" filled
+                                class="col-12 col-md-9">
+                                <template v-slot:prepend>
+                                    <q-icon name="search" />
+                                </template>
+                                <template v-slot:append>
+                                    <q-btn rounded unelevated type="submit" color="primary" class="q-ml-sm"
+                                        @click="searchData()">
+                                        <strong>Buscar</strong>
+                                    </q-btn>
+                                </template>
+                            </q-input>
+                        </q-form>
                     </div>
                 </div>
             </div>

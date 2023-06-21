@@ -5,7 +5,7 @@
       <q-card-section class="flex justify-between q-pt-md q-px-md">
         <div class="text-h6 text-secondary text-bold">Experiencia</div>
         <div>
-          <!--<q-btn color="primary" icon="edit" flat round size="xs" />-->
+          <!--<q-btn unelevated color="primary" icon="edit" flat round size="xs" />-->
           <ProfileExperienceCreate @created="loadExperiences" v-if="editProfile"></ProfileExperienceCreate>
         </div>
       </q-card-section>
@@ -40,7 +40,7 @@
       <q-card-section class="flex justify-between q-pt-md q-px-md">
         <div class="text-h6 text-secondary text-bold">Educación</div>
         <div>
-          <!--<q-btn color="primary" icon="edit" flat round size="xs" />-->
+          <!--<q-btn unelevated color="primary" icon="edit" flat round size="xs" />-->
           <ProfileEducationCreate @created="loadEducation" v-if="editProfile"></ProfileEducationCreate>
         </div>
       </q-card-section>

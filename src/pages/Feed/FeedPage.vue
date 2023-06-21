@@ -14,7 +14,7 @@
                 <q-item-label caption>Categoría 1</q-item-label>
               </q-item-section>
               <q-item-section side>
-                <q-btn icon="mdi-link" />
+                <q-btn unelevated icon="mdi-link" />
               </q-item-section>
             </q-item>
             <q-item>
@@ -23,7 +23,7 @@
                 <q-item-label caption>Categoría 2</q-item-label>
               </q-item-section>
               <q-item-section side>
-                <q-btn icon="mdi-link" />
+                <q-btn unelevated icon="mdi-link" />
               </q-item-section>
             </q-item>
             <q-item>
@@ -32,12 +32,12 @@
                 <q-item-label caption>Categoría 1</q-item-label>
               </q-item-section>
               <q-item-section side>
-                <q-btn icon="mdi-link" />
+                <q-btn unelevated icon="mdi-link" />
               </q-item-section>
             </q-item>
           </q-card-section>
           <q-card-section>
-            <q-btn color="primary" to="/project/create" style="width: 100%;" class="q-mt-md w-full"
+            <q-btn unelevated color="primary" to="/project/create" style="width: 100%;" class="q-mt-md w-full"
               label="Publica un proyecto" flat />
           </q-card-section>
         </q-card>
@@ -66,9 +66,9 @@
 
         <q-card-section>
           <div class="row items-center">
-            <q-btn icon="favorite_border" color="primary" class="q-mr-sm" />
-            <q-btn icon="share" color="primary" class="q-mr-sm" />
-            <q-btn icon="comment" color="primary" class="q-mr-sm" />
+            <q-btn unelevated icon="favorite_border" color="primary" class="q-mr-sm" />
+            <q-btn unelevated icon="share" color="primary" class="q-mr-sm" />
+            <q-btn unelevated icon="comment" color="primary" class="q-mr-sm" />
             <q-space />
             <div class="text-grey">50 likes</div>
           </div>
@@ -101,9 +101,9 @@
           </q-card-section>
 
           <q-card-section>
-            <q-btn flat icon="thumb_up" label="Like" />
-            <q-btn flat icon="comment" label="Comment" />
-            <q-btn flat icon="share" label="Share" />
+            <q-btn unelevated flat icon="thumb_up" label="Like" />
+            <q-btn unelevated flat icon="comment" label="Comment" />
+            <q-btn unelevated flat icon="share" label="Share" />
           </q-card-section>
         </q-card>
       </div>
@@ -121,7 +121,7 @@
                   <q-item-label caption>{{ event.date }}</q-item-label>
                 </q-item-section>
                 <q-item-section side>
-                  <q-btn icon="mdi-chevron-right" />
+                  <q-btn unelevated icon="mdi-chevron-right" />
                 </q-item-section>
               </q-item>
             </q-list>
@@ -141,7 +141,7 @@
                   <q-item-label caption>{{ network.category }}</q-item-label>
                 </q-item-section>
                 <q-item-section side>
-                  <q-btn icon="mdi-link" />
+                  <q-btn unelevated icon="mdi-link" />
                 </q-item-section>
               </q-item>
             </q-list>

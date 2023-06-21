@@ -27,6 +27,8 @@
                 <q-chip v-for="tag in post.tags" :label="tag.name" :key="tag.id" />
             </div>
             <q-separator spaced />
+            <!--
+
             <div class="comments-section">
                 <h3 class="text-h5 text-secondary">Comentarios</h3>
                 <div class="comment q-mt-md">
@@ -77,7 +79,7 @@
 
 
 
-            </div>
+        </div>-->
         </div>
     </q-page>
 </template>

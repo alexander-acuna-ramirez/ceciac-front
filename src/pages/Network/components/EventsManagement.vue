@@ -51,7 +51,7 @@ watch(current, (newX) => {
                 </template>
             </q-input>
             <div>
-                <q-btn color="primary" icon="add" label="Crear"
+                <q-btn unelevated color="primary" icon="add" label="Crear"
                     :to="{ name: 'EventCreate', params: { network: props.network } }" rounded />
             </div>
         </q-card-section>

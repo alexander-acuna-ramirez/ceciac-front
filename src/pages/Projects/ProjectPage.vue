@@ -174,8 +174,8 @@ onMounted(() => {
 
           </q-card-section>
         </q-card>
-        <q-btn class="q-mt-md" :disable="participating" style="box-shadow: none; width: 100%;" color="primary" rounded
-          no-caps @click="enroll">
+        <q-btn unelevated class="q-mt-md" :disable="participating" style="box-shadow: none; width: 100%;" color="primary"
+          rounded no-caps @click="enroll">
           <strong>{{ (participating) ? 'Inscrito' : 'Participar' }}</strong>
         </q-btn>
       </div>

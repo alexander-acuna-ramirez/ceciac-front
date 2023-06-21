@@ -53,7 +53,7 @@ const sortOptions = [
     },
     {
         label: "Descripción",
-        value: "descripcion",
+        value: "description",
     },
     {
         label: "Institución",
@@ -83,10 +83,14 @@ const searchData = reactive({
     searchTerm: '',
     category: [],
     institutions: [],
+    sortOrder: "",
+    sortBy: "",
 });
 async function getPosts(page = 1) {
     $q.loading.show();
     try {
+        searchData.sortBy = paginationData.sortBy;
+        searchData.sortOrder = paginationData.sortOrder;
         const response = await exploreService.getProjects({
             page,
             perpage: paginationData.perpage,
@@ -187,7 +191,7 @@ onMounted(() => {
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                                             <q-date v-model="searchData.start_date">
                                                 <div class="row items-center justify-end">
-                                                    <q-btn v-close-popup label="Close" color="primary" flat />
+                                                    <q-btn unelevated v-close-popup label="Close" color="primary" flat />
                                                 </div>
                                             </q-date>
                                         </q-popup-proxy>
@@ -201,7 +205,7 @@ onMounted(() => {
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                                             <q-date v-model="searchData.end_date">
                                                 <div class="row items-center justify-end">
-                                                    <q-btn v-close-popup label="Close" color="primary" flat />
+                                                    <q-btn unelevated v-close-popup label="Close" color="primary" flat />
                                                 </div>
                                             </q-date>
                                         </q-popup-proxy>
@@ -242,11 +246,11 @@ onMounted(() => {
                         </q-select>
                     </q-card-section>
                     <q-card-section class="flex justify-end">
-                        <q-btn color="accent" @click="clearFilters()" rounded flat>
+                        <q-btn unelevated color="accent" @click="clearFilters()" rounded flat>
                             <strong>Limpiar Filtros</strong>
                         </q-btn>
 
-                        <q-btn color="primary" @click="getPosts(1)" rounded>
+                        <q-btn unelevated color="primary" @click="getPosts(1)" rounded>
                             <strong>Filtrar</strong>
                         </q-btn>
 
@@ -263,8 +267,8 @@ onMounted(() => {
                             </template></q-input>
                         <q-space />
 
-                        <!--<q-btn flat round dense icon="apps" class="q-mr-xs" />
-                                                                <q-btn flat round dense icon="more_vert" />-->
+                        <!--<q-btn unelevated flat round dense icon="apps" class="q-mr-xs" />
+                                                                <q-btn unelevated flat round dense icon="more_vert" />-->
 
 
                         <q-select v-model="paginationData.perpage" :options="perpageOptions" option-label="label"

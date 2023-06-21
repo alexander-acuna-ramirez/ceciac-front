@@ -180,10 +180,11 @@ onMounted(() => {
 
             <template v-slot:navigation>
                 <q-stepper-navigation class="flex justify-end">
-                    <q-btn v-if="step > 1" flat color="primary" @click="($refs.stepper as QStepper).previous()"
+                    <q-btn unelevated v-if="step > 1" flat color="primary" @click="($refs.stepper as QStepper).previous()"
                         label="Atras" class="q-ml-sm" icon="chevron_left" />
 
-                    <q-btn @click="nextStep()" color="primary" :icon="step === 4 ? 'save' : 'chevron_right'" rounded>
+                    <q-btn unelevated @click="nextStep()" color="primary" :icon="step === 4 ? 'save' : 'chevron_right'"
+                        rounded>
                         <strong>{{ step === 4 ? 'Terminar' : 'Continuar' }}</strong>
                     </q-btn>
                 </q-stepper-navigation>

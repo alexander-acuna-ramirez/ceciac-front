@@ -114,7 +114,7 @@ onMounted(() => {
             </q-card-section>
 
             <q-card-actions align="right" v-if="resetStatus == 0">
-                <q-btn rounded color="primary" no-caps @click="changePassword()">
+                <q-btn unelevated rounded color="primary" no-caps @click="changePassword()">
                     <strong> Cambiar Contraseña </strong>
                 </q-btn>
             </q-card-actions>

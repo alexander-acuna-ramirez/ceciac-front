@@ -35,7 +35,7 @@ async function sendRecoverRequest() {
                 </div>
             </q-card-section>
             <q-card-actions align="right" v-if="!step">
-                <q-btn rounded color="primary" no-caps @click="sendRecoverRequest">
+                <q-btn unelevated rounded color="primary" no-caps @click="sendRecoverRequest">
                     <strong>
                         Recuperar Contraseña
                     </strong>

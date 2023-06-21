@@ -52,7 +52,8 @@ watch(current, (newX) => {
         </template>
       </q-input>
       <div>
-        <q-btn color="primary" icon="add" :to="{ name: 'ProjectCreate', params: { network: props.network } }" rounded>
+        <q-btn unelevated color="primary" icon="add" :to="{ name: 'ProjectCreate', params: { network: props.network } }"
+          rounded>
           <strong>Crear</strong>
         </q-btn>
       </div>

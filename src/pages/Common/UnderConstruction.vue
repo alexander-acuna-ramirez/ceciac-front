@@ -11,7 +11,7 @@
                     <q-input v-model="email" type="text" label="Tu correo" filled>
 
                         <template v-slot:append>
-                            <q-btn color="primary" icon="send" flat />
+                            <q-btn unelevated color="primary" icon="send" flat rounded />
                         </template>
                     </q-input>
                 </div>

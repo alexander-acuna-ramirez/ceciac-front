@@ -150,7 +150,8 @@ onMounted(() => {
                     </q-card-section>
                 </q-card>
 
-                <q-btn class="q-mt-md" style="width: 100%;" color="primary" label="Participar" @click="participate" />
+                <q-btn unelevated class="q-mt-md" style="width: 100%;" color="primary" label="Participar"
+                    @click="participate" />
             </div>
         </div>
     </q-page>

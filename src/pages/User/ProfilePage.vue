@@ -61,7 +61,7 @@
               </div>
             </div>
             <!-- Chip para el rango de la persona -->
-            <q-btn v-if="editProfile" color="primary" icon="edit" size="xs" round flat rounded
+            <q-btn unelevated v-if="editProfile" color="primary" icon="edit" size="xs" round flat rounded
               @click="basicInfoDialog = !basicInfoDialog" />
           </div>
         </div>
@@ -79,7 +79,8 @@
         <q-card flat style="border-radius: 15px;">
           <q-card-section class="q-pt-md q-px-md q-pb-none flex justify-between">
             <div class="text-h6 text-secondary text-bold">Acerca de</div>
-            <q-btn size="xs" color="primary" icon="edit" flat round @click="openAboutMeDialog" v-if="editProfile" />
+            <q-btn unelevated size="xs" color="primary" icon="edit" flat round @click="openAboutMeDialog"
+              v-if="editProfile" />
           </q-card-section>
           <q-card-section>
             <q-list separator>
@@ -164,9 +165,9 @@
 
 
             <div class="q-mt-md flex justify-end">
-              <q-btn @click="() => { basicInfoDialog = !basicInfoDialog; loadProfile(); }" label="Cancelar" no-caps
-                type="reset" color="primary" flat rounded class="q-ml-sm" />
-              <q-btn no-caps type="submit" color="primary" rounded>
+              <q-btn unelevated @click="() => { basicInfoDialog = !basicInfoDialog; loadProfile(); }" label="Cancelar"
+                no-caps type="reset" color="primary" flat rounded class="q-ml-sm" />
+              <q-btn unelevated no-caps type="submit" color="primary" rounded>
                 <strong>Guardar</strong>
               </q-btn>
             </div>
@@ -216,9 +217,9 @@
 
 
             <div class="q-mt-md flex justify-end">
-              <q-btn @click="() => { aboutMeInfoDialog = !aboutMeInfoDialog; loadProfile(); }" label="Cancelar" no-caps
-                type="reset" color="primary" flat rounded class="q-ml-sm" />
-              <q-btn no-caps type="submit" color="primary" rounded>
+              <q-btn unelevated @click="() => { aboutMeInfoDialog = !aboutMeInfoDialog; loadProfile(); }" label="Cancelar"
+                no-caps type="reset" color="primary" flat rounded class="q-ml-sm" />
+              <q-btn unelevated no-caps type="submit" color="primary" rounded>
                 <strong>Guardar</strong>
               </q-btn>
             </div>

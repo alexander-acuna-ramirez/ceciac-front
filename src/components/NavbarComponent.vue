@@ -45,14 +45,60 @@ function openMenu() {
 
 
       <div class="q-pl-sm q-gutter-sm row items-center no-wrap" v-if="$q.screen.gt.sm">
-        <q-btn style="box-shadow: none;" color="primary" rounded no-caps to="/login" v-if="!authStore.isAuthenticated">
+        <q-btn unelevated class="no-shadow" color="primary" rounded no-caps to="/login" v-if="!authStore.isAuthenticated">
           <small><strong>Iniciar Sesión</strong></small>
         </q-btn>
 
-        <q-btn v-else style="box-shadow: none;" rounded color="primary" :label="'Bienvenido(a) ' + authStore.getUser.name"
-          no-caps>
-          <q-menu fit>
-            <q-list style="min-width: 100px" class="text-accent">
+
+        <div class="flex">
+          <q-avatar rounded size="50px">
+            <img v-if="authStore.getUser.logo != ''" :src="authStore.getUser.logo" alt="USER LOGO">
+            <img v-if="authStore.getUser.logo == ''" src="~assets/img/app/user/user-profile-default.jpg" alt="USER LOGO">
+          </q-avatar>
+          <div class="q-ml-md">
+            <div class="text-primary text-subtitle1 text-bold">
+              {{ authStore.getUser.name + ' ' + authStore.getUser.lastname }}
+            </div>
+            <div class="text-accent text-subtitle2">
+              {{ authStore.getUser.email }}
+            </div>
+          </div>
+
+          <q-menu>
+            <q-list style="min-width: 100px" class="text-secondary">
+              <q-item clickable v-close-popup :to="'/profile/' + authStore.getUser.id">
+                <q-item-section avatar>
+                  <q-icon name="person" />
+                </q-item-section>
+                <q-item-section>Perfil</q-item-section>
+              </q-item>
+              <q-item clickable v-close-popup to="/network-management" v-if="authStore.getUser.network">
+                <q-item-section avatar>
+                  <q-icon name="groups" />
+                </q-item-section>
+                <q-item-section>Gestionar Red</q-item-section>
+              </q-item>
+              <q-item clickable v-close-popup>
+                <q-item-section avatar>
+                  <q-icon name="settings" />
+                </q-item-section>
+                <q-item-section>Configuraciones</q-item-section>
+              </q-item>
+              <q-separator />
+              <q-item clickable v-close-popup @click="logout()">
+                <q-item-section avatar>
+                  <q-icon name="logout" />
+                </q-item-section>
+                <q-item-section>Cerrar Sesión</q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </div>
+        <!--
+        <q-btn unelevated v-else style="box-shadow: none;" rounded color="primary"
+          :label="'Bienvenido(a) ' + authStore.getUser.name" no-caps>
+          <q-menu>
+            <q-list style="min-width: 100px" class="text-secondary">
               <q-item clickable v-close-popup :to="'/profile/' + authStore.getUser.id">
                 <q-item-section avatar>
                   <q-icon name="person" />
@@ -81,9 +127,12 @@ function openMenu() {
             </q-list>
           </q-menu>
         </q-btn>
+-->
+
+
       </div>
 
-      <q-btn v-else dense flat round icon="menu" color="primary" @click="openMenu" />
+      <q-btn unelevated v-else dense flat round icon="menu" color="primary" @click="openMenu" />
     </q-toolbar>
   </q-header>
 </template>

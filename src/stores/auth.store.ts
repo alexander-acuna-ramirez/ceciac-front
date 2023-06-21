@@ -7,8 +7,11 @@ export const useAuthStore = defineStore('userData', {
     user: {
       id: '',
       name: '',
+      lastname: '',
       email: '',
       network: false,
+      logo: '',
+      orcid_code: '',
     },
   }),
   getters: {
@@ -27,8 +30,11 @@ export const useAuthStore = defineStore('userData', {
       this.user = {
         id: '',
         name: '',
+        lastname: '',
         email: '',
         network: false,
+        logo: '',
+        orcid_code: '',
       };
       this.token = '';
     },

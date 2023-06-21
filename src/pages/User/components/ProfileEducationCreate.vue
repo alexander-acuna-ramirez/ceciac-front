@@ -42,7 +42,7 @@ async function resetDialog() {
 
 </script>
 <template>
-  <q-btn color="primary" icon="add" round flat @click="openCreationDialog" />
+  <q-btn unelevated color="primary" icon="add" round flat @click="openCreationDialog" />
   <q-dialog v-model="creationDialog">
     <q-card style="min-width: 65%;">
       <q-card-section>
@@ -70,7 +70,7 @@ async function resetDialog() {
                   <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                     <q-date v-model="education.start_date">
                       <div class="row items-center justify-end">
-                        <q-btn v-close-popup label="Close" color="primary" flat />
+                        <q-btn unelevated v-close-popup label="Close" color="primary" flat />
                       </div>
                     </q-date>
                   </q-popup-proxy>
@@ -85,7 +85,7 @@ async function resetDialog() {
                   <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                     <q-date v-model="education.end_date">
                       <div class="row items-center justify-end">
-                        <q-btn v-close-popup label="Close" color="primary" flat />
+                        <q-btn unelevated v-close-popup label="Close" color="primary" flat />
                       </div>
                     </q-date>
                   </q-popup-proxy>
@@ -99,9 +99,9 @@ async function resetDialog() {
 
 
           <div class="q-mt-md flex justify-end">
-            <q-btn label="Cancelar" no-caps type="reset" color="primary" flat rounded class="q-ml-sm"
+            <q-btn unelevated label="Cancelar" no-caps type="reset" color="primary" flat rounded class="q-ml-sm"
               @click="resetDialog" />
-            <q-btn no-caps type="submit" color="primary" rounded>
+            <q-btn unelevated no-caps type="submit" color="primary" rounded>
               <strong>Guardar</strong>
             </q-btn>
           </div>

@@ -19,12 +19,12 @@ const events = reactive<Event[]>([]);
 const optionsCategory = reactive<FilterOption[]>([
     {
         label: 'Presencial',
-        value: 1,
+        value: 0,
         disable: false
     },
     {
         label: 'Virtual',
-        value: 0,
+        value: 1,
         disable: false
     },
 
@@ -33,12 +33,12 @@ const optionsCategory = reactive<FilterOption[]>([
 const optionsModality = reactive<FilterOption[]>([
     {
         label: 'Privado',
-        value: 1,
+        value: 0,
         disable: false
     },
     {
         label: 'Publico',
-        value: 0,
+        value: 1,
         disable: false
     },
 
@@ -80,7 +80,7 @@ const sortOptions = [
     },
     {
         label: "Descripción",
-        value: "descripcion",
+        value: "description",
     },
     {
         label: "Institución",
@@ -111,9 +111,14 @@ const searchData = reactive({
     is_public: [],
     is_online: [],
     institutions: [],
+    sortOrder: "",
+    sortBy: "",
 });
 async function getEvents(page = 1) {
     $q.loading.show();
+    console.log(searchData);
+    searchData.sortOrder = paginationData.sortOrder;
+    searchData.sortBy = paginationData.sortBy;
     try {
         const response = await exploreService.getEvents({
             page,
@@ -216,7 +221,7 @@ onMounted(() => {
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                                             <q-date v-model="searchData.start_date">
                                                 <div class="row items-center justify-end">
-                                                    <q-btn v-close-popup label="Close" color="primary" flat />
+                                                    <q-btn unelevated v-close-popup label="Close" color="primary" flat />
                                                 </div>
                                             </q-date>
                                         </q-popup-proxy>
@@ -230,7 +235,7 @@ onMounted(() => {
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                                             <q-date v-model="searchData.end_date">
                                                 <div class="row items-center justify-end">
-                                                    <q-btn v-close-popup label="Close" color="primary" flat />
+                                                    <q-btn unelevated v-close-popup label="Close" color="primary" flat />
                                                 </div>
                                             </q-date>
                                         </q-popup-proxy>
@@ -271,11 +276,11 @@ onMounted(() => {
                         </q-select>
                     </q-card-section>
                     <q-card-section class="flex justify-end">
-                        <q-btn color="accent" @click="clearFilters()" rounded flat>
+                        <q-btn unelevated color="accent" @click="clearFilters()" rounded flat>
                             <strong>Limpiar Filtros</strong>
                         </q-btn>
 
-                        <q-btn color="primary" @click="getEvents(1)" rounded>
+                        <q-btn unelevated color="primary" @click="getEvents(1)" rounded>
                             <strong>Filtrar</strong>
                         </q-btn>
 
@@ -292,8 +297,8 @@ onMounted(() => {
                             </template></q-input>
                         <q-space />
 
-                        <!--<q-btn flat round dense icon="apps" class="q-mr-xs" />
-                                                                <q-btn flat round dense icon="more_vert" />-->
+                        <!--<q-btn unelevated flat round dense icon="apps" class="q-mr-xs" />
+                                                                <q-btn unelevated flat round dense icon="more_vert" />-->
 
 
                         <q-select v-model="paginationData.perpage" :options="perpageOptions" option-label="label"

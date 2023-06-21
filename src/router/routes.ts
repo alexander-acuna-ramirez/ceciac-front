@@ -101,10 +101,34 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/User/ProfilePage.vue'),
       },
       {
-        path: 'network-managment',
-        name: 'NetworkManagment',
+        path: 'network-management',
+        name: 'NetworkManagement',
         meta: { requiresAuth: true },
         component: () => import('pages/Network/NetworkManagement.vue'),
+        redirect: 'network-management/projects',
+        props: true,
+        children: [
+          {
+            path: 'projects',
+            name: 'NetworkManagementProjects',
+            component: () => import('pages/Network/components/ProjectsManagement.vue')
+          },
+          {
+            path: 'events',
+            name: 'NetworkManagementEvents',
+            component: () => import('pages/Network/components/EventsManagement.vue')
+          },
+          {
+            path: 'blog',
+            name: 'BlogManagementProjects',
+            component: () => import('pages/Network/components/BlogPostManagement.vue')
+          },
+          {
+            path: 'members',
+            name: 'MembersManagementProjects',
+            component: () => import('pages/Network/components/MembersManagement.vue')
+          }
+        ]
       },
       {
         path: 'explore/projects',

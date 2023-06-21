@@ -49,7 +49,7 @@ onMounted(() => {
 <template>
   <q-card>
     <q-card-section class="flex justify-end">
-      <q-btn color="primary" icon="add" :to="'/blog/create/' + props.network" rounded>
+      <q-btn unelevated color="primary" icon="add" :to="'/blog/create/' + props.network" rounded>
         <strong>Crear</strong>
       </q-btn>
     </q-card-section>
