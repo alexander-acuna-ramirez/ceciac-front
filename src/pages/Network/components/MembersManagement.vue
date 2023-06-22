@@ -1,164 +1,185 @@
 <script setup lang="ts">
-import { onMounted, reactive } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import { NetworkService } from 'src/services';
 import { NetworkRepresentative } from 'src/models';
-import { QTableColumn, QTableProps } from 'quasar';
 import { Functions } from 'src/utils';
+import ProfileManagementCard from 'src/pages/User/components/ProfileManagmentCard.vue'
 
 
 const props = defineProps({
-    network: {
-        required: true,
-        type: Number
-    },
+  network: {
+    required: true,
+    type: Number
+  },
 });
 const networkService = new NetworkService();
 const members = reactive<NetworkRepresentative[]>([]);
+const membersAddDialog = ref(false);
 const paginationData = reactive({
-    current_page: 1,
-    total: 0,
-    last_page: 0,
+  current_page: 1,
+  total: 0,
+  last_page: 0,
 });
 const pagination = reactive({
-    sortBy: 'id',
-    descending: false,
-    page: 1,
-    rowsPerPage: 10,
-    rowsNumber: 0,
+  sortBy: 'id',
+  descending: false,
+  page: 1,
+  rowsPerPage: 1,
+  rowsNumber: 0,
 });
 
 const searchData = reactive({
-    searchTerm: '',
-    rank: '',
+  searchTerm: '',
+  rank: '',
 })
 
 const ranks = [
-    { label: "Administrador", value: 1 },
-    { label: "Gestor", value: 2 },
-    { label: "Miembro", value: 2 },
+  { label: 'Administrador', value: 1 },
+  { label: 'Gestor de contenido', value: 2 },
+  { label: 'Miembro', value: 3 },
 ];
-const columns: QTableColumn[] = [
-    {
-        name: 'name',
-        required: true,
-        label: 'Nombre',
-        align: 'left',
-        field: (row) => row.user.name,
-    },
-    {
-        name: 'email',
-        required: true,
-        label: 'E-mail',
-        align: 'left',
-        field: (row) => row.user.email,
-    },
-    {
-        name: 'rank',
-        align: 'center',
-        label: 'Rango',
-        field: 'rank',
-        sortable: false,
-    },
-    {
-        name: 'created_at',
-        label: 'Fecha de asignación',
-        field: 'created_at',
-        sortable: false,
-    },
-    {
-        name: 'actions',
-        label: 'Acciones',
-        field: 'created_at',
-        sortable: false,
-    },
-];
+
+const memberAddRequest = reactive({
+  user: '',
+  rank: '',
+})
+const loadingAddMember = ref(false);
+
+const options = ref([]);
 
 async function loadMembers(
-    page = 1,
+  page = 1,
 ) {
-    const response = await networkService.networkMembersManage(
-        props.network as number,
-        {
-            page,
-            searchTerm: searchData.searchTerm,
-            rank: searchData.rank,
-            sortOrder: (pagination.descending) ? 'desc' : 'asc',
-            sortBy: pagination.sortBy,
-        }
-    );
+  const response = await networkService.networkMembersManage(
+    props.network as number,
+    {
+      page,
+      perpage: pagination.rowsNumber,
+      searchTerm: searchData.searchTerm,
+      rank: searchData.rank,
+      sortOrder: (pagination.descending) ? 'desc' : 'asc',
+      sortBy: pagination.sortBy,
+    }
+  );
 
-    members.splice(0, members.length);
-    members.push(...response.data.data);
-    pagination.rowsNumber = response.data.total;
+  members.splice(0, members.length);
+  members.push(...response.data);
+  //pagination.rowsNumber = response.data.total;
 
 }
 
-async function onRequestMembers(propsData: QTableProps) {
-    if (propsData.pagination) {
-        const { page, rowsPerPage, sortBy, descending } = propsData.pagination;
 
-
+function filterUser(val: string, update: any, abort: any) {
+  update(async () => {
+    if (val === '') {
+      options.value = [];
     }
+    else {
+      const response = await networkService.networkSearchUser(props.network ?? '', val.trim());
+      options.value = response.data;
+    }
+  })
+}
+async function addMember() {
+  loadingAddMember.value = true;
+  try {
+    await networkService.networkAddMember(props.network, memberAddRequest);
+    membersAddDialog.value = false;
+    Object.assign(memberAddRequest, {
+      user: '',
+      rank: '',
+    })
+    loadMembers(1);
+  } catch (e) {
+    console.error(e)
+  } finally {
+    loadingAddMember.value = false;
+  }
+
 }
 
 onMounted(() => {
-    loadMembers(1);
+  loadMembers(1);
 })
 
 </script>
 <template>
-    <q-card>
+  <q-card>
+    <q-card-section class="flex justify-end">
+      <q-btn color="primary" icon="add" label="Agregar" @click="membersAddDialog = true" rounded unelevated />
+    </q-card-section>
+    <q-card-section class="gallery">
+      <profile-management-card @reload="loadMembers(1)" v-for="member in members" :member="member"
+        :key="member.id"></profile-management-card>
+    </q-card-section>
+    <q-card-section>
+      <!--<q-pagination v-model="pagination.page" :max="pagination.rowsNumber" />-->
+    </q-card-section>
 
+
+    <q-dialog v-model="membersAddDialog">
+      <q-card style="width: 100%;">
         <q-card-section>
-            <q-table title="Miembros" :data="members" :columns="columns" row-key="id" v-model:pagination="pagination"
-                @request="onRequestMembers" flat :rows="members">
-                <template v-slot:top>
-                    <div class="text-h6 text-primary text-bold">Miembros</div>
-                    <q-space />
-                    <q-btn unelevated color="primary" icon="add" rounded>
-                        <strong>Invitar</strong>
-                    </q-btn>
-                </template>
-                <template v-slot:body="props">
-                    <q-tr :props="props">
-                        <q-td key="name" :props="props">
-                            {{ props.row.user.name }}
-                        </q-td>
-                        <q-td key="email" :props="props">
-                            {{ props.row.user.email }}
-                        </q-td>
-                        <q-td key="rank" :props="props">
-                            <q-chip label="Administrador" size="sm" v-if="props.row.rank == 1" />
-                            <q-chip label="Gestor de contenido" size="sm" v-if="props.row.rank == 2" />
-                            <q-chip label="Miembro" size="sm" v-if="props.row.rank == 3" />
-                        </q-td>
-                        <q-td key="created_at" :props="props">
-                            {{ Functions.formatDate(props.row.created_at) }}
-                        </q-td>
-                        <q-td key="actions" :props="props">
-                            <q-btn unelevated flat round color="primary" icon="close" :disable="props.row.rank == 1" />
-                        </q-td>
-                    </q-tr>
-                </template>
-            </q-table>
+          <div class="text-h6 text-primary text-bold">
+            Agregar Usuario
+          </div>
         </q-card-section>
-    </q-card>
+        <q-card-section class="row q-col-gutter-md">
+          <q-select class="col-12" filled v-model="memberAddRequest.user" use-input input-debounce="0"
+            label="Buscar Usuarios" :options="options" @filter="filterUser" hint="Ingrese el e-mail" option-label="email"
+            option-value="id" emit-value map-options>
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  Sin resultados
+                </q-item-section>
+              </q-item>
+            </template>
+
+            <template v-slot:option="scope">
+              <q-item v-bind="scope.itemProps">
+                <q-item-section avatar>
+                  <q-avatar size="50px" rounded>
+                    <img :src="scope.opt.logo.fullpath" alt="Logo" v-if="scope.opt.logo != null">
+                    <img src="~assets/img/app/user/user-profile-default.jpg" alt="Logo" v-else>
+                  </q-avatar>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>{{ scope.opt.name + ' ' + scope.opt.lastname }}</q-item-label>
+                  <q-item-label caption>{{ scope.opt.email }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+
+          <q-select class="col-12" v-model="memberAddRequest.rank" :options="ranks" label="Rango" filled
+            option-label="label" option-value="value" emit-value map-options />
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn unelevated flat label="Cancelar" color="secondary" v-close-popup rounded />
+          <q-btn unelevated color="primary" @click="addMember()" rounded :loading="loadingAddMember">
+            <strong>Agregar</strong>
+          </q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+  </q-card>
 </template>
 <style lang="scss" scoped>
 .gallery {
-    display: grid;
-    gap: 3rem;
-    grid-auto-rows: 27rem;
-    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  display: grid;
+  gap: 3rem;
+  grid-auto-rows: 27rem;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
 }
 
 
 @media (max-width: $breakpoint-md-min) {
-    .gallery {
-        display: grid;
-        gap: 1rem;
-        grid-auto-rows: 30rem;
-        grid-template-columns: 1fr;
-    }
+  .gallery {
+    display: grid;
+    gap: 1rem;
+    grid-auto-rows: 30rem;
+    grid-template-columns: 1fr;
+  }
 }
 </style>

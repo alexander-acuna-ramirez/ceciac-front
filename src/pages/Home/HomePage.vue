@@ -8,9 +8,12 @@
                     <div class="text-h3 text-bold text-secondary ">Plataforma de integración de la
                         RED <span class="text-primary">CECIAC</span></div>
                     <div class="text-subtitle1 q-mb-sm text-accent">
-                        Fortalecer capacidades de gestión de innovación (tecnológica, no tecnológica) con orientación
-                        prosocial
-                        en Universidades Consorcio GESIT
+                        Construcción y
+                        evaluación de
+                        capacidades
+                        de gestión de
+                        innovación en las
+                        universidades
                     </div>
 
                     <div>
@@ -143,7 +146,8 @@ const slides = [
     { id: 7, title: 'Ucsm', src: 'img/institutions/ucsm.svg' },
     { id: 8, title: 'Unam', src: 'img/institutions/unam.jpg' },
     { id: 9, title: 'Utp', src: 'img/institutions/utp.jpg' },
-    { id: 10, title: 'Upc', src: 'img/institutions/upc.png' }
+    { id: 10, title: 'Upc', src: 'img/institutions/upc.png' },
+    { id: 10, title: 'UGalileo', src: 'img/institutions/u-galileo.png' }
 ];
 
 const options = [

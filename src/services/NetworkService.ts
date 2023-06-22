@@ -4,6 +4,10 @@ export class NetworkService {
   public getUserNetwork(id: string | number) {
     return api.get('/api/v1/network-representative/' + id);
   }
+
+  public deleteUserNetwork(id: string | number) {
+    return api.delete('/api/v1/network-representative/' + id);
+  }
   public networkMembers(id: string | number) {
     return api.get('api/v1/network/members/' + id);
   }
@@ -25,8 +29,8 @@ export class NetworkService {
     return api.get('/api/v1/search-users/network?network=' + network + '&email=' + email);
   }
 
-  public networkAddMember(network: string | number, { user = '', rank = '' } = {}){
-    return api.post('/api/v1/network/add/' + network, {user, rank});
+  public networkAddMember(network: string | number, { user = '', rank = '' } = {}) {
+    return api.post('/api/v1/network/add/' + network, { user, rank });
   }
 
   public async uploadLogo(file: FormData, id: string | number) {

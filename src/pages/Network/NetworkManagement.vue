@@ -89,7 +89,7 @@ const ranks = [
   },
   {
     label: "Miembro",
-    value: 2
+    value: 3
   },
 ]
 const memberAddRequest = reactive({
@@ -179,7 +179,7 @@ function openMembers() {
 async function onRequestMembers(props: QTableProps) {
   if (props.pagination) {
     const { page, rowsPerPage, sortBy, descending } = props.pagination;
-    loadMembers(page, '', '', 'desc', 'name');
+    //loadMembers(page, '', '', 'desc', 'name');
   }
 }
 

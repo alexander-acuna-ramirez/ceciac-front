@@ -110,6 +110,15 @@ const members = reactive<NetworkCountry[]>([
             },
 
             {
+                name: "Agueda Garcia Carrillo",
+                email: "agueda.garciaupc.edu",
+                bio: "Graduada en Ingeniería Química por la Universidad de Ramon Llull (URL) en 1994, Máster en Ergonomía por la UPC en 1997 y Postgrado en Fase Creativa en la Innovación de los Productos y Servicios por la UPC en 1998. En 2004 se Doctora en Ciencias en la UPC, dentro del Programa de Doctorado de Ingeniería de Sistemas Técnicos. Actualmente es Investigadora del Departamento de Ingeniería de Proyectos y de la Construcción en la ETSEIB (UPC) desde 2008. Sus intereses de investigación se centran en la gestión de la innovación y la enseñanza en ingeniería. Participa en los programas de doctorado de UPC de Sostenibilidad y de Administración y Gestión de Empresas. Ha dirigido 9 tesis doctorales, ha participado en proyectos nacionales e internacionales. Ha publicado más de 100 trabajos científicos entre revistas científicas, congresos (nacionales / internacionales), patentes y capítulos de libros. Es miembro de la Asociación Española de Dirección e Ingeniería de Proyectos (AEIPRO), miembro de la Asociación Internacional de Gestión de Proyectos (IPMA).",
+                institucion: "Universitat Politécnica de Catalunya (UPC)",
+                role: "Miembro",
+                id: "fe9c7e6d-98c7-4b52-9db4-8828e23a0b5f",
+                foto: "https://i.ibb.co/cXPwT9r/a17d9882-db75-462b-93ca-2618cd929b1b.jpg"
+            },
+            {
                 name: "Juan Carlos Marcillo Delgado",
                 email: "jacqueline.tatiana.hidrobo@upc.edu",
                 bio: "Juan C. Marcillo-Delgado, Licenciado en Gestión Económica (Université Jean Monnet Saint Etienne; Francia, 2011), Ingeniero en Ciencias Económicas y Financieras (EPN, 2012), Máster en Dirección de Empresas MBA (EPN, 2016), Máster en Estadística e Investigación Operativa (Universidad Politécnica de Cataluña, 2018), Postgrado profesional en Sistemas de Información Geográfica (Universidad de Girona, 2019), Programa de Doctorado en Sostenibilidad (Estudiante de doctorado, UPC, 2018-2022). Su campo laboral se ha centrado en el manejo de bases de datos, manejo de información de proyectos, análisis de procesos estadísticos, análisis de cuantificación de riesgos, evaluación educativa. Sus intereses de investigación se centran en modelos estadísticos aplicados a la innovación y la comunicación para la reducción del riesgo de desastres. orcid.org/0000-0002-1991-7498​",
@@ -172,8 +181,8 @@ const members = reactive<NetworkCountry[]>([
                 bio: "Doctora en Ingeniería de Sistemas, Magister en Sistemas de Información y en Educación Superior. Certificacion CCNA CISCO. Coordinador del Área de Ingenierías del CICA-UCSM. Investigador en tecnologías de la Información. Directora de Innovación y Desarrollo Vicerrectorado de Investigación Universidad Católica de Santa María, Perú​",
                 institucion: "Universidad Católica de Santa María",
                 role: "Miembro",
-                id: "224ee74e-6b1f-47ad-b111-117f43b7403e",
-                foto: "https://i.ibb.co/XX2fgL1/224ee74e-6b1f-47ad-b111-117f43b7403e.jpg"
+                id: "3b21a2e4-18e9-48c3-ae44-6e68ad57d304",
+                foto: "https://i.ibb.co/0pNyBW6/3b21a2e4-18e9-48c3-ae44-6e68ad57d304.jpg"
             },
             {
                 name: "José Huerta Delgado",
@@ -184,6 +193,7 @@ const members = reactive<NetworkCountry[]>([
                 id: "3a87452b-73f6-4c4d-91c2-6d981f8d3b3d",
                 foto: "https://i.ibb.co/0qZNTDy/3a87452b-73f6-4c4d-91c2-6d981f8d3b3d.png",
             },
+            // <img src="https://i.ibb.co/0pNyBW6/3b21a2e4-18e9-48c3-ae44-6e68ad57d304.jpg" alt="3b21a2e4-18e9-48c3-ae44-6e68ad57d304" border="0">
         ],
     },
 ]);

@@ -46,11 +46,12 @@ watch(current, (newX) => {
 <template>
   <q-card flat>
     <q-card-section class="flex justify-between">
-      <q-input v-model="searchTerm" type="text" label="Buscar proyecto" filled>
+      <!--<q-input v-model="searchTerm" type="text" label="Buscar proyecto" filled>
         <template v-slot:append>
           <q-icon name="search" />
         </template>
-      </q-input>
+      </q-input>-->
+      <q-space />
       <div>
         <q-btn unelevated color="primary" icon="add" :to="{ name: 'ProjectCreate', params: { network: props.network } }"
           rounded>

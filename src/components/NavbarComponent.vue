@@ -50,11 +50,17 @@ function openMenu() {
         </q-btn>
 
 
-        <div class="flex">
-          <q-avatar rounded size="50px">
-            <img v-if="authStore.getUser.logo != ''" :src="authStore.getUser.logo" alt="USER LOGO">
-            <img v-if="authStore.getUser.logo == ''" src="~assets/img/app/user/user-profile-default.jpg" alt="USER LOGO">
+        <div class="flex userloged" v-else>
+          <q-avatar rounded size="50px" v-if="authStore.getUser.logo !== '' && authStore.getUser.logo != null">
+            <img :src="authStore.getUser.logo" alt="USER LOGO">
+            <img src="~assets/img/app/user/user-profile-default.jpg" alt="USER LOGO">
           </q-avatar>
+
+          <q-avatar rounded size="50px" v-else>
+
+            <img src="~assets/img/app/user/user-profile-default.jpg" alt="USER LOGO">
+          </q-avatar>
+
           <div class="q-ml-md">
             <div class="text-primary text-subtitle1 text-bold">
               {{ authStore.getUser.name + ' ' + authStore.getUser.lastname }}
@@ -137,4 +143,8 @@ function openMenu() {
   </q-header>
 </template>
 
-<style scoped></style>
+<style scoped>
+.userLoged:hover {
+  background-color: rgb(246, 247, 248);
+}
+</style>
