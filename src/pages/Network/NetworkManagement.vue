@@ -3,10 +3,6 @@ import { NetworkService } from 'src/services/NetworkService';
 import { NetworkRepresentative, Network } from 'src/models';
 import { useAuthStore } from 'src/stores/auth.store';
 import { ref, onMounted, reactive } from 'vue';
-import ProjectsManagement from './components/ProjectsManagement.vue';
-import EventsManagement from './components/EventsManagement.vue';
-import BlogPostManagement from './components/BlogPostManagement.vue';
-import BuildingPage from 'src/components/BuildingPage.vue';
 import { QTableColumn, useQuasar, QTableProps } from 'quasar';
 import VuePictureCropper, { cropper } from 'vue-picture-cropper';
 import { Functions } from 'src/utils';
@@ -80,15 +76,15 @@ const columns: QTableColumn[] = [
 
 const ranks = [
   {
-    label: "Administrador",
+    label: 'Administrador',
     value: 1
   },
   {
-    label: "Gestor",
+    label: 'Gestor',
     value: 2
   },
   {
-    label: "Miembro",
+    label: 'Miembro',
     value: 3
   },
 ]
@@ -171,14 +167,14 @@ function openBannerChange() {
   cropMode.value = 1;
   cropDialog.value = true;
 }
-
+/*
 function openMembers() {
   membersDialog.value = true;
-}
+}*/
 
 async function onRequestMembers(props: QTableProps) {
   if (props.pagination) {
-    const { page, rowsPerPage, sortBy, descending } = props.pagination;
+    //const { page, rowsPerPage, sortBy, descending } = props.pagination;
     //loadMembers(page, '', '', 'desc', 'name');
   }
 }

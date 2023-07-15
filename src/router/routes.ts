@@ -31,6 +31,12 @@ const routes: RouteRecordRaw[] = [
             component: () => import('pages/Projects/ProjectCreate.vue'),
           },
           {
+            path: 'settings/:id?',
+            name: 'ProjectSettings',
+            meta: { requiresAuth: true },
+            component: () => import('pages/Projects/ProjectSettings.vue'),
+          },
+          {
             path: 'detail/:id',
             name: 'ProjectPage',
             component: () => import('pages/Projects/ProjectPage.vue'),
@@ -105,7 +111,7 @@ const routes: RouteRecordRaw[] = [
         name: 'NetworkManagement',
         meta: { requiresAuth: true },
         component: () => import('pages/Network/NetworkManagement.vue'),
-        redirect: 'network-management/projects',
+        redirect: '/network-management/projects',
         props: true,
         children: [
           {
@@ -171,6 +177,10 @@ const routes: RouteRecordRaw[] = [
     props: (route) => ({
       token: route.query.token || '',
     }),
+  },
+  {
+    path: '/not-found',
+    component: () => import('pages/ErrorNotFound.vue'),
   },
   {
     path: '/:catchAll(.*)*',

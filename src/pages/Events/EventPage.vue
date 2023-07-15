@@ -2,7 +2,7 @@
 import { ref, onMounted, reactive } from 'vue';
 import { EventService } from 'src/services';
 import { RouteParams, useRoute } from 'vue-router';
-import { Event } from '@models/Event';
+import { Event } from 'src/models/Event';
 
 const eventService = new EventService();
 const route = useRoute();

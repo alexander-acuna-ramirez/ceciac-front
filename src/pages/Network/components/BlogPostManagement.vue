@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { onMounted, reactive } from 'vue';
 import { BlogService } from 'src/services';
-import { BlogPost } from '@models/BlogPost';
+import { BlogPost } from 'src/models/BlogPost';
 import PostCard from 'src/pages/Blog/components/PostCard.vue';
 
 const blogService = new BlogService();
 const props = defineProps({
   network: {
     required: true,
-    type: Number
+    type: Number,
   },
 });
 
@@ -36,30 +36,46 @@ async function loadNetworkBlogPosts() {
   params.append('sortBy', filter.sortBy);
   params.append('sortOrder', filter.sortOrder);
 
-  const response = await blogService.blogNetwork(props.network.toString(), params);
+  const response = await blogService.blogNetwork(
+    props.network.toString(),
+    params
+  );
   posts.push(...response.data.data);
   Object.assign(paginationData, response.data);
 }
 
 onMounted(() => {
   loadNetworkBlogPosts();
-})
-
+});
 </script>
 <template>
   <q-card>
     <q-card-section class="flex justify-end">
-      <q-btn unelevated color="primary" icon="add" :to="'/blog/create/' + props.network" rounded>
+      <q-btn
+        unelevated
+        color="primary"
+        icon="add"
+        :to="'/blog/create/' + props.network"
+        rounded
+      >
         <strong>Crear</strong>
       </q-btn>
     </q-card-section>
     <q-card-section>
       <div v-if="posts.length > 0" class="gallery">
-        <post-card v-for="post in posts" :post="post" :key="post.id" class="q-col-md-4 q-col-xs-12"></post-card>
+        <post-card
+          v-for="post in posts"
+          :post="post"
+          :key="post.id"
+          class="q-col-md-4 q-col-xs-12"
+        ></post-card>
       </div>
       <div v-if="posts.length > 0 && paginationData.last_page != 1">
         <div class="q-pa-lg flex flex-center">
-          <q-pagination v-model="paginationData.current_page" :max="paginationData.last_page" />
+          <q-pagination
+            v-model="paginationData.current_page"
+            :max="paginationData.last_page"
+          />
         </div>
       </div>
     </q-card-section>
@@ -72,7 +88,6 @@ onMounted(() => {
   grid-auto-rows: 27rem;
   grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
 }
-
 
 @media (max-width: $breakpoint-md-min) {
   .gallery {

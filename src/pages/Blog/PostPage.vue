@@ -1,33 +1,33 @@
 <template>
-    <q-page class="flex justify-center">
-        <div class="containerPage">
-            <div class="q-my-lg">
-                <span class="text-accent">
-                    {{ post.category?.name }}
-                </span>
-                <div class="text-h2 text-primary text-bold">{{ post.title }}</div>
-                <div class="text-accent flex justify-left q-mb-md">
-                    <span>
-                        Por {{ post.network?.name }}
-                    </span>
-                    <q-separator spaced vertical />
-                    <span>
-                        Tiempo de lectura {{ calculateReadingTime(post.content) }} min
-                    </span>
-                </div>
-            </div>
+  <q-page class="flex justify-center">
+    <div class="containerPage">
+      <div class="q-my-lg">
+        <span class="text-accent">
+          {{ post.category?.name }}
+        </span>
+        <div class="text-h2 text-primary text-bold">{{ post.title }}</div>
+        <div class="text-accent flex justify-left q-mb-md">
+          <span>
+            Por {{ post.network?.name }}
+          </span>
+          <q-separator spaced vertical />
+          <span>
+            Tiempo de lectura {{ calculateReadingTime(post.content) }} min
+          </span>
+        </div>
+      </div>
 
 
-            <div class="postImage q-mb-lg">
-                <q-img :src="post.file?.fullpath" spinner-color="primary" spinner-size="82px" class="rounded-borders" />
-            </div>
-            <div v-html="post.content" class="q-mb-lg"></div>
-            <div>
-                <span class="text-subtitle1 text-secondary">Tags: </span>
-                <q-chip v-for="tag in post.tags" :label="tag.name" :key="tag.id" />
-            </div>
-            <q-separator spaced />
-            <!--
+      <div class="postImage q-mb-lg">
+        <q-img :src="post.file?.fullpath" spinner-color="primary" spinner-size="82px" class="rounded-borders" />
+      </div>
+      <div v-html="post.content" class="q-mb-lg"></div>
+      <div>
+        <span class="text-subtitle1 text-secondary">Tags: </span>
+        <q-chip v-for="tag in post.tags" :label="tag.name" :key="tag.id" />
+      </div>
+      <q-separator spaced />
+      <!--
 
             <div class="comments-section">
                 <h3 class="text-h5 text-secondary">Comentarios</h3>
@@ -80,15 +80,15 @@
 
 
         </div>-->
-        </div>
-    </q-page>
+    </div>
+  </q-page>
 </template>
 
 <script lang="ts" setup>
 import { onMounted, reactive } from 'vue';
 import { useRoute, RouteParams } from 'vue-router';
 import { BlogService } from 'src/services';
-import { BlogPost } from '@models/BlogPost';
+import { BlogPost } from 'src/models/BlogPost';
 
 const blogService = new BlogService();
 const route = useRoute();
@@ -124,15 +124,15 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .postImage {
-    height: auto;
-    width: 100%;
+  height: auto;
+  width: 100%;
 }
 
 .comments-section {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 .comment {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 </style>

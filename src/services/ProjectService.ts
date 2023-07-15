@@ -1,5 +1,5 @@
 import { api } from 'src/boot/axios';
-import { Project } from '@models/Project';
+import { Project } from 'src/models/Project';
 
 export class ProjectService {
   public store(project: Project) {

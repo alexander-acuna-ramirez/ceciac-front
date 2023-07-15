@@ -2,13 +2,13 @@
 import { ref, onMounted, reactive } from 'vue';
 import { ProjectService } from 'src/services/ProjectService';
 import { RouteParams, useRoute } from 'vue-router';
-import { Project } from '@models/Project';
+import { Project } from 'src/models/Project';
+import { useRouter } from 'vue-router';
 
 const projectService = new ProjectService();
 const route = useRoute();
-
+const router = useRouter();
 const slide = ref(1);
-
 const participating = ref(false);
 const project = reactive<Project>({
   name: '',
@@ -27,7 +27,7 @@ async function loadProject() {
     Object.assign(project, response.data);
     console.log(project);
   } catch (e) {
-    console.error(e);
+    router.push('/not-found');
   }
 }
 
