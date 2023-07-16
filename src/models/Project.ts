@@ -1,6 +1,7 @@
 import { File } from './File';
 import { Network } from './Network';
 import { ProjectType } from './ProjectType';
+import { Tag } from './Tag';
 
 export interface Project {
   id?: number;
@@ -16,4 +17,5 @@ export interface Project {
   network?: Network;
   type?: ProjectType;
   files?: File[];
+  tags?: Tag[];
 }

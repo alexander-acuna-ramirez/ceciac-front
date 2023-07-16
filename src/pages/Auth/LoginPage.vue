@@ -48,7 +48,7 @@ const onSubmit = async () => {
       return;
     }
     let loginData = login.data.data;
-    authStore.setToken(loginData.token)
+    authStore.setToken(loginData.token);
     authStore.setUser(loginData.user);
 
     router.push('/');
@@ -68,8 +68,8 @@ async function register(e: Event) {
     console.log(registerUser);
     let data = {
       ...registerUser,
-      userProfiles: userProfileTypesSelection.value
-    }
+      userProfiles: userProfileTypesSelection.value,
+    };
     const login = await registerService.store(data);
     if (login.data.success != true) {
       $q.notify({
@@ -80,11 +80,10 @@ async function register(e: Event) {
       return;
     }
     let loginData = login.data.data;
-    authStore.setToken(loginData.token)
+    authStore.setToken(loginData.token);
     authStore.setUser(loginData.user);
 
     router.push('/');
-
   } catch (e) {
     $q.notify({
       color: 'negative',
@@ -100,7 +99,6 @@ function changeForm(e: Event) {
   panel.value = !panel.value;
 }
 
-
 async function loadCountries() {
   const response = await registerService.countries();
   countries.push(...response.data);
@@ -111,7 +109,6 @@ async function loadUserProfileTypes() {
   userProfileTypes.push(...response.data);
 }
 
-
 async function loadProfessions() {
   const response = await registerService.professions();
   professions.push(...response.data);
@@ -120,79 +117,178 @@ onMounted(() => {
   loadCountries();
   loadProfessions();
   loadUserProfileTypes();
-})
+});
 </script>
 
 <template>
   <div style="height: 100vh" class="auth-container">
-    <div :class="{ container: true, 'right-panel-active': panel }" id="container">
+    <div
+      :class="{ container: true, 'right-panel-active': panel }"
+      id="container"
+    >
       <div class="form-container sign-up-container">
         <q-form @submit="register">
-          <div class="text-h4 text-secondary text-bold q-pa-sm q-mb-sm">Crear cuenta</div>
+          <div class="text-h4 text-secondary text-bold q-pa-sm q-mb-sm">
+            Crear cuenta
+          </div>
           <div class="row q-col-gutter-sm">
-            <q-input class="col-12 col-md-6" dense v-model="registerUser.name" type="text" label="Nombre" filled
-              lazy-rules :rules="[Rules.required]" />
-            <q-input class="col-12 col-md-6" dense v-model="registerUser.lastname" type="text" label="Apellidos" filled
-              lazy-rules :rules="[Rules.required]" />
-            <q-input class="col-12" dense v-model="registerUser.email" type="text" label="E-mail" filled
-              :rules="[Rules.email]" />
-            <q-input class="col-12" dense v-model="registerUser.password" type="password" label="Contraseña" filled
-              :rules="[Rules.required]" />
-            <q-select class="col-12 col-sm-12 col-md-6" dense filled v-model="registerUser.id_country"
-              :options="countries" label="Pais" emit-value map-options option-value="id" option-label="name"
-              :rules="[Rules.required]" />
-            <q-select class="col-12 col-sm-12 col-md-6" dense filled v-model="registerUser.id_profession"
-              :options="professions" label="Profesión" emit-value map-options option-value="id" option-label="name"
-              :rules="[Rules.required]" />
-            <q-select class="col-12" dense label="¿Qué eres?" filled v-model="userProfileTypesSelection" use-input
-              use-chips multiple input-debounce="0" :options="userProfileTypes" option-value="id" option-label="name"
-              emit-value map-options :rules="[Rules.required]" />
+            <q-input
+              class="col-12 col-md-6"
+              dense
+              v-model="registerUser.name"
+              type="text"
+              label="Nombre"
+              filled
+              lazy-rules
+              :rules="[Rules.required]"
+            />
+            <q-input
+              class="col-12 col-md-6"
+              dense
+              v-model="registerUser.lastname"
+              type="text"
+              label="Apellidos"
+              filled
+              lazy-rules
+              :rules="[Rules.required]"
+            />
+            <q-input
+              class="col-12"
+              dense
+              v-model="registerUser.email"
+              type="text"
+              label="E-mail"
+              filled
+              :rules="[Rules.email]"
+            />
+            <q-input
+              class="col-12"
+              dense
+              v-model="registerUser.password"
+              type="password"
+              label="Contraseña"
+              filled
+              :rules="[Rules.required]"
+            />
+            <q-select
+              class="col-12 col-sm-12 col-md-6"
+              dense
+              filled
+              v-model="registerUser.id_country"
+              :options="countries"
+              label="Pais"
+              emit-value
+              map-options
+              option-value="id"
+              option-label="nicename"
+              :rules="[Rules.required]"
+            />
+            <q-select
+              class="col-12 col-sm-12 col-md-6"
+              dense
+              filled
+              v-model="registerUser.id_profession"
+              :options="professions"
+              label="Profesión"
+              emit-value
+              map-options
+              option-value="id"
+              option-label="name"
+              :rules="[Rules.required]"
+            />
+            <q-select
+              class="col-12"
+              dense
+              label="¿Qué eres?"
+              filled
+              v-model="userProfileTypesSelection"
+              use-input
+              use-chips
+              multiple
+              input-debounce="0"
+              :options="userProfileTypes"
+              option-value="id"
+              option-label="name"
+              emit-value
+              map-options
+              :rules="[Rules.required]"
+            />
           </div>
 
-          <a href="#" @click="changeForm">¿Tienes cuenta? Inicia Sesión Aqui!</a>
+          <a href="#" @click="changeForm"
+            >¿Tienes cuenta? Inicia Sesión Aqui!</a
+          >
           <button class="bg-primary" type="submit">Registrarse</button>
         </q-form>
       </div>
       <div class="form-container sign-in-container">
         <q-form @submit="onSubmit">
-          <div class="text-h4 text-secondary text-bold q-pa-sm q-mb-sm">Iniciar sesión</div>
+          <div class="text-h4 text-secondary text-bold q-pa-sm q-mb-sm">
+            Iniciar sesión
+          </div>
           <div class="row">
-            <q-input class="col-12" v-model="userData.email" type="text" label="E-mail" filled lazy-rules :rules="[
+            <q-input
+              class="col-12"
+              v-model="userData.email"
+              type="text"
+              label="E-mail"
+              filled
+              lazy-rules
+              :rules="[
               (val: any) => (val && val.length > 0) || 'Ingrese un correo válido',
-            ]">
+            ]"
+            >
               <template v-slot:append>
                 <q-icon name="alternate_email" />
               </template>
             </q-input>
-            <q-input class="col-12" v-model="userData.password" type="password" label="Contraseña" filled lazy-rules
+            <q-input
+              class="col-12"
+              v-model="userData.password"
+              type="password"
+              label="Contraseña"
+              filled
+              lazy-rules
               :rules="[
                 (val: any) =>
                   (val && val.length > 0) || 'Ingrese una contraseña válida',
-              ]">
+              ]"
+            >
               <template v-slot:append>
                 <q-icon name="lock" />
               </template>
             </q-input>
           </div>
 
-
-          <span class="text-subtitle2">¿Olvidaste tu contraseña? <router-link to="/recover-password"
-              class="text-secondary">Recuperala
-              Aquí</router-link></span>
-          <button type="submit" class="bg-primary q-mt-sm">Iniciar sesión</button>
+          <span class="text-subtitle2"
+            >¿Olvidaste tu contraseña?
+            <router-link to="/recover-password" class="text-secondary"
+              >Recuperala Aquí</router-link
+            ></span
+          >
+          <button type="submit" class="bg-primary q-mt-sm">
+            Iniciar sesión
+          </button>
         </q-form>
       </div>
       <div class="overlay-container">
         <div class="overlay bg-primary">
           <div class="overlay-panel overlay-left">
             <div class="text-h4 text-bold">¡Bienvenido de vuelta!</div>
-            <p>Para seguir conectado con nosotros, inicia sesión con tu información personal</p>
-            <button class="ghost" id="signIn" @click="panel = !panel">Iniciar sesión</button>
+            <p>
+              Para seguir conectado con nosotros, inicia sesión con tu
+              información personal
+            </p>
+            <button class="ghost" id="signIn" @click="panel = !panel">
+              Iniciar sesión
+            </button>
           </div>
           <div class="overlay-panel overlay-right">
             <div class="text-h3 text-bold">¡Hola, amigo!</div>
             <p>Ingresa tus datos personales y comienza tu viaje con nosotros</p>
-            <button class="ghost" id="signUp" @click="panel = !panel">Registrarse</button>
+            <button class="ghost" id="signUp" @click="panel = !panel">
+              Registrarse
+            </button>
           </div>
         </div>
       </div>
@@ -241,7 +337,7 @@ a {
 button {
   border-radius: 20px;
   border: 1px solid white;
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 12px;
   font-weight: bold;
   padding: 12px 45px;
@@ -260,11 +356,11 @@ button:focus {
 
 button.ghost {
   background-color: transparent;
-  border-color: #FFFFFF;
+  border-color: #ffffff;
 }
 
 form {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -282,8 +378,7 @@ form {
 
 .container {
   background-color: #fff;
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
-    0 10px 10px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
   position: relative;
   overflow: hidden;
   width: 100%;
@@ -323,7 +418,6 @@ form {
 }
 
 @keyframes show {
-
   0%,
   49.99% {
     opacity: 0;
@@ -356,7 +450,7 @@ form {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: 0 0;
-  color: #FFFFFF;
+  color: #ffffff;
   position: relative;
   left: -100%;
   height: 100%;
@@ -364,8 +458,6 @@ form {
   transform: translateX(0);
   transition: transform 0.6s ease-in-out;
 }
-
-
 
 @media (max-width: $breakpoint-sm-max) {
   .container {
@@ -384,7 +476,6 @@ form {
   .overlay-container {
     display: none;
   }
-
 
   .container .sign-in-container {
     transform: translate(0%);
@@ -405,7 +496,6 @@ form {
   form {
     padding: 0px 10%;
   }
-
 }
 
 @media (max-width: $breakpoint-xs-max) {
@@ -418,8 +508,6 @@ form {
     padding: 0px 5%;
   }
 }
-
-
 
 .container.right-panel-active .overlay {
   transform: translateX(50%);
@@ -462,7 +550,7 @@ form {
 }
 
 .social-container a {
-  border: 1px solid #DDDDDD;
+  border: 1px solid #dddddd;
   border-radius: 50%;
   display: inline-flex;
   justify-content: center;

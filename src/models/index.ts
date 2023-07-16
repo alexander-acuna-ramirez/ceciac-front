@@ -10,6 +10,7 @@ export * from './Network';
 export * from './NetworkRepresentative';
 export * from './Profession';
 export * from './Project';
+export * from './ProjectParticipant';
 export * from './ProjectType';
 export * from './Tag';
 export * from './User';

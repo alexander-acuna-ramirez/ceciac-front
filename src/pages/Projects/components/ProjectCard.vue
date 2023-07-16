@@ -40,7 +40,6 @@ function openSetting() {
       >
         <q-chip :label="project.type?.name" size="md" />
         <q-btn
-          color="secondary"
           icon="settings"
           flat
           size="md"

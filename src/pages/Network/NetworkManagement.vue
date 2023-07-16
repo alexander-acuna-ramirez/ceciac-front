@@ -77,21 +77,21 @@ const columns: QTableColumn[] = [
 const ranks = [
   {
     label: 'Administrador',
-    value: 1
+    value: 1,
   },
   {
     label: 'Gestor',
-    value: 2
+    value: 2,
   },
   {
     label: 'Miembro',
-    value: 3
+    value: 3,
   },
-]
+];
 const memberAddRequest = reactive({
   user: '',
   rank: '',
-})
+});
 const membersAddDialog = ref(false);
 const paginationMembers = ref({
   sortBy: 'desc',
@@ -206,15 +206,18 @@ async function loadMembers(
   paginationMembers.value.rowsNumber = response.data.total as number;
 }
 function filterUser(val: string, update: any, abort: any) {
+  console.log(abort);
   update(async () => {
     if (val === '') {
       options.value = [];
-    }
-    else {
-      const response = await networkService.networkSearchUser(network.id ?? '', val.trim());
+    } else {
+      const response = await networkService.networkSearchUser(
+        network.id ?? '',
+        val.trim()
+      );
       options.value = response.data;
     }
-  })
+  });
 }
 
 onMounted(() => {
@@ -225,16 +228,37 @@ onMounted(() => {
   <q-page padding>
     <q-card flat style="border-radius: 15px">
       <div class="q-pa-sm">
-        <q-img v-if="network.banner" style="border-radius: 15px" :src="network.banner?.fullpath" :ratio="16 / 9"
-          height="250px" spinner-color="primary" spinner-size="82px" fit="cover" class="my-img">
-          <div class="absolute-full text-subtitle2 flex flex-center my-text" @click="openBannerChange">
+        <q-img
+          v-if="network.banner"
+          style="border-radius: 15px"
+          :src="network.banner?.fullpath"
+          :ratio="16 / 9"
+          height="250px"
+          spinner-color="primary"
+          spinner-size="82px"
+          fit="cover"
+          class="my-img"
+        >
+          <div
+            class="absolute-full text-subtitle2 flex flex-center my-text"
+            @click="openBannerChange"
+          >
             <q-icon name="photo_camera" />
           </div>
         </q-img>
 
-        <q-img v-else style="border-radius: 15px" src="~assets/img/app/user/user-profile-banner-default.jpg"
-          :ratio="16 / 9" height="250px" spinner-color="primary" spinner-size="82px" fit="cover" class="my-img"
-          @click="openBannerChange">
+        <q-img
+          v-else
+          style="border-radius: 15px"
+          src="~assets/img/app/user/user-profile-banner-default.jpg"
+          :ratio="16 / 9"
+          height="250px"
+          spinner-color="primary"
+          spinner-size="82px"
+          fit="cover"
+          class="my-img"
+          @click="openBannerChange"
+        >
           <div class="absolute-full text-subtitle2 flex flex-center my-text">
             <q-icon name="photo_camera" />
           </div>
@@ -242,21 +266,51 @@ onMounted(() => {
       </div>
       <q-card-section>
         <div class="row">
-          <div class="flex items-center justify-between institutionData" style="width: 100%">
+          <div
+            class="flex items-center justify-between institutionData"
+            style="width: 100%"
+          >
             <div class="flex institutionData">
-              <q-avatar v-if="network.logo" size="120px" font-size="52px" class="my-img" style="border-radius: 15px">
-                <q-img :src="network.logo?.fullpath" spinner-color="primary" spinner-size="82px" @click="openIconChange">
-                  <div class="absolute-full text-subtitle2 flex flex-center my-text" @click="openIconChange">
+              <q-avatar
+                v-if="network.logo"
+                size="120px"
+                font-size="52px"
+                class="my-img"
+                style="border-radius: 15px"
+              >
+                <q-img
+                  :src="network.logo?.fullpath"
+                  spinner-color="primary"
+                  spinner-size="82px"
+                  @click="openIconChange"
+                >
+                  <div
+                    class="absolute-full text-subtitle2 flex flex-center my-text"
+                    @click="openIconChange"
+                  >
                     <q-icon name="photo_camera" />
                   </div>
                 </q-img>
               </q-avatar>
 
-              <q-avatar v-else size="120px" font-size="52px" class="my-img" style="border-radius: 15px">
-                <q-img src="~assets/img/app/user/user-profile-default.jpg" spinner-color="primary" spinner-size="82px"
-                  height="100%">
-                  <div class="absolute-full text-subtitle2 flex flex-center my-text" style="height: 100%"
-                    @click="openIconChange">
+              <q-avatar
+                v-else
+                size="120px"
+                font-size="52px"
+                class="my-img"
+                style="border-radius: 15px"
+              >
+                <q-img
+                  src="~assets/img/app/user/user-profile-default.jpg"
+                  spinner-color="primary"
+                  spinner-size="82px"
+                  height="100%"
+                >
+                  <div
+                    class="absolute-full text-subtitle2 flex flex-center my-text"
+                    style="height: 100%"
+                    @click="openIconChange"
+                  >
                     <q-icon name="photo_camera" />
                   </div>
                 </q-img>
@@ -272,30 +326,80 @@ onMounted(() => {
                 </div>
 
                 <div class="flex items-center">
-                  <img :src="'https://flagcdn.com/w20/' +
-                    network.country?.iso.toLowerCase() +
-                    '.png'
-                    " />
+                  <img
+                    :src="
+                      'https://flagcdn.com/w20/' +
+                      network.country?.iso.toLowerCase() +
+                      '.png'
+                    "
+                  />
                   <small class="q-ml-sm">{{ network.country?.name }}</small>
                 </div>
               </div>
             </div>
             <!-- Chip para el rango de la persona -->
-            <q-chip v-if="networkRepresentative.rank == 1" icon="star" label="Administrador" color="primary" />
-            <q-chip v-if="networkRepresentative.rank == 2" icon="thumb_up" label="Gestor de contenido" color="primary" />
-            <q-chip v-if="networkRepresentative.rank == 3" icon="person" label="Miembro" color="primary" />
+            <q-chip
+              v-if="networkRepresentative.rank == 1"
+              icon="star"
+              label="Administrador"
+              color="primary"
+            />
+            <q-chip
+              v-if="networkRepresentative.rank == 2"
+              icon="thumb_up"
+              label="Gestor de contenido"
+              color="primary"
+            />
+            <q-chip
+              v-if="networkRepresentative.rank == 3"
+              icon="person"
+              label="Miembro"
+              color="primary"
+            />
           </div>
         </div>
       </q-card-section>
       <q-card-section class="q-py-none q-px-none">
-        <q-tabs v-model="tab" class="text-accent" active-color="primary" indicator-color="primary" align="justify"
-          style="border-bottom-right-radius: 15px; border-bottom-left-radius: 15px;" inline-label>
-
-          <q-route-tab label="Proyectos" icon="article" to="/network-management/projects" exact no-caps />
-          <q-route-tab label="Eventos" icon="event" to="/network-management/events" exact no-caps />
-          <q-route-tab label="Blog" icon="book" to="/network-management/blog" exact no-caps />
-          <q-route-tab label="Miembros" icon="group" to="/network-management/members" exact no-caps />
-
+        <q-tabs
+          v-model="tab"
+          class="text-accent"
+          active-color="primary"
+          indicator-color="primary"
+          align="justify"
+          style="
+            border-bottom-right-radius: 15px;
+            border-bottom-left-radius: 15px;
+          "
+          inline-label
+        >
+          <q-route-tab
+            label="Proyectos"
+            icon="article"
+            to="/network-management/projects"
+            exact
+            no-caps
+          />
+          <q-route-tab
+            label="Eventos"
+            icon="event"
+            to="/network-management/events"
+            exact
+            no-caps
+          />
+          <q-route-tab
+            label="Blog"
+            icon="book"
+            to="/network-management/blog"
+            exact
+            no-caps
+          />
+          <q-route-tab
+            label="Miembros"
+            icon="group"
+            to="/network-management/members"
+            exact
+            no-caps
+          />
         </q-tabs>
       </q-card-section>
     </q-card>
@@ -303,7 +407,6 @@ onMounted(() => {
     <div class="row q-col-gutter-md q-mt-sm">
       <div class="col-12 col-md-12">
         <q-card flat style="border-radius: 15px">
-
           <RouterView :network="network.id" v-if="isLoaded"></RouterView>
           <!--
           <q-tab-panels v-model="tab">
@@ -320,10 +423,8 @@ onMounted(() => {
             </q-tab-panel>
           </q-tab-panels>
           -->
-
         </q-card>
       </div>
-
     </div>
 
     <!-- CROP IMAGE -->
@@ -338,29 +439,60 @@ onMounted(() => {
           </div>
         </q-card-section>
         <q-card-section>
-          <q-stepper flat v-model="cropStepperStep" ref="stepper" color="primary" animated>
-            <q-step :name="1" title="Seleccionar imagen" icon="settings" :done="cropStepperStep > 1">
-              <q-file v-model="fileCrop" filled label="Imagen" accept=".jpg, image/*" max-file-size="2048000" />
+          <q-stepper
+            flat
+            v-model="cropStepperStep"
+            ref="stepper"
+            color="primary"
+            animated
+          >
+            <q-step
+              :name="1"
+              title="Seleccionar imagen"
+              icon="settings"
+              :done="cropStepperStep > 1"
+            >
+              <q-file
+                v-model="fileCrop"
+                filled
+                label="Imagen"
+                accept=".jpg, image/*"
+                max-file-size="2048000"
+              />
               <div class="q-mt-sm flex justify-end">
-                <q-btn unelevated color="primary" @click="nextCropStep"> Siguiente </q-btn>
+                <q-btn unelevated color="primary" @click="nextCropStep">
+                  Siguiente
+                </q-btn>
               </div>
             </q-step>
 
-            <q-step :name="2" title="Redimensionar imagen" icon="create_new_folder" :done="cropStepperStep > 2">
-              <VuePictureCropper :boxStyle="{
-                width: '100%',
-                height: '100%',
-                backgroundColor: '#f8f8f8',
-                margin: 'auto',
-              }" :img="cropPreview" :options="{
-  viewMode: 1,
-  dragMode: 'crop',
-  aspectRatio: cropAspectRatio,
-}" />
+            <q-step
+              :name="2"
+              title="Redimensionar imagen"
+              icon="create_new_folder"
+              :done="cropStepperStep > 2"
+            >
+              <VuePictureCropper
+                :boxStyle="{
+                  width: '100%',
+                  height: '100%',
+                  backgroundColor: '#f8f8f8',
+                  margin: 'auto',
+                }"
+                :img="cropPreview"
+                :options="{
+                  viewMode: 1,
+                  dragMode: 'crop',
+                  aspectRatio: cropAspectRatio,
+                }"
+              />
               <div class="q-mt-sm flex justify-end">
-                <q-btn unelevated color="primary" @click="nextCropStep"> Guardar </q-btn>
+                <q-btn unelevated color="primary" @click="nextCropStep">
+                  Guardar
+                </q-btn>
               </div>
-            </q-step></q-stepper>
+            </q-step></q-stepper
+          >
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -368,12 +500,26 @@ onMounted(() => {
     <q-dialog v-model="membersDialog">
       <q-card>
         <q-card-section>
-          <q-table title="Miembros" :data="members" :columns="columns" row-key="id" v-model:pagination="paginationMembers"
-            @request="onRequestMembers" flat :rows="members">
+          <q-table
+            title="Miembros"
+            :data="members"
+            :columns="columns"
+            row-key="id"
+            v-model:pagination="paginationMembers"
+            @request="onRequestMembers"
+            flat
+            :rows="members"
+          >
             <template v-slot:top>
               <div class="text-h6 text-primary text-bold">Miembros</div>
               <q-space />
-              <q-btn unelevated color="primary" icon="add" @click="membersAddDialog = true" rounded>
+              <q-btn
+                unelevated
+                color="primary"
+                icon="add"
+                @click="membersAddDialog = true"
+                rounded
+              >
                 <strong>Agregar</strong>
               </q-btn>
             </template>
@@ -386,15 +532,34 @@ onMounted(() => {
                   {{ props.row.user.email }}
                 </q-td>
                 <q-td key="rank" :props="props">
-                  <q-chip label="Administrador" size="sm" v-if="props.row.rank == 1" />
-                  <q-chip label="Gestor de contenido" size="sm" v-if="props.row.rank == 2" />
-                  <q-chip label="Miembro" size="sm" v-if="props.row.rank == 3" />
+                  <q-chip
+                    label="Administrador"
+                    size="sm"
+                    v-if="props.row.rank == 1"
+                  />
+                  <q-chip
+                    label="Gestor de contenido"
+                    size="sm"
+                    v-if="props.row.rank == 2"
+                  />
+                  <q-chip
+                    label="Miembro"
+                    size="sm"
+                    v-if="props.row.rank == 3"
+                  />
                 </q-td>
                 <q-td key="created_at" :props="props">
                   {{ Functions.formatDate(props.row.created_at) }}
                 </q-td>
                 <q-td key="actions" :props="props">
-                  <q-btn unelevated flat round color="primary" icon="close" :disable="props.row.rank == 1" />
+                  <q-btn
+                    unelevated
+                    flat
+                    round
+                    color="primary"
+                    icon="close"
+                    :disable="props.row.rank == 1"
+                  />
                 </q-td>
               </q-tr>
             </template>
@@ -406,14 +571,24 @@ onMounted(() => {
     <q-dialog v-model="membersAddDialog">
       <q-card>
         <q-card-section>
-          <div class="text-h6 text-primary text-bold">
-            Agregar Usuario
-          </div>
+          <div class="text-h6 text-primary text-bold">Agregar Usuario</div>
         </q-card-section>
         <q-card-section class="row q-col-gutter-md">
-          <q-select class="col-12" filled v-model="memberAddRequest.user" use-input input-debounce="0"
-            label="Buscar Usuarios" :options="options" @filter="filterUser" hint="Ingrese el e-mail" option-label="email"
-            option-value="id" emit-value map-options>
+          <q-select
+            class="col-12"
+            filled
+            v-model="memberAddRequest.user"
+            use-input
+            input-debounce="0"
+            label="Buscar Usuarios"
+            :options="options"
+            @filter="filterUser"
+            hint="Ingrese el e-mail"
+            option-label="email"
+            option-value="id"
+            emit-value
+            map-options
+          >
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey">
@@ -426,24 +601,55 @@ onMounted(() => {
               <q-item v-bind="scope.itemProps">
                 <q-item-section avatar>
                   <q-avatar size="50px" rounded>
-                    <img :src="scope.opt.logo.fullpath" alt="Logo" v-if="scope.opt.logo != null">
-                    <img src="~assets/img/app/user/user-profile-default.jpg" alt="Logo" v-else>
+                    <img
+                      :src="scope.opt.logo.fullpath"
+                      alt="Logo"
+                      v-if="scope.opt.logo != null"
+                    />
+                    <img
+                      src="~assets/img/app/user/user-profile-default.jpg"
+                      alt="Logo"
+                      v-else
+                    />
                   </q-avatar>
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>{{ scope.opt.name + ' ' + scope.opt.lastname }}</q-item-label>
+                  <q-item-label>{{
+                    scope.opt.name + ' ' + scope.opt.lastname
+                  }}</q-item-label>
                   <q-item-label caption>{{ scope.opt.email }}</q-item-label>
                 </q-item-section>
               </q-item>
             </template>
           </q-select>
 
-          <q-select class="col-12" v-model="memberAddRequest.rank" :options="ranks" label="Rango" filled
-            option-label="label" option-value="value" emit-value map-options />
+          <q-select
+            class="col-12"
+            v-model="memberAddRequest.rank"
+            :options="ranks"
+            label="Rango"
+            filled
+            option-label="label"
+            option-value="value"
+            emit-value
+            map-options
+          />
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn unelevated flat label="Cancelar" color="primary" v-close-popup />
-          <q-btn unelevated flat label="Agregar" color="primary" @click="addMember()" />
+          <q-btn
+            unelevated
+            flat
+            label="Cancelar"
+            color="primary"
+            v-close-popup
+          />
+          <q-btn
+            unelevated
+            flat
+            label="Agregar"
+            color="primary"
+            @click="addMember()"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>

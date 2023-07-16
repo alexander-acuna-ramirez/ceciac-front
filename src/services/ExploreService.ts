@@ -1,10 +1,5 @@
 import { api } from 'src/boot/axios';
 
-interface projectsParams {
-  searchTerm?: string;
-  type_id?: number;
-}
-
 export class ExploreService {
   public getProjectTypes() {
     return api.get('/api/v1/explore/types');

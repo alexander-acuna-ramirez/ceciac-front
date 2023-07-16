@@ -11,6 +11,10 @@ body {
   width: 80%;
 }
 
+.backgroundColor {
+  background-color: #0000000d;
+}
+
 @media (max-width: $breakpoint-md-min) {
   .containerPage {
     width: 95%;

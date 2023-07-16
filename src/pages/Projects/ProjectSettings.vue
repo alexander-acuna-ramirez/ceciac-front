@@ -1,14 +1,23 @@
 <script setup lang="ts">
-import { useRoute, RouteParams } from 'vue-router';
-import { ProjectService } from 'src/services';
-import { Project } from 'src/models';
+import { useRoute, RouteParams, useRouter } from 'vue-router';
+import { ProjectService, ProjectTypeService } from 'src/services';
+import { Project, ProjectType } from 'src/models';
 import { reactive, onMounted, ref } from 'vue';
-import { Rules } from 'src/utils';
+import { useQuasar } from 'quasar';
+
+import ProjectBasicInfo from './components/ProjectBasicInfo.vue';
+import ProjectContent from './components/ProjectContent.vue';
+import ProjectParticipants from './components/ProjectParticipants.vue';
+import ProjectUploads from './components/ProjectUploads.vue';
 
 const route = useRoute();
+const router = useRouter();
+const $q = useQuasar();
 const projectService = new ProjectService();
 const tab = ref('info');
 const splitterModel = ref(20);
+const projectTypeService = new ProjectTypeService();
+const projectTypes = reactive<ProjectType[]>([]);
 const project = reactive<Project>({
   name: '',
   description: '',
@@ -18,155 +27,164 @@ const project = reactive<Project>({
   id_network: null,
   type_id: null,
 });
-const projectTags = ref(null);
 
 async function getProject() {
   let { id } = route.params as RouteParams;
   const response = await projectService.show(id as string);
   Object.assign(project, response.data);
 }
+async function loadProjectTypes() {
+  try {
+    const response = await projectTypeService.getAll();
+    const types: ProjectType[] = response.data;
+    projectTypes.push(...types);
+  } catch (e) {
+    console.error(e);
+  }
+}
 
-onMounted(() => {
-  getProject();
+async function checkOwnership() {
+  try {
+    let { id } = route.params as RouteParams;
+    await projectService.checkOwnership(id as string);
+  } catch (e) {
+    router.push('/not-found');
+  }
+}
+
+async function deleteProject() {
+  $q.dialog({
+    title: 'Archivar Proyecto',
+    message: '¿Esta realmente seguro de archivar este proyecto?',
+    cancel: true,
+    persistent: true,
+  }).onOk(async () => {
+    try {
+      $q.loading.show();
+      if (project.id) await projectService.deleteProject(project.id);
+      $q.notify({
+        type: 'positive',
+        message: 'Proyecto archivado!',
+      });
+      router.push('/network-management/projects');
+    } catch (e) {
+      $q.notify({
+        type: 'negative',
+        message: 'No se pudo archivar!',
+      });
+    } finally {
+      $q.loading.hide();
+    }
+  });
+}
+
+onMounted(async () => {
+  $q.loading.show();
+  await checkOwnership();
+  await loadProjectTypes();
+  await getProject();
+  $q.loading.hide();
 });
 </script>
 
 <template>
   <q-page padding>
-    <q-toolbar class="q-my-md">
-      <q-toolbar-title class="text-secondary text-bold text-subtitle1">
-      </q-toolbar-title>
-      <q-btn unelevated rounded dense icon="delete" color="red" flat>
-        <strong>ARCHIVAR</strong>
-      </q-btn>
-    </q-toolbar>
-
-    <q-splitter v-model="splitterModel">
-      <template v-slot:before>
-        <q-tabs v-model="tab" vertical class="text-secondary">
-          <q-tab name="info" icon="info" label="Información General" no-caps />
-          <q-tab
-            name="alarms"
-            icon="collections"
-            label="Imagenes y recursos"
-            no-caps
-          />
-          <q-tab name="alarms" icon="notes" label="Contenido" no-caps />
-          <q-tab name="movies" icon="groups" label="Participantes" no-caps />
-        </q-tabs>
-      </template>
-
-      <template v-slot:after>
-        <q-tab-panels
-          v-model="tab"
-          animated
-          swipeable
-          vertical
-          transition-prev="jump-up"
-          transition-next="jump-up"
+    <div class="q-my-md">
+      <q-toolbar class="q-mb-sm">
+        <q-toolbar-title class="text-primary text-bold text-h5">
+        </q-toolbar-title>
+        <q-btn
+          unelevated
+          rounded
+          dense
+          color="secondary"
+          no-caps
+          :to="'/project/detail/' + project.id"
+          class="q-mr-md q-pa-sm"
         >
-          <q-tab-panel name="info">
-            <div class="text-subtitle2 q-mb-md text-secondary text-bold">
-              Información General
-            </div>
-            <q-form class="q-gutter-md q-pa-md">
-              <div class="row q-col-gutter-md">
-                <div class="col-12 col-md-6">
-                  <q-input
-                    v-model="project.name"
-                    label="Titulo"
-                    hint="El titulo de tu proyecto"
-                    lazy-rules
-                    filled
-                    :rules="[Rules.required, Rules.maxLength]"
-                  />
-                </div>
-                <div class="col-12 col-md-6">
-                  <q-select
-                    filled
-                    v-model="project.type_id"
-                    :options="[]"
-                    option-value="id"
-                    option-label="name"
-                    emit-value
-                    map-options
-                    label="Tipo de proyecto"
-                    :rules="[Rules.required]"
-                  />
-                </div>
-                <div class="col-12">
-                  <q-input
-                    filled
-                    type="textarea"
-                    v-model="project.description"
-                    label="Descripción"
-                    hint="Una descripción breve de tu proyecto"
-                    lazy-rules
-                    :rules="[Rules.required, Rules.maxLength]"
-                  />
-                </div>
-                <div class="col-12">
-                  <q-select
-                    label="Tags"
-                    filled
-                    v-model="projectTags"
-                    use-input
-                    use-chips
-                    multiple
-                    input-debounce="0"
-                    :options="[]"
-                    option-value="id"
-                    option-label="name"
-                    emit-value
-                    map-options
-                    :rules="[Rules.required]"
-                  />
-                </div>
-              </div>
-            </q-form>
-          </q-tab-panel>
+          Ver Proyecto
+        </q-btn>
+        <q-btn
+          unelevated
+          rounded
+          dense
+          color="primary"
+          no-caps
+          @click="deleteProject"
+          class="q-pa-sm"
+        >
+          Archivar
+        </q-btn>
+      </q-toolbar>
 
-          <q-tab-panel name="alarms">
-            <div class="text-h4 q-mb-md">Alarms</div>
-            <p>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis
-              praesentium cumque magnam odio iure quidem, quod illum numquam
-              possimus obcaecati commodi minima assumenda consectetur culpa fuga
-              nulla ullam. In, libero.
-            </p>
-            <p>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis
-              praesentium cumque magnam odio iure quidem, quod illum numquam
-              possimus obcaecati commodi minima assumenda consectetur culpa fuga
-              nulla ullam. In, libero.
-            </p>
-          </q-tab-panel>
+      <q-splitter
+        v-model="splitterModel"
+        style="background-color: white; border-radius: 15px"
+        class="q-pa-md"
+      >
+        <template v-slot:before>
+          <q-tabs
+            v-model="tab"
+            vertical
+            class="text-secondary"
+            inline-label
+            switch-indicator
+          >
+            <q-tab
+              name="info"
+              icon="info"
+              label="Información General"
+              no-caps
+            />
+            <q-tab
+              name="resources"
+              icon="collections"
+              label="Imagenes y recursos"
+              no-caps
+            />
+            <q-tab name="content" icon="notes" label="Contenido" no-caps />
+            <q-tab
+              name="participants"
+              icon="groups"
+              label="Participantes"
+              no-caps
+            />
+          </q-tabs>
+        </template>
 
-          <q-tab-panel name="movies">
-            <div class="text-h4 q-mb-md">Movies</div>
-            <p>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis
-              praesentium cumque magnam odio iure quidem, quod illum numquam
-              possimus obcaecati commodi minima assumenda consectetur culpa fuga
-              nulla ullam. In, libero.
-            </p>
-            <p>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis
-              praesentium cumque magnam odio iure quidem, quod illum numquam
-              possimus obcaecati commodi minima assumenda consectetur culpa fuga
-              nulla ullam. In, libero.
-            </p>
-            <p>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis
-              praesentium cumque magnam odio iure quidem, quod illum numquam
-              possimus obcaecati commodi minima assumenda consectetur culpa fuga
-              nulla ullam. In, libero.
-            </p>
-          </q-tab-panel>
-        </q-tab-panels>
-      </template>
-    </q-splitter>
+        <template v-slot:after>
+          <q-tab-panels
+            v-model="tab"
+            animated
+            vertical
+            transition-prev="jump-up"
+            transition-next="jump-up"
+          >
+            <q-tab-panel name="info">
+              <project-basic-info
+                :project="project"
+                :project-types="projectTypes"
+                @updated="getProject()"
+              ></project-basic-info>
+            </q-tab-panel>
+
+            <q-tab-panel name="resources">
+              <project-uploads></project-uploads>
+            </q-tab-panel>
+
+            <q-tab-panel name="content">
+              <project-content :content="project.synopsis"></project-content>
+            </q-tab-panel>
+
+            <q-tab-panel name="participants">
+              <project-participants
+                :project="project.id ?? 0"
+              ></project-participants>
+            </q-tab-panel>
+          </q-tab-panels>
+        </template>
+      </q-splitter>
+    </div>
   </q-page>
 </template>
-
 <style lang="scss" scoped></style>

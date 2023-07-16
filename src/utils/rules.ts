@@ -12,7 +12,9 @@ export const Rules = {
   minLength: (value: string, length: number) =>
     value.length >= length || `La longitud mínima es de ${length} caracteres.`,
   maxLength: (value: string) =>
-    value.length <= 255 || `La longitud maxima es de 255 caracteres.`,
+    value.length <= 255 || 'La longitud maxima es de 255 caracteres.',
+  maxShortLength: (value: string) =>
+    value.length <= 150 || 'La longitud maxima es de 150 caracteres.',
   orcid: (val: string) => {
     if (val && val.trim() !== '') {
       const regex = /^(?:\d{4}-){3}\d{3}[0-9X]$/;

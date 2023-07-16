@@ -40,9 +40,50 @@ export class ProjectService {
   public storeProjectTags(project: string | number, tags: number[]) {
     return api.post('api/v1/project/tags/' + project, { tags });
   }
+
+  public checkOwnership(project: string | number) {
+    return api.get('api/v1/project/check-ownership/' + project);
+  }
+
+  public updateBasicInfo(data: { name: string, type_id: number, description: string, tags: number[] }, project: string | number) {
+    return api.put('api/v1/project/' + project, data);
+  }
+
+
+  public projectParticipants(
+    project: string,
+    page = 1,
+    perpage = 10,
+    sortBy = '',
+    sortOrder = 'desc',
+    searchTerm = '',
+    start_date = '',
+    end_date = ''
+  ) {
+
+    const queryParams = new URLSearchParams({
+      page: page.toString(),
+      perpage: perpage.toString(),
+      sortBy,
+      sortOrder,
+      start_date,
+      end_date,
+      searchTerm,
+    });
+
+
+    return api.get('api/v1/project/participants/' + project + '?' + queryParams.toString());
+
+  }
+
+  public updateProjectContent(project: string | number, content: string) {
+    return api.put('api/v1/project/update-content/' + project, {
+      content
+    });
+  }
+
+  public deleteProject(project: string | number) {
+    return api.delete('api/v1/project/' + project);
+  }
 }
 
-/*
-Route::get('project/participate/{project}', [ProjectController::class, 'participate']);
-        Route::get('project/project-participation/{project}', [ProjectController::class, 'projectParticipation']);
-*/
