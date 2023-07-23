@@ -41,6 +41,7 @@ function openSetting() {
         <q-chip :label="project.type?.name" size="md" />
         <q-btn
           icon="settings"
+          color="accent"
           flat
           size="md"
           round
@@ -66,7 +67,7 @@ function openSetting() {
       >
         <q-chip :label="project.type?.name" size="md" />
         <q-btn
-          color="secondary"
+          color="accent"
           icon="settings"
           flat
           size="md"

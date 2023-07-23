@@ -75,6 +75,12 @@ const routes: RouteRecordRaw[] = [
             component: () => import('pages/Events/EventCreate.vue'),
           },
           {
+            path: 'settings/:id',
+            name: 'EventSettings',
+            meta: { requiresAuth: true },
+            component: () => import('pages/Events/EventSettings.vue'),
+          },
+          {
             path: 'detail/:id',
             name: 'EventPage',
             component: () => import('pages/Events/EventPage.vue'),
@@ -157,6 +163,11 @@ const routes: RouteRecordRaw[] = [
         name: 'UnderConstructionPage',
         component: () => import('../pages/Common/UnderConstruction.vue'),
       },
+      {
+        path: '/unauthorized',
+        name: 'Unauthorized',
+        component: () => import('pages/Common/UnauthorizedPage.vue'),
+      },
     ],
   },
   {
@@ -180,6 +191,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/not-found',
+    name: 'NotFound',
     component: () => import('pages/ErrorNotFound.vue'),
   },
   {

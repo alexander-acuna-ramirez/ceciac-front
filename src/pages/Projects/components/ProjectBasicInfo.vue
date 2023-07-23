@@ -68,71 +68,80 @@ function save() {
 </script>
 
 <template>
-  <div class="text-h4 q-mb-md text-secondary">Información General</div>
-  <q-form class="q-gutter-md q-pa-md" ref="form" @submit.prevent="save">
-    <div class="row q-col-gutter-md">
-      <div class="col-12 col-md-6">
-        <q-input
-          v-model="projectData.name"
-          label="Titulo"
-          hint="El titulo de tu proyecto"
-          lazy-rules
-          filled
-          :rules="[Rules.required, Rules.maxLength]"
-        />
+  <div class="row q-col-gutter-md">
+    <div class="col-12 col-md-12">
+      <div class="text-subtitle1 text-bold text-primary">
+        Información general del proyecto
       </div>
-      <div class="col-12 col-md-6">
-        <q-select
-          filled
-          v-model="projectData.type_id"
-          :options="projectTypes"
-          option-value="id"
-          option-label="name"
-          emit-value
-          map-options
-          label="Tipo de proyecto"
-          :rules="[Rules.required]"
-        />
-      </div>
-      <div class="col-12">
-        <q-input
-          filled
-          type="textarea"
-          v-model="projectData.description"
-          label="Descripción"
-          hint="Una descripción breve de tu proyecto"
-          lazy-rules
-          :rules="[Rules.required, Rules.maxShortLength]"
-        />
-      </div>
-      <div class="col-12">
-        <q-select
-          label="Tags"
-          filled
-          v-model="projectData.tags"
-          use-input
-          use-chips
-          multiple
-          input-debounce="0"
-          :options="tags"
-          @filter="filterFn"
-          option-value="id"
-          option-label="name"
-          map-options
-          :rules="[Rules.required]"
-        />
-      </div>
-
-      <div class="col-12" style="display: flex; justify-content: end">
-        <q-btn
-          color="primary"
-          icon="update"
-          label="Actualizar"
-          unelevated
-          rounded
-          type="submit"
-        />
+      <div class="text-subtitle2 text-accent">
+        Aqui puedes configurar la información general de tu proyecto!
       </div>
     </div>
-  </q-form>
+    <q-form class="col-12 col-md-12 q-pa-md" ref="form" @submit.prevent="save">
+      <div class="row q-col-gutter-md">
+        <div class="col-12 col-md-6">
+          <q-input
+            v-model="projectData.name"
+            label="Titulo"
+            hint="El titulo de tu proyecto"
+            lazy-rules
+            outlined
+            :rules="[Rules.required, Rules.maxLength]"
+          />
+        </div>
+        <div class="col-12 col-md-6">
+          <q-select
+            outlined
+            v-model="projectData.type_id"
+            :options="projectTypes"
+            option-value="id"
+            option-label="name"
+            emit-value
+            map-options
+            label="Tipo de proyecto"
+            :rules="[Rules.required]"
+          />
+        </div>
+        <div class="col-12">
+          <q-input
+            outlined
+            type="textarea"
+            v-model="projectData.description"
+            label="Descripción"
+            hint="Una descripción breve de tu proyecto"
+            lazy-rules
+            :rules="[Rules.required, Rules.maxShortLength]"
+          />
+        </div>
+        <div class="col-12">
+          <q-select
+            label="Tags"
+            outlined
+            v-model="projectData.tags"
+            use-input
+            use-chips
+            multiple
+            input-debounce="0"
+            :options="tags"
+            @filter="filterFn"
+            option-value="id"
+            option-label="name"
+            map-options
+            :rules="[Rules.required]"
+          />
+        </div>
+
+        <div class="col-12" style="display: flex; justify-content: end">
+          <q-btn
+            color="primary"
+            icon="update"
+            label="Actualizar"
+            unelevated
+            rounded
+            type="submit"
+          />
+        </div>
+      </div>
+    </q-form>
+  </div>
 </template>

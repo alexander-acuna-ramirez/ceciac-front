@@ -85,5 +85,10 @@ export class ProjectService {
   public deleteProject(project: string | number) {
     return api.delete('api/v1/project/' + project);
   }
+
+  public deleteProjectFiles(project: string | number, files: number[]) {
+    const filesData = files.map(e => e.toString()).concat(',');
+    return api.delete('api/v1/project/delete-files/' + project + '?deleted=' + filesData);
+  }
 }
 

@@ -138,7 +138,7 @@ onMounted(() => {
               v-model="registerUser.name"
               type="text"
               label="Nombre"
-              filled
+              outlined
               lazy-rules
               :rules="[Rules.required]"
             />
@@ -148,7 +148,7 @@ onMounted(() => {
               v-model="registerUser.lastname"
               type="text"
               label="Apellidos"
-              filled
+              outlined
               lazy-rules
               :rules="[Rules.required]"
             />
@@ -158,7 +158,7 @@ onMounted(() => {
               v-model="registerUser.email"
               type="text"
               label="E-mail"
-              filled
+              outlined
               :rules="[Rules.email]"
             />
             <q-input
@@ -167,13 +167,13 @@ onMounted(() => {
               v-model="registerUser.password"
               type="password"
               label="Contraseña"
-              filled
+              outlined
               :rules="[Rules.required]"
             />
             <q-select
               class="col-12 col-sm-12 col-md-6"
               dense
-              filled
+              outlined
               v-model="registerUser.id_country"
               :options="countries"
               label="Pais"
@@ -186,7 +186,7 @@ onMounted(() => {
             <q-select
               class="col-12 col-sm-12 col-md-6"
               dense
-              filled
+              outlined
               v-model="registerUser.id_profession"
               :options="professions"
               label="Profesión"
@@ -200,7 +200,7 @@ onMounted(() => {
               class="col-12"
               dense
               label="¿Qué eres?"
-              filled
+              outlined
               v-model="userProfileTypesSelection"
               use-input
               use-chips
@@ -232,7 +232,7 @@ onMounted(() => {
               v-model="userData.email"
               type="text"
               label="E-mail"
-              filled
+              outlined
               lazy-rules
               :rules="[
               (val: any) => (val && val.length > 0) || 'Ingrese un correo válido',
@@ -247,7 +247,7 @@ onMounted(() => {
               v-model="userData.password"
               type="password"
               label="Contraseña"
-              filled
+              outlined
               lazy-rules
               :rules="[
                 (val: any) =>

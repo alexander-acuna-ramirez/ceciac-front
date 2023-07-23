@@ -66,14 +66,24 @@ onMounted(() => {
   <q-page padding>
     <div class="row q-col-gutter-md">
       <div class="col-12">
-
-
         <q-card flat class="rounded-corners">
           <q-card-section>
-            <q-carousel :swipeable="true" :autoplay="true" :vertical="true" animated v-model="slide" arrows navigation
-              infinite>
-              <q-carousel-slide :key="idx" v-for="(file, idx) in project.files" :name="file.filename"
-                :img-src="file.fullpath" />
+            <q-carousel
+              :swipeable="true"
+              :autoplay="true"
+              :vertical="true"
+              animated
+              v-model="slide"
+              arrows
+              navigation
+              infinite
+            >
+              <q-carousel-slide
+                :key="idx"
+                v-for="(file, idx) in project.files"
+                :name="file.filename"
+                :img-src="file.fullpath"
+              />
             </q-carousel>
           </q-card-section>
           <q-card-section>
@@ -83,8 +93,18 @@ onMounted(() => {
                   {{ project.name }}
                 </div>
                 <div class="text-subtitle1 text-secondary">
-                  <q-avatar rounded size="30px" font-size="52px" text-color="white" class="my-img">
-                    <q-img :src="project.network?.logo?.fullpath" spinner-color="primary" spinner-size="82px"></q-img>
+                  <q-avatar
+                    rounded
+                    size="30px"
+                    font-size="52px"
+                    text-color="white"
+                    class="my-img"
+                  >
+                    <q-img
+                      :src="project.network?.logo?.fullpath"
+                      spinner-color="primary"
+                      spinner-size="82px"
+                    ></q-img>
                   </q-avatar>
                   {{ project.network?.name }}
                 </div>
@@ -95,7 +115,6 @@ onMounted(() => {
       </div>
     </div>
     <div class="row q-col-gutter-md q-mt-sm">
-
       <div class="col-12 col-md-9">
         <q-card flat class="rounded-corners">
           <q-card-section>
@@ -109,21 +128,29 @@ onMounted(() => {
       <div class="col-12 col-md-3">
         <q-card flat class="rounded-corners">
           <q-card-section>
-            <div class="text text-bold text-primary">
-              Organizador
-            </div>
+            <div class="text text-bold text-primary">Organizador</div>
           </q-card-section>
           <q-card-section>
             <div>
-              <q-avatar rounded size="30px" font-size="52px" text-color="white" class="my-img">
-                <q-img :src="project.network?.logo?.fullpath" spinner-color="primary" spinner-size="82px"></q-img>
+              <q-avatar
+                rounded
+                size="30px"
+                font-size="52px"
+                text-color="white"
+                class="my-img"
+              >
+                <q-img
+                  :src="project.network?.logo?.fullpath"
+                  spinner-color="primary"
+                  spinner-size="82px"
+                ></q-img>
               </q-avatar>
 
               {{ project.network?.name }}
             </div>
           </q-card-section>
         </q-card>
-        <q-card flat class="q-mt-sm  rounded-corners">
+        <q-card flat class="q-mt-sm rounded-corners">
           <q-card-section>
             <div class="text text-bold text-primary text-h6">
               Datos Generales
@@ -131,52 +158,52 @@ onMounted(() => {
           </q-card-section>
           <q-card-section>
             <q-list bordered separator>
+              <q-item clickable v-ripple>
+                <q-item-section>
+                  <q-item-label overline class="text-primary"
+                    >Fecha de lanzamiento</q-item-label
+                  >
+                  <q-item-label class="text-secondary">{{
+                    project.release_date
+                  }}</q-item-label>
+                </q-item-section>
+              </q-item>
 
               <q-item clickable v-ripple>
                 <q-item-section>
-                  <q-item-label overline class="text-primary">Fecha de lanzamiento</q-item-label>
-                  <q-item-label class="text-secondary">{{ project.release_date }}</q-item-label>
-                </q-item-section>
-              </q-item>
-              <q-item clickable v-ripple>
-                <q-item-section>
-                  <q-item-label overline class="text-primary">Fecha de lanzamiento</q-item-label>
-                  <q-item-label class="text-secondary">{{ project.release_date }}</q-item-label>
-                </q-item-section>
-              </q-item>
-              <q-item clickable v-ripple>
-                <q-item-section>
-                  <q-item-label overline class="text-primary">Tipo de proyecto</q-item-label>
-                  <q-item-label class="text-secondary">{{ project.type?.name }}</q-item-label>
+                  <q-item-label overline class="text-primary"
+                    >Tipo de proyecto</q-item-label
+                  >
+                  <q-item-label class="text-secondary">{{
+                    project.type?.name
+                  }}</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
-
           </q-card-section>
         </q-card>
 
         <q-card flat class="q-mt-sm rounded-corners">
           <q-card-section>
-            <div class="text text-bold text-primary text-h6">
-              Tags
-            </div>
+            <div class="text text-bold text-primary text-h6">Tags</div>
           </q-card-section>
           <q-card-section>
-            <q-chip color="primary" text-color="white" icon="event">
-              Tecnologia
+            <q-chip v-for="tag in project.tags" :key="tag.id" size="sm">
+              {{ tag.name }}
             </q-chip>
-            <q-chip color="primary" text-color="white" icon="event">
-              Sociedad
-            </q-chip>
-            <q-chip color="primary" text-color="white" icon="event">
-              Derecho
-            </q-chip>
-
           </q-card-section>
         </q-card>
-        <q-btn unelevated class="q-mt-md" :disable="participating" style="box-shadow: none; width: 100%;" color="primary"
-          rounded no-caps @click="enroll">
-          <strong>{{ (participating) ? 'Inscrito' : 'Participar' }}</strong>
+        <q-btn
+          unelevated
+          class="q-mt-md"
+          :disable="participating"
+          style="box-shadow: none; width: 100%"
+          color="primary"
+          rounded
+          no-caps
+          @click="enroll"
+        >
+          <strong>{{ participating ? 'Inscrito' : 'Participar' }}</strong>
         </q-btn>
       </div>
     </div>

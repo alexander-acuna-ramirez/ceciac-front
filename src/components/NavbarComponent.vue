@@ -112,10 +112,10 @@ function openMenu() {
           </q-avatar>
 
           <div class="q-ml-md">
-            <div class="text-primary text-subtitle1 text-bold">
+            <div class="text-primary text-subtitle2 text-bold">
               {{ authStore.getUser.name + ' ' + authStore.getUser.lastname }}
             </div>
-            <div class="text-accent text-subtitle2">
+            <div class="text-accent text-caption">
               {{ authStore.getUser.email }}
             </div>
           </div>

@@ -99,20 +99,26 @@ onMounted(() => {
 </script>
 
 <template>
-  <q-table
-    title="Miembros"
-    :data="participants"
-    :columns="columns"
-    row-key="id"
-    v-model:pagination="participantsPagination"
-    @request="onParticipantsRequest"
-    flat
-    :rows="participants"
-    :loading="loading"
-  >
-    <template v-slot:top>
-      <div class="text-h4 q-mb-md text-secondary">Participantes</div>
-      <q-space />
-    </template>
-  </q-table>
+  <div class="row q-col-gutter-md">
+    <div class="col-12 col-md-12">
+      <div class="text-subtitle1 text-bold text-primary">
+        Participantes del proyecto
+      </div>
+      <div class="text-subtitle2 text-accent">
+        Aqui puedes ver a los interesados en tu proyecto!
+      </div>
+    </div>
+    <q-table
+      :data="participants"
+      :columns="columns"
+      row-key="id"
+      v-model:pagination="participantsPagination"
+      @request="onParticipantsRequest"
+      flat
+      :rows="participants"
+      :loading="loading"
+      class="col-12 col-md-12"
+    >
+    </q-table>
+  </div>
 </template>

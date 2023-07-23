@@ -219,13 +219,13 @@ watch(
                 label="Titulo"
                 hint="El titulo de tu proyecto"
                 lazy-rules
-                filled
+                outlined
                 :rules="[Rules.required, Rules.maxLength]"
               />
             </div>
             <div class="col-12 col-md-6">
               <q-select
-                filled
+                outlined
                 v-model="project.type_id"
                 :options="projectTypes"
                 option-value="id"
@@ -238,7 +238,7 @@ watch(
             </div>
             <div class="col-12">
               <q-input
-                filled
+                outlined
                 type="textarea"
                 v-model="project.description"
                 label="Descripción"
@@ -250,7 +250,7 @@ watch(
             <div class="col-12">
               <q-select
                 label="Tags"
-                filled
+                outlined
                 v-model="projectTags"
                 use-input
                 use-chips
@@ -280,7 +280,7 @@ watch(
             v-model="project.synopsis"
             min-height="10prem"
             hint="Aqui puedes explicar todo tu proyecto"
-            filled
+            outlined
           />
         </q-form>
       </q-step>
@@ -295,7 +295,7 @@ watch(
           <div class="row q-col-gutter-md">
             <div class="col-12 col-md-6">
               <q-input
-                filled
+                outlined
                 v-model="project.release_date"
                 mask="date"
                 label="Fecha de lanzamiento"
@@ -329,7 +329,7 @@ watch(
             </div>
             <div class="col-12 col-md-6">
               <q-input
-                filled
+                outlined
                 v-model="project.end_date"
                 mask="date"
                 :rules="['date']"

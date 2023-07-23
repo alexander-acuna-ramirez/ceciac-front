@@ -1,16 +1,17 @@
 import { api } from 'src/boot/axios';
 import { Event } from 'src/models/Event';
+import { EventBasicInformation } from 'src/interfaces/EventBasicInformation';
 
 export class EventService {
-  public async show(id: string | number) {
+  public show(id: string | number) {
     return api.get('/api/v1/event/' + id);
   }
 
-  public async store(e: Event) {
+  public store(e: Event) {
     return api.post('/api/v1/event', e);
   }
 
-  public async uploadEventFile(file: FormData, id: string | number) {
+  public uploadEventFile(file: FormData, id: string | number) {
     return api.post('/api/v1/event/upload-file/' + id, file);
   }
 
@@ -28,5 +29,22 @@ export class EventService {
       url += '&sortBy=' + sortBy;
     }
     return api.get(url);
+  }
+
+  public checkAccess(id: string) {
+    return api.get('api/v1/event/access/' + id);
+  }
+
+  public updateEvent(eventId: number, eventData: EventBasicInformation) {
+    const url = `api/v1/event/${eventId}`;
+    return api.put(url, eventData);
+  }
+
+  public deleteEvent(eventId: string) {
+    return api.delete('api/v1/event/' + eventId);
+  }
+
+  public updateEventContent(eventId: string | number, content: string) {
+    return api.put('api/v1/event/update-content/' + eventId, { 'event_content': content });
   }
 }

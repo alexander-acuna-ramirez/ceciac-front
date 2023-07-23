@@ -43,29 +43,36 @@ async function save() {
 </script>
 
 <template>
-  <div class="text-h4 q-mb-md text-secondary">Contenido</div>
-  <q-form class="q-gutter-md q-pa-md" @submit.prevent="save">
-    <q-editor
-      v-model="content"
-      min-height="5rem"
-      flat
-      autocorrect="off"
-      autocapitalize="off"
-      content-class="backgroundColor"
-      autocomplete="off"
-      spellcheck="false"
-      :toolbar="toolbarConfig.toolbarConfig"
-    />
-    <div class="flex justify-end">
-      <q-btn
-        color="primary"
-        icon="sync"
-        label="Actualizar"
-        no-caps
-        unelevated
-        type="submit"
-        rounded
-      />
+  <div class="row q-col-gutter-md">
+    <div class="col-12 col-md-12">
+      <div class="text-subtitle1 text-bold text-primary">
+        Contenido del proyecto
+      </div>
+      <div class="text-subtitle2 text-accent">
+        Aqui puedes configurar contenido de tu proyecto!
+      </div>
     </div>
-  </q-form>
+    <q-form class="col-12 col-md-12 q-pa-md" @submit.prevent="save">
+      <q-editor
+        v-model="content"
+        min-height="5rem"
+        autocorrect="off"
+        autocapitalize="off"
+        autocomplete="off"
+        spellcheck="false"
+        :toolbar="toolbarConfig.toolbarConfig"
+      />
+      <div class="flex justify-end">
+        <q-btn
+          color="primary"
+          icon="sync"
+          label="Actualizar"
+          no-caps
+          unelevated
+          type="submit"
+          rounded
+        />
+      </div>
+    </q-form>
+  </div>
 </template>

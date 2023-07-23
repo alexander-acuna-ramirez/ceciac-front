@@ -88,103 +88,154 @@ onMounted(async () => {
 </script>
 
 <template>
-  <q-page padding>
-    <div class="q-my-md">
-      <q-toolbar class="q-mb-sm">
-        <q-toolbar-title class="text-primary text-bold text-h5">
-        </q-toolbar-title>
+  <q-page padding class="q-px-xl">
+    <div class="flex justify-between q-my-lg">
+      <div class="text-h4 text-primary text-bold">
+        {{ project.name }}
+      </div>
+      <div>
         <q-btn
-          unelevated
-          rounded
-          dense
-          color="secondary"
-          no-caps
-          :to="'/project/detail/' + project.id"
-          class="q-mr-md q-pa-sm"
-        >
-          Ver Proyecto
-        </q-btn>
-        <q-btn
-          unelevated
-          rounded
-          dense
           color="primary"
+          icon="visibility"
+          label="Ver Proyecto"
+          :to="'/project/detail/' + project.id"
+          unelevated
           no-caps
-          @click="deleteProject"
-          class="q-pa-sm"
-        >
-          Archivar
-        </q-btn>
-      </q-toolbar>
-
-      <q-splitter
-        v-model="splitterModel"
-        style="background-color: white; border-radius: 15px"
-        class="q-pa-md"
-      >
-        <template v-slot:before>
-          <q-tabs
-            v-model="tab"
-            vertical
-            class="text-secondary"
-            inline-label
-            switch-indicator
-          >
-            <q-tab
-              name="info"
-              icon="info"
-              label="Información General"
-              no-caps
-            />
-            <q-tab
-              name="resources"
-              icon="collections"
-              label="Imagenes y recursos"
-              no-caps
-            />
-            <q-tab name="content" icon="notes" label="Contenido" no-caps />
-            <q-tab
-              name="participants"
-              icon="groups"
-              label="Participantes"
-              no-caps
-            />
-          </q-tabs>
-        </template>
-
-        <template v-slot:after>
-          <q-tab-panels
-            v-model="tab"
-            animated
-            vertical
-            transition-prev="jump-up"
-            transition-next="jump-up"
-          >
-            <q-tab-panel name="info">
-              <project-basic-info
-                :project="project"
-                :project-types="projectTypes"
-                @updated="getProject()"
-              ></project-basic-info>
-            </q-tab-panel>
-
-            <q-tab-panel name="resources">
-              <project-uploads></project-uploads>
-            </q-tab-panel>
-
-            <q-tab-panel name="content">
-              <project-content :content="project.synopsis"></project-content>
-            </q-tab-panel>
-
-            <q-tab-panel name="participants">
-              <project-participants
-                :project="project.id ?? 0"
-              ></project-participants>
-            </q-tab-panel>
-          </q-tab-panels>
-        </template>
-      </q-splitter>
+          rounded
+        />
+        <q-btn
+          icon="delete"
+          color="red"
+          rounded
+          label="Archivar"
+          unelevated
+          no-caps
+          @click="deleteProject()"
+          class="q-ml-md"
+        />
+      </div>
     </div>
+
+    <!-- MOBILE VIEW -->
+
+    <div v-if="$q.screen.lt.md">
+      <q-tabs
+        v-model="tab"
+        vertical
+        class="text-accent"
+        inline-label
+        switch-indicator
+      >
+        <q-tab name="info" icon="info" label="Información General" no-caps />
+        <q-tab
+          name="resources"
+          icon="collections"
+          label="Imagenes y recursos"
+          no-caps
+        />
+        <q-tab name="content" icon="notes" label="Contenido" no-caps />
+        <q-tab
+          name="participants"
+          icon="groups"
+          label="Participantes"
+          no-caps
+        />
+      </q-tabs>
+      <q-tab-panels
+        v-model="tab"
+        animated
+        vertical
+        transition-prev="jump-up"
+        transition-next="jump-up"
+      >
+        <q-tab-panel name="info">
+          <project-basic-info
+            :project="project"
+            :project-types="projectTypes"
+            @updated="getProject()"
+          ></project-basic-info>
+        </q-tab-panel>
+
+        <q-tab-panel name="resources">
+          <project-uploads :files="project.files ?? []"></project-uploads>
+        </q-tab-panel>
+
+        <q-tab-panel name="content">
+          <project-content :content="project.synopsis"></project-content>
+        </q-tab-panel>
+
+        <q-tab-panel name="participants">
+          <project-participants
+            :project="project.id ?? 0"
+          ></project-participants>
+        </q-tab-panel>
+      </q-tab-panels>
+    </div>
+
+    <!-- DESKTOP VIEW -->
+    <q-splitter
+      v-model="splitterModel"
+      style="background-color: white"
+      class="q-pa-md"
+      v-else
+    >
+      <template v-slot:before>
+        <q-tabs
+          v-model="tab"
+          vertical
+          class="text-accent"
+          inline-label
+          switch-indicator
+        >
+          <q-tab name="info" icon="info" label="Información General" no-caps />
+          <q-tab
+            name="resources"
+            icon="collections"
+            label="Imagenes y recursos"
+            no-caps
+          />
+          <q-tab name="content" icon="notes" label="Contenido" no-caps />
+          <q-tab
+            name="participants"
+            icon="groups"
+            label="Participantes"
+            no-caps
+          />
+        </q-tabs>
+      </template>
+
+      <template v-slot:after>
+        <q-tab-panels
+          v-model="tab"
+          animated
+          vertical
+          transition-prev="jump-up"
+          transition-next="jump-up"
+        >
+          <q-tab-panel name="info">
+            <project-basic-info
+              :project="project"
+              :project-types="projectTypes"
+              @updated="getProject()"
+            ></project-basic-info>
+          </q-tab-panel>
+
+          <q-tab-panel name="resources">
+            <project-uploads :files="project.files ?? []"></project-uploads>
+          </q-tab-panel>
+
+          <q-tab-panel name="content">
+            <project-content :content="project.synopsis"></project-content>
+          </q-tab-panel>
+
+          <q-tab-panel name="participants">
+            <project-participants
+              :project="project.id ?? 0"
+            ></project-participants>
+          </q-tab-panel>
+        </q-tab-panels>
+      </template>
+    </q-splitter>
   </q-page>
 </template>
 <style lang="scss" scoped></style>
