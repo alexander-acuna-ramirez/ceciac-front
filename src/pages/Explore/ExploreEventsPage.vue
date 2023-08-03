@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Event, Network } from 'src/models';
 import { useQuasar } from 'quasar';
-import { ExploreService, BlogService, NetworkService } from 'src/services';
+import { ExploreService, NetworkService } from 'src/services';
 import { onMounted, reactive, ref, watch } from 'vue';
 import EventCard from '../Events/components/EventCard.vue';
 import { useRoute } from 'vue-router';
@@ -199,7 +199,7 @@ onMounted(() => {
   <q-page padding>
     <div class="row q-col-gutter-md">
       <div class="col-12 col-md-3">
-        <q-card flat class="rounded-corners">
+        <q-card flat>
           <q-card-section>
             <span class="text-subtitle1 text-accent text-bold">Categorias</span>
             <q-option-group
@@ -378,7 +378,7 @@ onMounted(() => {
       </div>
       <div class="col-12 col-md-9">
         <div>
-          <q-toolbar class="bg-white text-accent q-py-md rounded-corners">
+          <q-toolbar class="bg-white text-accent q-py-md">
             <q-input
               v-model="searchData.searchTerm"
               type="text"

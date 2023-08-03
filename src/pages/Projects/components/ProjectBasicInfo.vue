@@ -16,6 +16,7 @@ const props = defineProps({
     type: Array,
   },
 });
+const loading = ref(false);
 const emit = defineEmits(['updated']);
 const form = ref();
 const $q = useQuasar();
@@ -38,8 +39,7 @@ function filterFn(val: string, update: any) {
 function save() {
   form.value.validate().then(async (success: boolean) => {
     if (success && projectData.id) {
-      $q.loading.show();
-      console.log(projectData);
+      loading.value = true;
       try {
         const data = {
           name: projectData.name,
@@ -60,7 +60,7 @@ function save() {
           message: 'No se pudo actualizar!',
         });
       } finally {
-        $q.loading.hide();
+        loading.value = false;
       }
     }
   });
@@ -86,11 +86,13 @@ function save() {
             hint="El titulo de tu proyecto"
             lazy-rules
             outlined
+            :disable="loading"
             :rules="[Rules.required, Rules.maxLength]"
           />
         </div>
         <div class="col-12 col-md-6">
           <q-select
+            :disable="loading"
             outlined
             v-model="projectData.type_id"
             :options="projectTypes"
@@ -104,6 +106,7 @@ function save() {
         </div>
         <div class="col-12">
           <q-input
+            :disable="loading"
             outlined
             type="textarea"
             v-model="projectData.description"
@@ -115,6 +118,7 @@ function save() {
         </div>
         <div class="col-12">
           <q-select
+            :disable="loading"
             label="Tags"
             outlined
             v-model="projectData.tags"
@@ -137,6 +141,8 @@ function save() {
             icon="update"
             label="Actualizar"
             unelevated
+            no-caps
+            :loading="loading"
             rounded
             type="submit"
           />

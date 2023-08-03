@@ -187,7 +187,7 @@ onMounted(() => {
   <q-page padding>
     <div class="row q-col-gutter-md">
       <div class="col-12 col-md-3">
-        <q-card flat class="rounded-corners">
+        <q-card flat>
           <q-card-section>
             <span class="text-subtitle1 text-accent text-bold">Categorias</span>
             <q-option-group
@@ -349,7 +349,7 @@ onMounted(() => {
       </div>
       <div class="col-12 col-md-9">
         <div>
-          <q-toolbar class="bg-white text-accent q-py-md rounded-corners">
+          <q-toolbar class="bg-white text-accent q-py-md">
             <q-input
               v-model="searchData.searchTerm"
               type="text"

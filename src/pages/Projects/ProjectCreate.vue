@@ -40,7 +40,7 @@ const files = reactive<File[]>([]);
 
 onMounted(() => {
   loadProjectTypes();
-  loadTags();
+  //loadTags();
   project.release_date = defaultReleaseDate();
 });
 
@@ -54,7 +54,7 @@ async function loadProjectTypes() {
   }
 }
 
-async function loadTags() {
+/*async function loadTags() {
   try {
     const response = await tagService.get();
     const data: Tag[] = response.data;
@@ -64,7 +64,7 @@ async function loadTags() {
   } catch (e) {
     console.error(e);
   }
-}
+}*/
 
 async function saveProject() {
   if (route.params.network) {
@@ -149,6 +149,19 @@ function removeFile(filesData: readonly File[]) {
     }
   });
 }
+function filterFn(val: string, update: any) {
+  update(async () => {
+    if (val === '' || val.length < 3) {
+      tags.splice(0, tags.length);
+    } else {
+      const needle = val.toLowerCase();
+      //const response = await api.get('api/v1/filtered-tags?search=' + needle);
+      const response = await tagService.get(needle);
+      tags.splice(0, tags.length);
+      tags.push(...response.data);
+    }
+  });
+}
 
 watch(
   () => project.release_date,
@@ -167,7 +180,7 @@ watch(
       color="primary"
       animated
       flat
-      class="rounded-corners stepperContainer"
+      class="stepperContainer"
     >
       <template v-slot:message>
         <q-banner v-if="step === 1" class="q-px-lg">
@@ -257,9 +270,9 @@ watch(
                 multiple
                 input-debounce="0"
                 :options="tags"
+                @filter="filterFn"
                 option-value="id"
                 option-label="name"
-                emit-value
                 map-options
                 :rules="[Rules.required]"
               />

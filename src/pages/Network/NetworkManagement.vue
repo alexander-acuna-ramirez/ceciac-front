@@ -106,44 +106,41 @@ onMounted(() => {
 </script>
 <template>
   <q-page padding>
-    <q-card flat style="border-radius: 15px">
-      <div class="q-pa-sm">
-        <q-img
-          v-if="network.banner"
-          style="border-radius: 15px"
-          :src="network.banner?.fullpath"
-          :ratio="16 / 9"
-          height="250px"
-          spinner-color="primary"
-          spinner-size="82px"
-          fit="cover"
-          class="my-img"
-        >
-          <div
-            class="absolute-full text-subtitle2 flex flex-center my-text"
-            @click="openBannerChange"
-          >
-            <q-icon name="photo_camera" />
-          </div>
-        </q-img>
-
-        <q-img
-          v-else
-          style="border-radius: 15px"
-          src="~assets/img/app/user/user-profile-banner-default.jpg"
-          :ratio="16 / 9"
-          height="250px"
-          spinner-color="primary"
-          spinner-size="82px"
-          fit="cover"
-          class="my-img"
+    <q-card flat bordered>
+      <!-- Image Banner -->
+      <q-img
+        v-if="network.banner"
+        :src="network.banner?.fullpath"
+        :ratio="16 / 9"
+        height="250px"
+        spinner-color="primary"
+        spinner-size="82px"
+        fit="cover"
+        class="my-img"
+      >
+        <div
+          class="absolute-full text-subtitle2 flex flex-center my-text"
           @click="openBannerChange"
         >
-          <div class="absolute-full text-subtitle2 flex flex-center my-text">
-            <q-icon name="photo_camera" />
-          </div>
-        </q-img>
-      </div>
+          <q-icon name="photo_camera" />
+        </div>
+      </q-img>
+      <q-img
+        v-else
+        src="~assets/img/app/user/user-profile-banner-default.jpg"
+        :ratio="16 / 9"
+        height="250px"
+        spinner-color="primary"
+        spinner-size="82px"
+        fit="cover"
+        class="my-img"
+        @click="openBannerChange"
+      >
+        <div class="absolute-full text-subtitle2 flex flex-center my-text">
+          <q-icon name="photo_camera" />
+        </div>
+      </q-img>
+
       <q-card-section>
         <div class="row">
           <div
@@ -223,18 +220,21 @@ onMounted(() => {
               icon="star"
               label="Administrador"
               color="primary"
+              class="text-white"
             />
             <q-chip
               v-if="networkRepresentative.rank == 2"
               icon="thumb_up"
               label="Gestor de contenido"
               color="primary"
+              class="text-white"
             />
             <q-chip
               v-if="networkRepresentative.rank == 3"
               icon="person"
               label="Miembro"
               color="primary"
+              class="text-white"
             />
           </div>
         </div>
@@ -246,10 +246,6 @@ onMounted(() => {
           active-color="primary"
           indicator-color="primary"
           align="justify"
-          style="
-            border-bottom-right-radius: 15px;
-            border-bottom-left-radius: 15px;
-          "
           inline-label
         >
           <q-route-tab
@@ -284,9 +280,9 @@ onMounted(() => {
       </q-card-section>
     </q-card>
 
-    <div class="row q-col-gutter-md q-mt-sm">
+    <div class="row q-col-gutter-md q-mt-xs">
       <div class="col-12 col-md-12">
-        <q-card flat style="border-radius: 15px">
+        <q-card flat bordered>
           <RouterView :network="network.id" v-if="isLoaded"></RouterView>
         </q-card>
       </div>

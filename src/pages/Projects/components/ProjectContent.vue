@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { ProjectService } from 'src/services';
-import { ref } from 'vue';
+import { ref, defineEmits } from 'vue';
 import { useRoute, RouteParams } from 'vue-router';
 import { useQuasar } from 'quasar';
 import { useToolbarConfig } from 'src/composables/useToolbarConfig';
+
 const props = defineProps({
   content: {
     required: true,
     type: String,
   },
 });
+const emit = defineEmits(['updated']);
 const projectService = new ProjectService();
 const content = ref(props.content);
 const route = useRoute();
@@ -26,6 +28,7 @@ async function save() {
         content.value
       );
       content.value = response.data.synopsis;
+      emit('updated');
       $q.notify({
         color: 'positive',
         message: 'Actualizado correctamente!',

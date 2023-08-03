@@ -12,6 +12,7 @@ export interface Project {
   synopsis: string;
   id_network: number | null;
   type_id: number | null;
+  participants_count?: number;
   created_at?: string;
   updated_at?: string;
   network?: Network;

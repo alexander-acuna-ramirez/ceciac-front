@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { defineProps, reactive } from 'vue';
+import { defineProps, reactive, defineEmits } from 'vue';
 import { File as UploadFile } from 'src/models';
 import { ProjectService } from 'src/services';
 import { useRoute, RouteParams } from 'vue-router';
-import { useQuasar } from 'quasar';
+import { useQuasar, QRejectedEntry } from 'quasar';
 
 const props = defineProps({
   files: {
@@ -11,6 +11,7 @@ const props = defineProps({
     type: Array,
   },
 });
+const emit = defineEmits(['updated']);
 const route = useRoute();
 const projectService = new ProjectService();
 const storedFiles = reactive<UploadFile[]>(props.files as UploadFile[]);
@@ -25,6 +26,7 @@ function deleteStoredFile(file: UploadFile, idx: number) {
 
 function addNotUploadedFile(filesData: readonly File[]) {
   toUploadFiles.push(...filesData);
+  console.log(toUploadFiles);
 }
 function removeNotUploadedFile(filesData: readonly File[]) {
   filesData.forEach((fileToRemove) => {
@@ -35,10 +37,24 @@ function removeNotUploadedFile(filesData: readonly File[]) {
   });
 }
 
-async function save() {
+function rejectedFiles(rejectedEntries: QRejectedEntry[]) {
+  console.log(rejectedEntries, 'rejected');
+  rejectedEntries.forEach((e) => {
+    $q.notify({
+      type: 'negative',
+      message: 'El archivo ' + e.file.name + ' no es un archivo valido!',
+    });
+  });
+}
+
+async function updateFiles() {
+  console.log('working');
+  $q.loading.show();
   try {
-    $q.loading.show();
     let { id } = route.params as RouteParams;
+    console.log(toUploadFiles);
+    console.log(deletedStoredFiles);
+
     if (toUploadFiles.length > 0) {
       const filesData = new FormData();
       const dataFiles: File[] = toUploadFiles;
@@ -49,7 +65,11 @@ async function save() {
       const toDelete = deletedStoredFiles.map((e) => Number(e.id));
       await projectService.deleteProjectFiles(id as string, toDelete);
     }
+    toUploadFiles.splice(0, toUploadFiles.length);
+    deletedStoredFiles.splice(0, deletedStoredFiles.length);
+    emit('updated');
   } catch (e) {
+    console.error(e);
   } finally {
     $q.loading.hide();
   }
@@ -67,7 +87,13 @@ async function save() {
     </div>
     <div class="col-12 col-md-12 q-pa-md">
       <q-uploader
-        style="width: 100%; height: auto"
+        style="
+          width: 100%;
+          height: auto;
+          min-height: 350px;
+          border-style: dashed;
+          max-height: none;
+        "
         :hide-upload-btn="true"
         label="Imagenes"
         multiple
@@ -78,19 +104,45 @@ async function save() {
         color="accent"
         @added="addNotUploadedFile"
         @removed="removeNotUploadedFile"
+        @rejected="rejectedFiles"
+        class="uploader"
       >
+        <!-- Header -->
+        <template v-slot:header="scope">
+          <div class="row no-wrap items-center text-accent bg-white q-pa-sm">
+            <q-spinner v-if="scope.isUploading" class="q-uploader__spinner" />
+            <div class="col">
+              <div class="q-uploader__title text-uppercase"></div>
+            </div>
+            <q-btn
+              v-if="scope.canAddFiles"
+              type="a"
+              icon="add"
+              @click="scope.pickFiles"
+              rounded
+              unelevated
+              color="secondary"
+              no-caps
+            >
+              Agregar imagenes
+              <q-uploader-add-trigger />
+              <q-tooltip>Agregar imagenes</q-tooltip>
+            </q-btn>
+          </div>
+        </template>
+        <!-- List -->
         <template v-slot:list="scope">
           <div class="gallery">
             <div
               v-for="(file, idx) in storedFiles"
               :key="idx"
               :style="'background-image: url(' + file.fullpath + ')'"
-              class="rounded-corners galleryItem"
+              class="rounded-borders galleryItem"
             >
               <q-btn
                 color="red"
                 icon="clear"
-                flat
+                size="sm"
                 round
                 @click="deleteStoredFile(file, idx)"
               />
@@ -99,25 +151,37 @@ async function save() {
               v-for="file in scope.files"
               :key="file.__key"
               :style="'background-image: url(' + file.__img.src + ')'"
-              class="rounded-corners galleryItem"
+              class="rounded-borders galleryItem"
             >
               <q-btn
                 color="red"
                 icon="clear"
-                flat
+                size="sm"
                 round
                 @click="scope.removeFile(file)"
               />
+            </div>
+
+            <div
+              class="rounded-borders galleryItem galleryItemAdd"
+              @click="scope.pickFiles"
+            >
+              <q-icon name="add" />
             </div>
           </div>
 
           <div
             v-if="scope.files.length == 0 && storedFiles.length == 0"
             class="w-full flex justify-center items-center"
-            style="height: 100%"
+            style="height: 300px"
           >
             <span class="text-accent text-center text-secondary"
-              >Arrastre o suelte las imagenes relacionadas a su proyecto</span
+              ><span>
+                <a @click="scope.pickFiles" class="text-primary"
+                  >Haz click aquí</a
+                >
+              </span>
+              o arrastra y suelta las imagenes relacionadas a su proyecto</span
             >
           </div>
         </template>
@@ -129,9 +193,8 @@ async function save() {
           label="Actualizar"
           no-caps
           unelevated
-          type="submit"
           rounded
-          @click="save"
+          @click="updateFiles()"
         />
       </div>
     </div>
@@ -148,16 +211,30 @@ async function save() {
 .galleryItem {
   height: 100%;
   width: 100%;
-  background-size: contain;
+  background-size: cover;
+  border: 1px #9e9e9e solid;
   background-position: center;
   padding: 5px;
 }
+.galleryItemAdd {
+  border-style: dashed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #9e9e9e;
+}
+.galleryItemAdd:hover {
+  background-color: #eeeeee;
+  color: white;
+}
 
-@media (max-width: $breakpoint-md-min) {
+@media (max-width: $breakpoint-xs-max) {
   .gallery {
     display: grid;
     gap: 1rem;
-    grid-auto-rows: 30rem;
+    grid-auto-rows: 12rem;
     grid-template-columns: 1fr;
   }
 }

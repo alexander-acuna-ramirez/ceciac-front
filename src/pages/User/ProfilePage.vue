@@ -1,10 +1,9 @@
 <template>
   <q-page padding>
-    <q-card flat style="border-radius: 15px">
-      <div class="q-pa-sm">
+    <q-card flat bordered>
+      <div>
         <q-img
           v-if="userData.banner"
-          style="border-radius: 15px"
           :src="userData.banner?.fullpath"
           :ratio="16 / 9"
           height="250px"
@@ -24,7 +23,6 @@
 
         <q-img
           v-else
-          style="border-radius: 15px"
           src="~assets/img/app/user/user-profile-banner-default.jpg"
           :ratio="16 / 9"
           height="250px"
@@ -133,7 +131,7 @@
         </div>
       </div>
       <div class="col-12 col-md-3">
-        <q-card flat style="border-radius: 15px">
+        <q-card flat bordered>
           <q-card-section
             class="q-pt-md q-px-md q-pb-none flex justify-between"
           >

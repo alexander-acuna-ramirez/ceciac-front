@@ -19,11 +19,7 @@
           </div>
 
           <div>
-            <q-form
-              @submit.prevent="searchData"
-              @reset="onReset"
-              class="row q-col-gutter-md"
-            >
+            <q-form @submit.prevent="searchData" class="row q-col-gutter-md">
               <q-select
                 v-model="contentType"
                 :options="options"

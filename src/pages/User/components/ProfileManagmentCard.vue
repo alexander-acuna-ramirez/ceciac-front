@@ -50,7 +50,7 @@ onMounted(() => {
 });
 </script>
 <template>
-  <q-card class="my-card rounded-corners" flat bordered>
+  <q-card flat bordered>
     <q-img
       v-if="member.user?.banner"
       :src="member.user?.banner.fullpath"

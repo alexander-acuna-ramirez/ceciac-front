@@ -6,6 +6,7 @@ import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
 import { User, Country, UserProfileType, Profession } from 'src/models';
 import { Rules } from 'src/utils';
+import { AxiosError } from 'axios';
 
 const panel = ref(false);
 const authService = new AuthService();
@@ -84,13 +85,21 @@ async function register(e: Event) {
     authStore.setUser(loginData.user);
 
     router.push('/');
-  } catch (e) {
-    $q.notify({
-      color: 'negative',
-      message: 'Usuario o contraseña incorrecta!',
-      icon: 'report_problem',
-    });
-    console.error(e);
+  } catch (error) {
+    if ((error as AxiosError)?.response?.status === 409) {
+      $q.notify({
+        color: 'info',
+        message: registerUser.email + ' ya se encuentra registrado!',
+        icon: 'info',
+      });
+    } else {
+      $q.notify({
+        color: 'negative',
+        message: 'No se pudo concluir con el registro, intente más tarde!',
+        icon: 'report_problem',
+      });
+    }
+    console.error(error);
   }
 }
 
