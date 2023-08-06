@@ -177,7 +177,7 @@ onMounted(() => {
               type="password"
               label="Contraseña"
               outlined
-              :rules="[Rules.required]"
+              :rules="[Rules.required, Rules.securePassword]"
             />
             <q-select
               class="col-12 col-sm-12 col-md-6"

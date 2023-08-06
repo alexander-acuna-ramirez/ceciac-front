@@ -257,7 +257,7 @@ onMounted(() => {
                           <q-btn
                             unelevated
                             v-close-popup
-                            label="Close"
+                            label="Cerrar"
                             color="primary"
                             flat
                           />
@@ -287,7 +287,7 @@ onMounted(() => {
                           <q-btn
                             unelevated
                             v-close-popup
-                            label="Close"
+                            label="Cerrar"
                             color="primary"
                             flat
                           />

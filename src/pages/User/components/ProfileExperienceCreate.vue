@@ -162,7 +162,7 @@ function filterFn(val: string, update: any) {
                         <q-btn
                           unelevated
                           v-close-popup
-                          label="Close"
+                          label="Cerrar"
                           color="primary"
                           flat
                         />
@@ -192,7 +192,7 @@ function filterFn(val: string, update: any) {
                         <q-btn
                           unelevated
                           v-close-popup
-                          label="Close"
+                          label="Cerrar"
                           color="primary"
                           flat
                         />

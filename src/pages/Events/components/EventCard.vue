@@ -78,7 +78,18 @@
     <q-card-section style="height: 15%">
       <div class="row no-wrap">
         <q-avatar size="45px" rounded>
-          <img :src="event.network?.logo?.fullpath" alt="" />
+          <!--<img :src="event.network?.logo?.fullpath" alt="" />-->
+
+          <img
+            v-if="event.network && event.network.logo"
+            :src="event.network?.logo?.fullpath"
+            alt="Network Logo"
+          />
+          <img
+            v-else
+            src="~assets/img/app/user/user-profile-banner-default.jpg"
+            alt="Network Logo"
+          />
         </q-avatar>
         <div class="q-ml-md column">
           <div class="col text-subtitle2 text-accent">

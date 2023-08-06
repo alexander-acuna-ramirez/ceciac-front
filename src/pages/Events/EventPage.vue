@@ -4,6 +4,10 @@ import { EventService } from 'src/services';
 import { RouteParams, useRoute } from 'vue-router';
 import { Event } from 'src/models/Event';
 import { Functions } from 'src/utils';
+import { AxiosError } from 'axios';
+import { useQuasar } from 'quasar';
+
+const $q = useQuasar();
 const tab = ref('description');
 const eventService = new EventService();
 const route = useRoute();
@@ -20,9 +24,14 @@ const event = reactive<Event>({
   is_public: 1,
   is_online: 1,
 });
-
-function participate() {
-  // Aquí se podría agregar la lógica para participar en el proyecto
+const participationStatus = ref(0);
+const loading = ref(false);
+async function participate() {
+  loading.value = true;
+  let { id } = route.params as RouteParams;
+  await eventService.participate(id as string);
+  loadParticipation();
+  loading.value = false;
 }
 async function loadEvent() {
   try {
@@ -33,9 +42,30 @@ async function loadEvent() {
     console.error(e);
   }
 }
+async function loadParticipation() {
+  try {
+    let { id } = route.params as RouteParams;
+    const response = await eventService.participation(id as string);
+    if (response.data.participation_type) {
+      participationStatus.value = response.data.participation_type;
+    }
+  } catch (error) {
+    if ((error as AxiosError)?.response?.status === 401) {
+      participationStatus.value = -1;
+    } else {
+      $q.notify({
+        color: 'negative',
+        message: 'Ocurrió un error cargando el evento, intente más tarde!',
+        icon: 'report_problem',
+      });
+    }
+    console.error(error);
+  }
+}
 
 onMounted(() => {
   loadEvent();
+  loadParticipation();
 });
 </script>
 <template>
@@ -62,14 +92,33 @@ onMounted(() => {
                 </div>
                 <div>
                   <q-btn
+                    v-if="participationStatus == -1"
                     unelevated
                     class="q-my-md"
                     color="primary"
                     rounded
                     no-caps
-                    @click="() => {}"
+                    to="/login"
+                    :loading="loading"
+                    @click="participate"
                   >
-                    Participar en el evento
+                    Participar
+                  </q-btn>
+
+                  <q-btn
+                    v-else
+                    unelevated
+                    class="q-my-md"
+                    :color="participationStatus != 1 ? 'accent' : 'primary'"
+                    rounded
+                    no-caps
+                    :loading="loading"
+                    :disable="participationStatus != 1"
+                    @click="participate"
+                  >
+                    {{
+                      participationStatus === 3 ? 'Participando' : 'Participar'
+                    }}
                   </q-btn>
                 </div>
               </div>
@@ -116,10 +165,19 @@ onMounted(() => {
                     class="my-img"
                   >
                     <q-img
+                      v-if="event.network && event.network.logo"
                       :src="event.network?.logo?.fullpath"
                       spinner-color="primary"
                       spinner-size="82px"
                     ></q-img>
+
+                    <img
+                      v-else
+                      src="~assets/img/app/user/user-profile-banner-default.jpg"
+                      alt="Network Logo"
+                      spinner-color="primary"
+                      spinner-size="82px"
+                    />
                   </q-avatar>
                   {{ event.network?.name }}
                 </div>
@@ -128,7 +186,7 @@ onMounted(() => {
               <q-card-section>
                 <div class="text-subtitle2 text-secondary">
                   <span class="text-primary text-bold"
-                    >Duración del proyecto:
+                    >Duración del evento:
                   </span>
                   De {{ Functions.formatDate(event.date_time) }} a
                   {{ Functions.formatDate(event.end_date_time) }}
@@ -138,7 +196,7 @@ onMounted(() => {
               <q-separator inset />
               <q-card-section class="row">
                 <span class="col-6 text-accent">
-                  <span class="text-bold">665</span>
+                  <span class="text-bold">{{ event.participants_count }}</span>
                   participantes
                 </span>
                 <span class="col-6 text-accent">

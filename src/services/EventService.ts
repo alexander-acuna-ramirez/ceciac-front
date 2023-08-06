@@ -52,4 +52,11 @@ export class EventService {
     return api.post('api/v1/event/tags/' + event, { tags });
   }
 
+  public participate(event: string | number) {
+    return api.post('api/v1/event/participate/' + event);
+  }
+
+  public participation(event: string | number) {
+    return api.get('api/v1/event/event-participation/' + event);
+  }
 }

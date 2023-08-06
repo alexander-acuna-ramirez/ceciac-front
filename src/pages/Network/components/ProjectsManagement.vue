@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, reactive, watch, toRef } from 'vue';
-import { ProjectService } from 'src/services/ProjectService';
+import { ProjectService } from 'src/services';
 import ProjectCard from 'src/pages/Projects/components/ProjectCard.vue';
 import { Project } from 'src/models/Project';
 import EmptyResults from 'src/components/EmptyResults.vue';
@@ -11,7 +11,6 @@ const props = defineProps({
     type: Number,
   },
 });
-
 const projectService = new ProjectService();
 const projects = reactive<Project[]>([]);
 const paginationData = reactive({
@@ -76,6 +75,7 @@ watch(current, (newX) => {
     </q-card-section>
     <q-card-section v-if="projects.length == 0">
       <empty-results
+        style="height: 350px"
         titulo="No existen projectos"
         descripcion="Puedes crear uno!"
       ></empty-results>

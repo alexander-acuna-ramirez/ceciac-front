@@ -16,6 +16,7 @@ export interface Event {
   end_date_time: string;
   is_public: number;
   is_online: number;
+  participants_count?: number;
   network?: Network;
   user?: User;
   file?: File;

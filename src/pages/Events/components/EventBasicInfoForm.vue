@@ -124,7 +124,11 @@ const updateEventBasicInfo = async () => {
                   emit-value
                   map-options
                   label="Tipo de evento"
-                  :rules="[Rules.required]"
+                  :rules="[
+                    (val) => {
+                      return val !== null || 'El campo es requerido';
+                    },
+                  ]"
                   :disable="loading"
                 />
               </div>
@@ -184,7 +188,7 @@ const updateEventBasicInfo = async () => {
                             <q-btn
                               unelevated
                               v-close-popup
-                              label="Close"
+                              label="Cerrar"
                               color="primary"
                               flat
                             />
@@ -296,7 +300,11 @@ const updateEventBasicInfo = async () => {
                   emit-value
                   map-options
                   label="Modalidad"
-                  :rules="[Rules.required]"
+                  :rules="[
+                    (val) => {
+                      return val !== null || 'El campo es requerido';
+                    },
+                  ]"
                   :disable="loading"
                 />
               </div>

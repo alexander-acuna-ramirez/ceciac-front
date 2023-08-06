@@ -61,6 +61,7 @@ function logout() {
             v-ripple
             active-class="text-secondary"
             to="/network-management"
+            v-if="authStore.getUser.network"
           >
             <q-item-section avatar>
               <q-icon name="folder" />

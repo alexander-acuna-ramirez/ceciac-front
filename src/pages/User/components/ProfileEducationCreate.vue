@@ -114,7 +114,7 @@ async function resetDialog() {
                         <q-btn
                           unelevated
                           v-close-popup
-                          label="Close"
+                          label="Cerrar"
                           color="primary"
                           flat
                         />
@@ -145,7 +145,7 @@ async function resetDialog() {
                         <q-btn
                           unelevated
                           v-close-popup
-                          label="Close"
+                          label="Cerrar"
                           color="primary"
                           flat
                         />

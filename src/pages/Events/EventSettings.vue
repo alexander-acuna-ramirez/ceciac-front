@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { Event } from 'src/models';
 import { EventService } from 'src/services';
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref, watch } from 'vue';
 import { useRoute, RouteParams, useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
 import EventBasicInfoForm from './components/EventBasicInfoForm.vue';
@@ -26,7 +26,24 @@ const event = reactive<Event>({
   is_public: 0,
   is_online: 0,
 });
+
+const eventEdit = reactive<Event>({
+  title: '',
+  description: '',
+  event_content: '',
+  id_network: null,
+  id_user: null,
+  id_file: null,
+  location: '',
+  date_time: '',
+  end_date_time: '',
+  is_public: 0,
+  is_online: 0,
+});
+
 const eventTitle = ref('');
+const tab = ref('info');
+const splitterModel = ref(20);
 
 async function loadEvent() {
   try {
@@ -34,6 +51,7 @@ async function loadEvent() {
     const { id } = route.params as RouteParams;
     const response = await eventService.checkAccess(id as string);
     Object.assign(event, response.data);
+    Object.assign(eventEdit, response.data);
     eventTitle.value = event.title;
   } catch (e) {
     router.push({
@@ -72,8 +90,9 @@ async function deleteEvent() {
   });
 }
 
-const tab = ref('basic');
-const splitterModel = ref(20);
+watch(tab, () => {
+  Object.assign(event, eventEdit);
+});
 onMounted(() => {
   loadEvent();
 });
@@ -116,19 +135,25 @@ onMounted(() => {
           inline-label
           align="left"
         >
-          <q-tab name="basic" icon="info" label="Información General" no-caps />
-          <q-tab name="content" icon="content_copy" label="Contenido" no-caps />
+          <q-tab name="info" icon="info" label="Información General" no-caps />
+          <q-tab name="content" icon="collections" label="Contenido" no-caps />
           <q-tab name="image" icon="image" label="Imagenes" no-caps />
         </q-tabs>
         <q-tab-panels v-model="tab" animated>
-          <q-tab-panel name="basic">
-            <EventBasicInfoForm :event="event"></EventBasicInfoForm>
+          <q-tab-panel name="info">
+            <EventBasicInfoForm
+              :event="event"
+              @update="loadEvent"
+            ></EventBasicInfoForm>
           </q-tab-panel>
           <q-tab-panel name="content">
-            <EventContentSettings :event="event"></EventContentSettings>
+            <EventContentSettings
+              :event="event"
+              @update="loadEvent"
+            ></EventContentSettings>
           </q-tab-panel>
           <q-tab-panel name="image">
-            <EventMedia :event="event"></EventMedia>
+            <EventMedia :event="event" @update="loadEvent"></EventMedia>
           </q-tab-panel>
         </q-tab-panels>
       </div>
@@ -144,26 +169,37 @@ onMounted(() => {
             align="left"
           >
             <q-tab
-              name="basic"
-              icon="mail"
+              name="info"
+              icon="info"
               label="Información General"
               no-caps
             />
-            <q-tab name="content" icon="alarm" label="Contenido" no-caps />
-            <q-tab name="image" icon="movie" label="Imagenes" no-caps />
+            <q-tab
+              name="content"
+              icon="collections"
+              label="Contenido"
+              no-caps
+            />
+            <q-tab name="image" icon="images" label="Imagenes" no-caps />
           </q-tabs>
         </template>
 
         <template v-slot:after>
           <q-tab-panels v-model="tab" animated>
-            <q-tab-panel name="basic">
-              <EventBasicInfoForm :event="event"></EventBasicInfoForm>
+            <q-tab-panel name="info">
+              <EventBasicInfoForm
+                :event="event"
+                @update="loadEvent"
+              ></EventBasicInfoForm>
             </q-tab-panel>
             <q-tab-panel name="content">
-              <EventContentSettings :event="event"></EventContentSettings>
+              <EventContentSettings
+                :event="event"
+                @update="loadEvent"
+              ></EventContentSettings>
             </q-tab-panel>
             <q-tab-panel name="image">
-              <EventMedia :event="event"></EventMedia>
+              <EventMedia :event="event" @update="loadEvent"></EventMedia>
             </q-tab-panel>
           </q-tab-panels>
         </template>

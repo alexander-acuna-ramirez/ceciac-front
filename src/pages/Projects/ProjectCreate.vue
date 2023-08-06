@@ -330,7 +330,7 @@ watch(
                           <q-btn
                             unelevated
                             v-close-popup
-                            label="Close"
+                            label="Cerrar"
                             color="primary"
                             flat
                           />
@@ -364,7 +364,7 @@ watch(
                           <q-btn
                             unelevated
                             v-close-popup
-                            label="Close"
+                            label="Cerrar"
                             color="primary"
                             flat
                           />
@@ -400,10 +400,11 @@ watch(
             unelevated
             v-if="step > 1"
             flat
+            rounded
             color="primary"
             @click="($refs.stepper as QStepper).previous()"
             label="Atras"
-            class="q-ml-sm"
+            class="q-mr-sm"
             icon="chevron_left"
           />
 

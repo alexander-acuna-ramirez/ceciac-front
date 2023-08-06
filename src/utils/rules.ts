@@ -29,4 +29,8 @@ export const Rules = {
     }
     return true; // Permitir valor vacío o nulo
   },
+  securePassword: (value: string) => {
+    const strongPasswordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
+    return strongPasswordRegex.test(value) || 'La contraseña debe contener al menos una letra mayúscula, una letra minúscula, un dígito y un carácter especial.';
+  },
 };

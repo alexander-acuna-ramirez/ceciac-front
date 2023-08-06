@@ -113,7 +113,7 @@ onMounted(() => {
       <q-space />
       <q-btn
         color="primary"
-        icon="close"
+        icon="Cerrar"
         flat
         rounded
         @click="deleteMember()"
