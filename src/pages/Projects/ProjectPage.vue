@@ -128,58 +128,6 @@ onMounted(() => {
                   </q-btn>
                 </div>
               </div>
-              <!--
-              <div class="col-12 col-md-4">
-                <q-card flat bordered>
-                  <q-card-section>
-                    <div class="text-subtitle2 text-accent">
-                      <q-avatar
-                        rounded
-                        size="30px"
-                        font-size="52px"
-                        text-color="white"
-                        class="my-img"
-                      >
-                        <q-img
-                          :src="project.network?.logo?.fullpath"
-                          spinner-color="primary"
-                          spinner-size="82px"
-                        ></q-img>
-                      </q-avatar>
-                      {{ project.network?.name }}
-                    </div>
-                  </q-card-section>
-                  <q-separator inset />
-                  <q-card-section>
-                    <div class="text-subtitle2 text-secondary">
-                      <span class="text-primary text-bold"
-                        >Duración del proyecto:
-                      </span>
-                      De {{ Functions.formatDate(project.release_date) }} a
-                      {{ Functions.formatDate(project.end_date) }}
-                    </div>
-                  </q-card-section>
-
-                  <q-separator inset />
-                  <q-card-section class="row">
-                    <span class="col-6 text-accent">
-                      <span class="text-bold">{{
-                        project.participants_count
-                      }}</span>
-                      participantes
-                    </span>
-                    <span class="col-6 text-accent">
-                      <q-icon name="science" />
-                      {{ project.type?.name }}
-                    </span>
-                  </q-card-section>
-                  <q-card-section>
-                    <q-chip v-for="tag in project.tags" :key="tag.id" size="sm">
-                      {{ tag.name }}
-                    </q-chip>
-                  </q-card-section>
-                </q-card>
-              </div>-->
             </div>
           </q-card-section>
           <q-tabs class="text-accent" inline-label align="left" v-model="tab">

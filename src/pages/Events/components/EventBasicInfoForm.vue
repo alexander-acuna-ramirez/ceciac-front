@@ -3,8 +3,9 @@ import { defineProps } from 'vue';
 import { ref, reactive } from 'vue';
 import { Rules } from 'src/utils';
 import { Event } from 'src/models';
-import { EventService } from 'src/services';
+import { EventService, TagService } from 'src/services';
 import { EventBasicInformation } from 'src/interfaces/EventBasicInformation';
+import { Tag } from 'src/models';
 import { useQuasar } from 'quasar';
 
 const eventService = new EventService();
@@ -25,7 +26,23 @@ const eventType = [
 const $q = useQuasar();
 const form = ref();
 const localEvent = reactive<Event>(props.event as Event);
+const tagService = new TagService();
 const loading = ref(false);
+const tags = reactive<Tag[]>([]);
+
+function filterFn(val: string, update: any) {
+  update(async () => {
+    if (val === '' || val.length < 3) {
+      tags.splice(0, tags.length);
+    } else {
+      const needle = val.toLowerCase();
+      const response = await tagService.get(needle);
+      tags.splice(0, tags.length);
+      tags.push(...response.data);
+    }
+  });
+}
+
 const updateEventBasicInfo = async () => {
   try {
     if (form.value.validate()) {
@@ -52,7 +69,10 @@ const updateEventBasicInfo = async () => {
       if (is_online === 0) {
         data.location = location;
       }
+      const tags: number[] = localEvent.tags?.map((e) => e.id) ?? [];
+
       await eventService.updateEvent(id as number, data);
+      await eventService.storeEventTags(id as number, tags);
       $q.notify({
         type: 'positive',
         message: 'Actualizado correctamente!',
@@ -119,6 +139,25 @@ const updateEventBasicInfo = async () => {
                   rows="3"
                   :rules="[Rules.required, Rules.maxShortLength]"
                   :disable="loading"
+                />
+              </div>
+
+              <div class="col-12">
+                <q-select
+                  :disable="loading"
+                  label="Tags"
+                  outlined
+                  v-model="localEvent.tags"
+                  use-input
+                  use-chips
+                  multiple
+                  input-debounce="0"
+                  :options="tags"
+                  @filter="filterFn"
+                  option-value="id"
+                  option-label="name"
+                  map-options
+                  :rules="[Rules.required]"
                 />
               </div>
 

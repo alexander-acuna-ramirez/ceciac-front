@@ -47,4 +47,9 @@ export class EventService {
   public updateEventContent(eventId: string | number, content: string) {
     return api.put('api/v1/event/update-content/' + eventId, { 'event_content': content });
   }
+
+  public storeEventTags(event: string | number, tags: number[]) {
+    return api.post('api/v1/event/tags/' + event, { tags });
+  }
+
 }

@@ -107,7 +107,7 @@ onMounted(() => {
       </div>
     </div>
 
-    <q-card flat>
+    <q-card flat bordered>
       <!-- MOBILE VIEW -->
       <div v-if="$q.screen.lt.md">
         <q-tabs

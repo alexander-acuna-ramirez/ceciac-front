@@ -131,6 +131,7 @@ function save() {
             option-value="id"
             option-label="name"
             map-options
+            emit-value
             :rules="[Rules.required]"
           />
         </div>

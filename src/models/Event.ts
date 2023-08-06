@@ -1,6 +1,7 @@
 import { File } from './File';
 import { Network } from './Network';
 import { User } from './User';
+import { Tag } from './Tag';
 
 export interface Event {
   id?: number;
@@ -18,6 +19,7 @@ export interface Event {
   network?: Network;
   user?: User;
   file?: File;
+  tags?: Tag[];
   created_at?: string;
   updated_at?: string;
   deleted_at?: string;

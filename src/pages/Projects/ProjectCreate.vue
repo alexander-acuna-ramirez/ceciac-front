@@ -267,6 +267,7 @@ watch(
                 v-model="projectTags"
                 use-input
                 use-chips
+                emit-value
                 multiple
                 input-debounce="0"
                 :options="tags"

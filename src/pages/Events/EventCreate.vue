@@ -2,12 +2,14 @@
 import { ref, reactive } from 'vue';
 import { QStepper, useQuasar } from 'quasar';
 import { Event } from 'src/models/Event';
-import { EventService } from 'src/services';
+import { EventService, TagService } from 'src/services';
 import { Rules } from 'src/utils';
 import { useRoute, RouteParams, useRouter } from 'vue-router';
 import { useToolbarConfig } from 'src/composables/useToolbarConfig';
+import { Tag } from 'src/models';
 
 const eventService = new EventService();
+const tagService = new TagService();
 const toolbarConfig = useToolbarConfig();
 const route = useRoute();
 const router = useRouter();
@@ -17,6 +19,7 @@ const thirdStepForm = ref();
 const $q = useQuasar();
 const step = ref(1);
 const stepper = ref();
+const eventTags = ref(null);
 const event = reactive<Event>({
   title: '', //
   description: '', //
@@ -30,17 +33,15 @@ const event = reactive<Event>({
   is_public: 1,
   is_online: 1, //
 });
-
+const tags = reactive<Tag[]>([]);
 const eventConfig = [
   { label: 'Publico', value: 1 },
   { label: 'Privado', value: 0 },
 ];
-
 const eventType = [
   { label: 'Presencial', value: 0 },
   { label: 'Virtual', value: 1 },
 ];
-
 const eventFile = ref();
 
 function nextStep() {
@@ -62,7 +63,6 @@ function nextStep() {
     case 3:
       thirdStepForm.value.validate().then((success: boolean) => {
         if (success) {
-          console.log('HERE 2');
           saveEvent();
         }
       });
@@ -81,8 +81,23 @@ async function saveEvent() {
   fileData.append('event_file', eventFile.value);
   const eventId = typeof eventCreated.id !== 'undefined' ? eventCreated.id : '';
   await eventService.uploadEventFile(fileData, eventId);
-
+  const tagsId: number[] = eventTags.value ?? [];
+  await eventService.storeEventTags(eventId, tagsId);
   router.push('/event/detail/' + eventCreated.id);
+}
+
+function filterFn(val: string, update: any) {
+  update(async () => {
+    if (val === '' || val.length < 3) {
+      tags.splice(0, tags.length);
+    } else {
+      const needle = val.toLowerCase();
+      //const response = await api.get('api/v1/filtered-tags?search=' + needle);
+      const response = await tagService.get(needle);
+      tags.splice(0, tags.length);
+      tags.push(...response.data);
+    }
+  });
 }
 </script>
 
@@ -135,13 +150,7 @@ async function saveEvent() {
                 label="Titulo"
                 hint="El titulo de tu evento"
                 lazy-rules
-                :rules="[
-                                    (val: any) =>
-                                        (val !== null && val !== '') ||
-                                        'Por favor, ingresa el titulo',
-                                    (val: any) => val.length <= 255 || 'La descripción no puede ser mayor a 255 caracteres.'
-
-                                ]"
+                :rules="[Rules.required, Rules.maxLength]"
               />
             </div>
             <div class="col-12 col-md-6">
@@ -154,11 +163,7 @@ async function saveEvent() {
                 emit-value
                 map-options
                 label="Tipo de evento"
-                :rules="[
-                                    (val: any) =>
-                                        (val !== null && val !== '') ||
-                                        'Por favor, ingresa el tipo de evento',
-                                ]"
+                :rules="[Rules.required]"
               />
             </div>
             <div class="col-12">
@@ -169,12 +174,26 @@ async function saveEvent() {
                 label="Descripción"
                 hint="Una descripción breve de tu evento"
                 lazy-rules
-                :rules="[
-                                    (val: any) =>
-                                        (val !== null && val !== '') ||
-                                        'Por favor ingresa  la descripción',
-                                    (val: any) => val.length <= 255 || 'La descripción no puede ser mayor a 255 caracteres.'
-                                ]"
+                :rules="[Rules.required, Rules.maxShortLength]"
+              />
+            </div>
+
+            <div class="col-12">
+              <q-select
+                label="Tags"
+                outlined
+                v-model="eventTags"
+                use-input
+                use-chips
+                multiple
+                input-debounce="0"
+                :options="tags"
+                @filter="filterFn"
+                option-value="id"
+                option-label="name"
+                emit-value
+                map-options
+                :rules="[Rules.required]"
               />
             </div>
 
@@ -183,11 +202,7 @@ async function saveEvent() {
                 outlined
                 v-model="event.date_time"
                 label="Inicio del evento"
-                :rules="[
-                                (val: any) =>
-                                    (val !== null && val !== '') ||
-                                    'Por favor ingresa el comienzo del evento',
-                            ]"
+                :rules="[Rules.required]"
               >
                 <template v-slot:prepend>
                   <q-icon name="event" class="cursor-pointer">
@@ -201,7 +216,7 @@ async function saveEvent() {
                           <q-btn
                             unelevated
                             v-close-popup
-                            label="Close"
+                            label="Cerrar"
                             color="primary"
                             flat
                           />
@@ -227,7 +242,7 @@ async function saveEvent() {
                           <q-btn
                             unelevated
                             v-close-popup
-                            label="Close"
+                            label="Cerrar"
                             color="primary"
                             flat
                           />
@@ -244,11 +259,7 @@ async function saveEvent() {
                 outlined
                 v-model="event.end_date_time"
                 label="Fin del evento"
-                :rules="[
-                                (val: any) =>
-                                    (val !== null && val !== '') ||
-                                    'Por favor selecciona el termino del evento',
-                            ]"
+                :rules="[Rules.required]"
               >
                 <template v-slot:prepend>
                   <q-icon name="event" class="cursor-pointer">
@@ -265,7 +276,7 @@ async function saveEvent() {
                           <q-btn
                             unelevated
                             v-close-popup
-                            label="Close"
+                            label="Cerrar"
                             color="primary"
                             flat
                           />
@@ -291,7 +302,7 @@ async function saveEvent() {
                           <q-btn
                             unelevated
                             v-close-popup
-                            label="Close"
+                            label="Cerrar"
                             color="primary"
                             flat
                           />
@@ -313,11 +324,7 @@ async function saveEvent() {
                 emit-value
                 map-options
                 label="Modalidad"
-                :rules="[
-                                    (val: any) =>
-                                        (val !== null && val !== '') ||
-                                        'Por favor, ingresa la modalidad evento',
-                                ]"
+                :rules="[(val) => val !== null]"
               />
             </div>
 
@@ -327,11 +334,7 @@ async function saveEvent() {
                 v-model="event.location"
                 label="Ubicación"
                 lazy-rules
-                :rules="[
-                                (val: any) =>
-                                    (val !== null && val !== '') ||
-                                    'Por favor, ingresa la ubicación',
-                            ]"
+                :rules="[Rules.required]"
               />
             </div>
           </div>
@@ -340,7 +343,7 @@ async function saveEvent() {
 
       <q-step
         :name="2"
-        title="Definición del proyecto"
+        title="Definición del evento"
         icon="create_new_folder"
         :done="step > 2"
       >
@@ -349,7 +352,7 @@ async function saveEvent() {
             :toolbar="toolbarConfig.toolbarConfig"
             v-model="event.event_content"
             min-height="10rem"
-            hint="Aqui puedes explicar todo tu proyecto"
+            hint="Aqui puedes explicar todo tu evento"
           />
         </q-form>
       </q-step>
@@ -359,7 +362,7 @@ async function saveEvent() {
           <q-file
             outlined
             v-model="eventFile"
-            label="Imagen del proyecto"
+            label="Imagen del evento"
             :rules="[Rules.required, Rules.fileType, Rules.fileSize]"
           />
         </q-form>
@@ -374,8 +377,9 @@ async function saveEvent() {
             color="primary"
             @click="($refs.stepper as QStepper).previous()"
             label="Atras"
-            class="q-ml-sm"
+            class="q-mr-sm"
             icon="chevron_left"
+            rounded
           />
 
           <q-btn
