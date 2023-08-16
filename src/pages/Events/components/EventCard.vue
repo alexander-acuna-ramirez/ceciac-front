@@ -1,5 +1,5 @@
 <template>
-  <q-card class="my-card rounded-corners" flat bordered>
+  <q-card class="my-card" flat bordered>
     <q-img
       v-if="event.file"
       :src="event.file.fullpath"

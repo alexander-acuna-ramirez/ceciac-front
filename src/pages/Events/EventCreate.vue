@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
+import { ref, reactive, watch } from 'vue';
 import { QStepper, useQuasar } from 'quasar';
 import { Event } from 'src/models/Event';
 import { EventService, TagService } from 'src/services';
@@ -8,6 +8,7 @@ import { useRoute, RouteParams, useRouter } from 'vue-router';
 import { useToolbarConfig } from 'src/composables/useToolbarConfig';
 import { Tag } from 'src/models';
 
+const cropPreview = ref('');
 const eventService = new EventService();
 const tagService = new TagService();
 const toolbarConfig = useToolbarConfig();
@@ -16,10 +17,12 @@ const router = useRouter();
 const firstStepForm = ref();
 const secondStepForm = ref();
 const thirdStepForm = ref();
+const fourthStepForm = ref();
 const $q = useQuasar();
 const step = ref(1);
 const stepper = ref();
 const eventTags = ref(null);
+const loading = ref(false);
 const event = reactive<Event>({
   title: '', //
   description: '', //
@@ -61,7 +64,23 @@ function nextStep() {
         : stepper.value.next();
       break;
     case 3:
+      if (!(new Date(event.date_time) < new Date(event.end_date_time))) {
+        $q.notify({
+          color: 'negative',
+          message:
+            'La fecha de finalización debe ser posterior a la de inicio!',
+          icon: 'report_problem',
+        });
+        return;
+      }
       thirdStepForm.value.validate().then((success: boolean) => {
+        if (success) {
+          stepper.value.next();
+        }
+      });
+      break;
+    case 4:
+      fourthStepForm.value.validate().then((success: boolean) => {
         if (success) {
           saveEvent();
         }
@@ -73,22 +92,33 @@ function nextStep() {
 }
 
 async function saveEvent() {
-  const { network } = route.params as RouteParams;
-  event.id_network = parseInt(network as string);
-  const res = await eventService.store(event);
-  const eventCreated = res.data as Event;
-  const fileData = new FormData();
-  fileData.append('event_file', eventFile.value);
-  const eventId = typeof eventCreated.id !== 'undefined' ? eventCreated.id : '';
-  await eventService.uploadEventFile(fileData, eventId);
-  const tagsId: number[] = eventTags.value ?? [];
-  await eventService.storeEventTags(eventId, tagsId);
-  router.push('/event/detail/' + eventCreated.id);
+  try {
+    loading.value = true;
+    const { network } = route.params as RouteParams;
+    event.id_network = parseInt(network as string);
+    const res = await eventService.store(event);
+    const eventCreated = res.data as Event;
+    const fileData = new FormData();
+    fileData.append('event_file', eventFile.value);
+    const eventId =
+      typeof eventCreated.id !== 'undefined' ? eventCreated.id : '';
+    await eventService.uploadEventFile(fileData, eventId);
+    const tagsId: number[] = eventTags.value ?? [];
+    await eventService.storeEventTags(eventId, tagsId);
+    router.push('/event/detail/' + eventCreated.id);
+  } catch (e) {
+    $q.notify({
+      type: 'negative',
+      message: 'No se pudo crear el evento, intentalo más tarde!',
+    });
+  } finally {
+    loading.value = false;
+  }
 }
 
 function filterFn(val: string, update: any) {
   update(async () => {
-    if (val === '' || val.length < 3) {
+    if (val === '' || val.length < 2) {
       tags.splice(0, tags.length);
     } else {
       const needle = val.toLowerCase();
@@ -99,6 +129,28 @@ function filterFn(val: string, update: any) {
     }
   });
 }
+
+function defaultReleaseDate() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  return `${year}/${month}/${day}`;
+}
+
+function optionsFn(date: string) {
+  const defaultDate = defaultReleaseDate();
+  return date >= defaultDate;
+}
+
+function optionsEndFn(date: string) {
+  const defaultDate = event.date_time;
+  return new Date(date) >= new Date(defaultDate);
+}
+
+watch(eventFile, (file: File) => {
+  cropPreview.value = URL.createObjectURL(file);
+});
 </script>
 
 <template>
@@ -134,6 +186,14 @@ function filterFn(val: string, update: any) {
             Definamos las fechas en las que se sucedera su evento
           </div>
         </q-banner>
+        <q-banner v-else-if="step === 4" class="q-px-lg">
+          <div class="text-h5 text-bold text-primary">
+            Imagenes de su evento
+          </div>
+          <div class="text-subtitle2 text-accent">
+            Escoga la imagen que mejor defina su evento
+          </div>
+        </q-banner>
       </template>
       <q-step
         :name="1"
@@ -163,7 +223,7 @@ function filterFn(val: string, update: any) {
                 emit-value
                 map-options
                 label="Tipo de evento"
-                :rules="[Rules.required]"
+                :rules="[(val) => val !== null && val !== '']"
               />
             </div>
             <div class="col-12">
@@ -195,123 +255,6 @@ function filterFn(val: string, update: any) {
                 map-options
                 :rules="[Rules.required]"
               />
-            </div>
-
-            <div class="col-12 col-md-6">
-              <q-input
-                outlined
-                v-model="event.date_time"
-                label="Inicio del evento"
-                :rules="[Rules.required]"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="event" class="cursor-pointer">
-                    <q-popup-proxy
-                      cover
-                      transition-show="scale"
-                      transition-hide="scale"
-                    >
-                      <q-date v-model="event.date_time" mask="YYYY-MM-DD HH:mm">
-                        <div class="row items-center justify-end">
-                          <q-btn
-                            unelevated
-                            v-close-popup
-                            label="Cerrar"
-                            color="primary"
-                            flat
-                          />
-                        </div>
-                      </q-date>
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-
-                <template v-slot:append>
-                  <q-icon name="access_time" class="cursor-pointer">
-                    <q-popup-proxy
-                      cover
-                      transition-show="scale"
-                      transition-hide="scale"
-                    >
-                      <q-time
-                        v-model="event.date_time"
-                        mask="YYYY-MM-DD HH:mm"
-                        format24h
-                      >
-                        <div class="row items-center justify-end">
-                          <q-btn
-                            unelevated
-                            v-close-popup
-                            label="Cerrar"
-                            color="primary"
-                            flat
-                          />
-                        </div>
-                      </q-time>
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-              </q-input>
-            </div>
-
-            <div class="col-12 col-md-6">
-              <q-input
-                outlined
-                v-model="event.end_date_time"
-                label="Fin del evento"
-                :rules="[Rules.required]"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="event" class="cursor-pointer">
-                    <q-popup-proxy
-                      cover
-                      transition-show="scale"
-                      transition-hide="scale"
-                    >
-                      <q-date
-                        v-model="event.end_date_time"
-                        mask="YYYY-MM-DD HH:mm"
-                      >
-                        <div class="row items-center justify-end">
-                          <q-btn
-                            unelevated
-                            v-close-popup
-                            label="Cerrar"
-                            color="primary"
-                            flat
-                          />
-                        </div>
-                      </q-date>
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-
-                <template v-slot:append>
-                  <q-icon name="access_time" class="cursor-pointer">
-                    <q-popup-proxy
-                      cover
-                      transition-show="scale"
-                      transition-hide="scale"
-                    >
-                      <q-time
-                        v-model="event.end_date_time"
-                        mask="YYYY-MM-DD HH:mm"
-                        format24h
-                      >
-                        <div class="row items-center justify-end">
-                          <q-btn
-                            unelevated
-                            v-close-popup
-                            label="Cerrar"
-                            color="primary"
-                            flat
-                          />
-                        </div>
-                      </q-time>
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-              </q-input>
             </div>
 
             <div class="col-12 col-md-6">
@@ -357,10 +300,139 @@ function filterFn(val: string, update: any) {
         </q-form>
       </q-step>
 
-      <q-step :name="3" title="Imagenes" icon="calendar_month" :done="step > 3">
+      <q-step :name="3" title="Programar evento" icon="event" :done="step > 2">
         <q-form ref="thirdStepForm" class="q-gutter-md">
+          <div class="col-12 col-md-6">
+            <q-input
+              outlined
+              v-model="event.date_time"
+              label="Inicio del evento"
+              :rules="[Rules.required]"
+            >
+              <template v-slot:prepend>
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy
+                    cover
+                    transition-show="scale"
+                    transition-hide="scale"
+                  >
+                    <q-date
+                      v-model="event.date_time"
+                      mask="YYYY-MM-DD HH:mm"
+                      :options="optionsFn"
+                    >
+                      <div class="row items-center justify-end">
+                        <q-btn
+                          unelevated
+                          v-close-popup
+                          label="Cerrar"
+                          color="primary"
+                          flat
+                        />
+                      </div>
+                    </q-date>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+
+              <template v-slot:append>
+                <q-icon name="access_time" class="cursor-pointer">
+                  <q-popup-proxy
+                    cover
+                    transition-show="scale"
+                    transition-hide="scale"
+                  >
+                    <q-time
+                      v-model="event.date_time"
+                      mask="YYYY-MM-DD HH:mm"
+                      format24h
+                    >
+                      <div class="row items-center justify-end">
+                        <q-btn
+                          unelevated
+                          v-close-popup
+                          label="Cerrar"
+                          color="primary"
+                          flat
+                        />
+                      </div>
+                    </q-time>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <q-input
+              :disable="event.date_time == null || event.date_time == ''"
+              outlined
+              v-model="event.end_date_time"
+              label="Fin del evento"
+              :rules="[Rules.required]"
+            >
+              <template v-slot:prepend>
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy
+                    cover
+                    transition-show="scale"
+                    transition-hide="scale"
+                  >
+                    <q-date
+                      v-model="event.end_date_time"
+                      mask="YYYY-MM-DD HH:mm"
+                      :options="optionsEndFn"
+                    >
+                      <div class="row items-center justify-end">
+                        <q-btn
+                          unelevated
+                          v-close-popup
+                          label="Cerrar"
+                          color="primary"
+                          flat
+                        />
+                      </div>
+                    </q-date>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+
+              <template v-slot:append>
+                <q-icon name="access_time" class="cursor-pointer">
+                  <q-popup-proxy
+                    cover
+                    transition-show="scale"
+                    transition-hide="scale"
+                  >
+                    <q-time
+                      v-model="event.end_date_time"
+                      mask="YYYY-MM-DD HH:mm"
+                      format24h
+                    >
+                      <div class="row items-center justify-end">
+                        <q-btn
+                          unelevated
+                          v-close-popup
+                          label="Cerrar"
+                          color="primary"
+                          flat
+                        />
+                      </div>
+                    </q-time>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+          </div>
+        </q-form>
+      </q-step>
+
+      <q-step :name="4" title="Imagenes" icon="image" :done="step > 3">
+        <q-form ref="fourthStepForm">
           <q-file
+            :disable="loading"
             outlined
+            clearable
             v-model="eventFile"
             label="Imagen del evento"
             :rules="[Rules.required, Rules.fileType, Rules.fileSize]"
@@ -372,9 +444,10 @@ function filterFn(val: string, update: any) {
         <q-stepper-navigation class="flex justify-end">
           <q-btn
             unelevated
+            :disable="loading"
             v-if="step > 1"
             flat
-            color="primary"
+            color="accent"
             @click="($refs.stepper as QStepper).previous()"
             label="Atras"
             class="q-mr-sm"
@@ -384,6 +457,7 @@ function filterFn(val: string, update: any) {
 
           <q-btn
             unelevated
+            :loading="loading"
             @click="nextStep()"
             color="primary"
             :icon="step === 4 ? 'save' : 'chevron_right'"

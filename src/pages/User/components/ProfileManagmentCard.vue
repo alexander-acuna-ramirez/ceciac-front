@@ -108,19 +108,16 @@ onMounted(() => {
       style="height: 15%"
       class="flex row items-center justify-end q-pb-none"
     >
-      <!--<q-select v-model="selectedRank" :options="ranks" label="Rango" map-options emit-value option-label="label"
-                option-value="value" outlined style="width: 70%;" dense />-->
       <q-space />
       <q-btn
         color="primary"
-        icon="Cerrar"
         flat
         rounded
         @click="deleteMember()"
         :loading="loadingDelete"
         no-caps
       >
-        Expulsar
+        <span>Expulsar</span>
       </q-btn>
     </q-card-section>
   </q-card>

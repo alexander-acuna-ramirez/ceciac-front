@@ -6,6 +6,7 @@ import { TagService, BlogService } from 'src/services';
 import { Rules } from 'src/utils';
 import { useRoute, RouteParams, useRouter } from 'vue-router';
 import { useToolbarConfig } from 'src/composables/useToolbarConfig';
+import { api } from 'src/boot/axios';
 
 const tagService = new TagService();
 const blogService = new BlogService();
@@ -34,17 +35,18 @@ const blogPost = reactive<BlogPost>({
 });
 const postTags = ref();
 const categories = reactive<BlogCategory[]>([]);
-
-async function loadTags() {
-  try {
-    const response = await tagService.get();
-    const data: Tag[] = response.data;
-    tags.push(...data);
-
-    console.log(data);
-  } catch (e) {
-    console.error(e);
-  }
+const loading = ref(false);
+function filterFn(val: string, update: any) {
+  update(async () => {
+    if (val === '' || val.length < 2) {
+      tags.splice(0, tags.length);
+    } else {
+      const needle = val.toLowerCase();
+      const response = await api.get('api/v1/filtered-tags?search=' + needle);
+      tags.splice(0, tags.length);
+      tags.push(...response.data);
+    }
+  });
 }
 
 async function loadBlogCategories() {
@@ -77,13 +79,16 @@ function nextStep() {
       }
       stepper.value.next();
     case 3:
-      if (postFile.value != null && postFile.value != undefined) savePost();
+      thirdStepForm.value.validate().then((success: boolean) => {
+        if (success) savePost();
+      });
     default:
       break;
   }
 }
 
 async function savePost() {
+  loading.value = true;
   try {
     const { network } = route.params as RouteParams;
     blogPost.id_network = network as string;
@@ -103,11 +108,12 @@ async function savePost() {
       message: 'Tu post no pudo ser creado!',
       icon: 'report_problem',
     });
+  } finally {
+    loading.value = false;
   }
 }
 
 onMounted(() => {
-  loadTags();
   loadBlogCategories();
 });
 </script>
@@ -194,10 +200,11 @@ onMounted(() => {
                 multiple
                 input-debounce="0"
                 :options="tags"
+                @filter="filterFn"
                 option-value="id"
                 option-label="name"
-                emit-value
                 map-options
+                emit-value
                 :rules="[Rules.required]"
               />
             </div>
@@ -227,14 +234,17 @@ onMounted(() => {
         icon="create_new_folder"
         :done="step > 3"
       >
-        <q-file
-          v-model="postFile"
-          label="Imagen del Post"
-          outlined
-          :rules="[Rules.required]"
-          accept=".jpg, image/*"
-          max-file-size="20480000"
-        />
+        <q-form ref="thirdStepForm">
+          <q-file
+            v-model="postFile"
+            label="Imagen del Post"
+            outlined
+            :rules="[Rules.required, Rules.fileSize, Rules.fileType]"
+            :disable="loading"
+            accept=".jpg, image/*"
+            max-file-size="20480000"
+          />
+        </q-form>
       </q-step>
 
       <template v-slot:navigation>
@@ -248,16 +258,18 @@ onMounted(() => {
             label="Atras"
             class="q-ml-sm"
             icon="chevron_left"
+            :disable="loading"
           />
 
           <q-btn
+            :loading="loading"
             unelevated
             @click="nextStep()"
             color="primary"
-            :icon="step === 4 ? 'save' : 'chevron_right'"
+            :icon="step === 3 ? 'save' : 'chevron_right'"
             rounded
           >
-            <strong>{{ step === 4 ? 'Terminar' : 'Continuar' }}</strong>
+            <strong>{{ step === 3 ? 'Terminar' : 'Continuar' }}</strong>
           </q-btn>
         </q-stepper-navigation>
       </template>

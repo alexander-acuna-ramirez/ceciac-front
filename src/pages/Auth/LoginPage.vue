@@ -8,6 +8,7 @@ import { User, Country, UserProfileType, Profession } from 'src/models';
 import { Rules } from 'src/utils';
 import { AxiosError } from 'axios';
 
+const loading = ref(false);
 const panel = ref(false);
 const authService = new AuthService();
 const $q = useQuasar();
@@ -38,6 +39,7 @@ const userProfileTypes = reactive<UserProfileType[]>([]);
 const userProfileTypesSelection = ref(null);
 
 const onSubmit = async () => {
+  loading.value = true;
   try {
     const login = await authService.login(userData.email, userData.password);
     if (login.data.success != true) {
@@ -60,10 +62,13 @@ const onSubmit = async () => {
       icon: 'report_problem',
     });
     console.error(e);
+  } finally {
+    loading.value = false;
   }
 };
 
 async function register(e: Event) {
+  loading.value = true;
   try {
     e.preventDefault();
     console.log(registerUser);
@@ -100,6 +105,8 @@ async function register(e: Event) {
       });
     }
     console.error(error);
+  } finally {
+    loading.value = false;
   }
 }
 
@@ -147,11 +154,13 @@ onMounted(() => {
               v-model="registerUser.name"
               type="text"
               label="Nombre"
+              :disable="loading"
               outlined
               lazy-rules
               :rules="[Rules.required]"
             />
             <q-input
+              :disable="loading"
               class="col-12 col-md-6"
               dense
               v-model="registerUser.lastname"
@@ -162,6 +171,7 @@ onMounted(() => {
               :rules="[Rules.required]"
             />
             <q-input
+              :disable="loading"
               class="col-12"
               dense
               v-model="registerUser.email"
@@ -171,6 +181,7 @@ onMounted(() => {
               :rules="[Rules.email]"
             />
             <q-input
+              :disable="loading"
               class="col-12"
               dense
               v-model="registerUser.password"
@@ -180,6 +191,7 @@ onMounted(() => {
               :rules="[Rules.required, Rules.securePassword]"
             />
             <q-select
+              :disable="loading"
               class="col-12 col-sm-12 col-md-6"
               dense
               outlined
@@ -193,6 +205,7 @@ onMounted(() => {
               :rules="[Rules.required]"
             />
             <q-select
+              :disable="loading"
               class="col-12 col-sm-12 col-md-6"
               dense
               outlined
@@ -206,6 +219,7 @@ onMounted(() => {
               :rules="[Rules.required]"
             />
             <q-select
+              :disable="loading"
               class="col-12"
               dense
               label="¿Qué eres?"
@@ -227,7 +241,9 @@ onMounted(() => {
           <a href="#" @click="changeForm"
             >¿Tienes cuenta? Inicia Sesión Aqui!</a
           >
-          <button class="bg-primary" type="submit">Registrarse</button>
+          <button class="bg-primary" type="submit" :disabled="loading">
+            Registrarse
+          </button>
         </q-form>
       </div>
       <div class="form-container sign-in-container">
@@ -243,6 +259,7 @@ onMounted(() => {
               label="E-mail"
               outlined
               lazy-rules
+              :disable="loading"
               :rules="[
               (val: any) => (val && val.length > 0) || 'Ingrese un correo válido',
             ]"
@@ -252,6 +269,7 @@ onMounted(() => {
               </template>
             </q-input>
             <q-input
+              :disable="loading"
               class="col-12"
               v-model="userData.password"
               type="password"
@@ -275,7 +293,7 @@ onMounted(() => {
               >Recuperala Aquí</router-link
             ></span
           >
-          <button type="submit" class="bg-primary q-mt-sm">
+          <button type="submit" class="bg-primary q-mt-sm" :disabled="loading">
             Iniciar sesión
           </button>
         </q-form>

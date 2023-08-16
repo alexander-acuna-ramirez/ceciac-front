@@ -1,47 +1,57 @@
 <script setup lang="ts">
-import { onMounted, reactive } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import { BlogService } from 'src/services';
 import { BlogPost } from 'src/models/BlogPost';
+import { useQuasar } from 'quasar';
 import PostCard from 'src/pages/Blog/components/PostCard.vue';
+import LoadingCard from 'src/components/LoadingCard.vue';
 
-const blogService = new BlogService();
 const props = defineProps({
   network: {
     required: true,
     type: Number,
   },
 });
-
 const paginationData = reactive({
   current_page: 1,
   total: 0,
   last_page: 0,
 });
-
 const filter = reactive({
   searchTerm: '',
   category: '',
   sortBy: 'id',
   sortOrder: 'desc',
 });
-
+const $q = useQuasar();
+const loading = ref(false);
+const blogService = new BlogService();
 const posts: BlogPost[] = reactive<BlogPost[]>([]);
-
 async function loadNetworkBlogPosts() {
-  const params: URLSearchParams = new URLSearchParams();
-  posts.splice(0, posts.length);
-  params.append('page', paginationData.current_page.toString());
-  params.append('searchTerm', filter.searchTerm);
-  params.append('category', filter.category);
-  params.append('sortBy', filter.sortBy);
-  params.append('sortOrder', filter.sortOrder);
+  loading.value = true;
+  try {
+    const params: URLSearchParams = new URLSearchParams();
+    posts.splice(0, posts.length);
+    params.append('page', paginationData.current_page.toString());
+    params.append('searchTerm', filter.searchTerm);
+    params.append('category', filter.category);
+    params.append('sortBy', filter.sortBy);
+    params.append('sortOrder', filter.sortOrder);
 
-  const response = await blogService.blogNetwork(
-    props.network.toString(),
-    params
-  );
-  posts.push(...response.data.data);
-  Object.assign(paginationData, response.data);
+    const response = await blogService.blogNetwork(
+      props.network.toString(),
+      params
+    );
+    posts.push(...response.data.data);
+    Object.assign(paginationData, response.data);
+  } catch (e) {
+    $q.notify({
+      type: 'negative',
+      message: 'Ocurrió un error cargando los posts!',
+    });
+  } finally {
+    loading.value = false;
+  }
 }
 
 onMounted(() => {
@@ -62,7 +72,14 @@ onMounted(() => {
       </q-btn>
     </q-card-section>
     <q-card-section>
-      <div v-if="posts.length > 0" class="gallery">
+      <div v-if="loading" class="gallery">
+        <loading-card></loading-card>
+        <loading-card></loading-card>
+        <loading-card></loading-card>
+        <loading-card></loading-card>
+        <loading-card></loading-card>
+      </div>
+      <div v-if="posts.length > 0 && !loading" class="gallery">
         <post-card
           v-for="post in posts"
           :post="post"
@@ -70,7 +87,16 @@ onMounted(() => {
           class="q-col-md-4 q-col-xs-12"
         ></post-card>
       </div>
-      <div v-if="posts.length > 0 && paginationData.last_page != 1">
+
+      <div v-if="posts.length == 0 && loading == false">
+        <empty-results
+          style="height: 250px"
+          titulo="No existen posts"
+          descripcion="Puedes crear uno!"
+        ></empty-results>
+      </div>
+
+      <div v-if="posts.length > 0 && paginationData.last_page != 1 && !loading">
         <div class="q-pa-lg flex flex-center">
           <q-pagination
             v-model="paginationData.current_page"

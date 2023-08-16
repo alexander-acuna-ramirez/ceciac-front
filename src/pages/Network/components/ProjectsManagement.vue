@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { onMounted, ref, reactive, watch, toRef } from 'vue';
 import { ProjectService } from 'src/services';
-import ProjectCard from 'src/pages/Projects/components/ProjectCard.vue';
 import { Project } from 'src/models/Project';
+import LoadingCard from 'src/components/LoadingCard.vue';
+import ProjectCard from 'src/pages/Projects/components/ProjectCard.vue';
+//import ProjectNetworkFilter from './ProjectNetworkFilter.vue';
 import EmptyResults from 'src/components/EmptyResults.vue';
 
 const props = defineProps({
@@ -19,9 +21,10 @@ const paginationData = reactive({
   last_page: 0,
 });
 const current = ref(1);
+const loading = ref(false);
 async function loadProjects(page = 1, perpage = 5) {
+  loading.value = true;
   projects.splice(0, projects.length);
-  console.log(props.network);
   const response = await projectService.loadNetworkProjects(
     page,
     perpage,
@@ -30,13 +33,13 @@ async function loadProjects(page = 1, perpage = 5) {
   );
   projects.push(...response.data.data);
   Object.assign(paginationData, response.data);
+  loading.value = false;
 }
 
 onMounted(() => {
   if (props.network != 0) loadProjects();
 });
-watch(toRef(props, 'network'), (newNetwork) => {
-  console.log(newNetwork);
+watch(toRef(props, 'network'), () => {
   loadProjects();
 });
 
@@ -47,6 +50,7 @@ watch(current, (newX) => {
 <template>
   <q-card flat>
     <q-card-section class="flex justify-between">
+      <!--<project-network-filter></project-network-filter>-->
       <q-space />
       <div>
         <q-btn
@@ -60,6 +64,16 @@ watch(current, (newX) => {
         </q-btn>
       </div>
     </q-card-section>
+
+    <!-- Loading -->
+    <q-card-section class="gallery" v-if="loading == true">
+      <loading-card></loading-card>
+      <loading-card></loading-card>
+      <loading-card></loading-card>
+      <loading-card></loading-card>
+    </q-card-section>
+
+    <!-- Loaded -->
     <q-card-section v-if="projects.length > 0" class="gallery">
       <project-card
         v-for="project in projects"
@@ -68,17 +82,21 @@ watch(current, (newX) => {
         :settings="true"
       ></project-card>
     </q-card-section>
+
+    <!-- No results -->
+    <q-card-section v-if="projects.length == 0 && loading == false">
+      <empty-results
+        style="height: 250px"
+        titulo="No existen projectos"
+        descripcion="Puedes crear uno!"
+      ></empty-results>
+    </q-card-section>
+
+    <!-- Pagination -->
     <q-card-section v-if="projects.length > 0 && paginationData.last_page != 1">
       <div class="q-pa-lg flex flex-center">
         <q-pagination v-model="current" :max="paginationData.last_page" />
       </div>
-    </q-card-section>
-    <q-card-section v-if="projects.length == 0">
-      <empty-results
-        style="height: 350px"
-        titulo="No existen projectos"
-        descripcion="Puedes crear uno!"
-      ></empty-results>
     </q-card-section>
   </q-card>
 </template>

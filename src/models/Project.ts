@@ -16,6 +16,7 @@ export interface Project {
   created_at?: string;
   updated_at?: string;
   network?: Network;
+  file?: File;
   type?: ProjectType;
   files?: File[];
   tags?: Tag[];

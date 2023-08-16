@@ -38,19 +38,34 @@ const projectEdit = reactive<Project>({
   id_network: null,
   type_id: null,
 });
-const projectFiles = reactive<File[]>([]);
-const projectFilesEdit = reactive<File[]>([]);
+const projectFile = reactive<File>({
+  filename: '',
+  mime: '',
+  path: '',
+  fullpath: '',
+});
+const projectFileEdit = reactive<File>({
+  filename: '',
+  mime: '',
+  path: '',
+  fullpath: '',
+});
 
 async function getProject() {
-  let { id } = route.params as RouteParams;
-  const response = await projectService.show(id as string);
-  Object.assign(project, response.data);
-  Object.assign(projectEdit, response.data);
-  projectFiles.splice(0, projectFiles.length);
-  projectFiles.push(...response.data.files);
-
-  projectFilesEdit.splice(0, projectFilesEdit.length);
-  projectFilesEdit.push(...response.data.files);
+  try {
+    console.log('Loading again...');
+    let { id } = route.params as RouteParams;
+    const response = await projectService.show(id as string);
+    Object.assign(project, response.data);
+    Object.assign(projectEdit, response.data);
+    Object.assign(projectFile, response.data.file);
+    Object.assign(projectFileEdit, response.data.file);
+  } catch (e) {
+    $q.notify({
+      type: 'negative',
+      message: 'Ocurrió un error cargando el proyecto!',
+    });
+  }
 }
 async function loadProjectTypes() {
   try {
@@ -110,9 +125,7 @@ watch(tab, (newValue) => {
   console.log(projectEdit);
   console.log(project);
   Object.assign(projectEdit, project);
-
-  projectFiles.splice(0, projectFiles.length);
-  projectFiles.push(...projectFilesEdit);
+  Object.assign(projectFile, projectEdit);
 });
 </script>
 
@@ -183,7 +196,8 @@ watch(tab, (newValue) => {
 
           <q-tab-panel name="resources">
             <project-uploads
-              :files="projectFiles"
+              :file="projectFile"
+              :project="project"
               @updated="getProject()"
             ></project-uploads>
           </q-tab-panel>
@@ -252,7 +266,10 @@ watch(tab, (newValue) => {
             </q-tab-panel>
 
             <q-tab-panel name="resources">
-              <project-uploads :files="projectFiles"></project-uploads>
+              <project-uploads
+                :file="projectFile"
+                :project="project"
+              ></project-uploads>
             </q-tab-panel>
 
             <q-tab-panel name="content">

@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { ref, reactive, defineEmits } from 'vue';
+import { ref, reactive, defineEmits, watch } from 'vue';
 import { Experience } from 'src/models';
 import { Rules } from 'src/utils';
 import { ProfileService } from 'src/services/ProfileService';
+import { useQuasar } from 'quasar';
 
 const emit = defineEmits(['created']);
-
+const loading = ref(false);
+const $q = useQuasar();
 const experience = reactive<Experience>({
   id_user: 0,
   title: '',
@@ -34,13 +36,32 @@ function openCreationDialog() {
   creationDialog.value = true;
 }
 async function save() {
-  await profileService.createExperience(experience);
-  emit('created', true);
-  resetDialog();
+  loading.value = true;
+  try {
+    await profileService.createExperience(experience);
+    emit('created', true);
+    $q.notify({
+      type: 'positive',
+      message: 'Experiencia agregada correctamente!',
+    });
+    resetDialog();
+  } catch (e) {
+    $q.notify({
+      type: 'negative',
+      message: 'Ocurrió un error agregando la experiencia!',
+    });
+  } finally {
+    loading.value = false;
+  }
 }
 async function resetDialog() {
   creationDialog.value = false;
   Object.assign(experience, experienceDefault);
+  jobSkills.splice(0, jobSkills.length).push(...jobSkillsDefault);
+}
+
+function minExperienceDate(date: string) {
+  return date >= experience.start_date;
 }
 
 const jobSkills = [
@@ -65,6 +86,29 @@ const jobSkills = [
   'Proactividad',
   'Capacidad analítica',
 ];
+const jobSkillsDefault = [
+  'Trabajo en equipo',
+  'Comunicación efectiva',
+  'Resolución de problemas',
+  'Pensamiento crítico',
+  'Adaptabilidad',
+  'Habilidades interpersonales',
+  'Liderazgo',
+  'Creatividad',
+  'Organización',
+  'Planificación',
+  'Gestión de tiempo',
+  'Atención al detalle',
+  'Motivación',
+  'Negociación',
+  'Empatía',
+  'Responsabilidad',
+  'Toma de decisiones',
+  'Innovación',
+  'Proactividad',
+  'Capacidad analítica',
+];
+
 const filterOptions = ref(jobSkills);
 
 function createValue(val: string, done: any) {
@@ -88,6 +132,19 @@ function filterFn(val: string, update: any) {
     }
   });
 }
+
+watch(
+  () => experience.start_date,
+  () => (experience.end_date = null)
+);
+watch(
+  () => experience.currently_working,
+  () => {
+    if (experience.currently_working == 1) {
+      experience.end_date = null;
+    }
+  }
+);
 </script>
 <template>
   <q-btn
@@ -108,46 +165,50 @@ function filterFn(val: string, update: any) {
         <q-form @submit="save">
           <div class="row q-col-gutter-sm">
             <q-input
-              :rules="[Rules.required]"
+              :rules="[Rules.required, Rules.maxShortLength]"
               placeholder="Ej. Ingeniero de Sistemas"
               class="col-md-6 col-12"
               v-model="experience.title"
               label="Titulo"
+              :disable="loading"
               outlined
             />
 
             <q-input
-              :rules="[Rules.required]"
+              :rules="[Rules.required, Rules.maxShortLength]"
               class="col-md-6 col-12"
               v-model="experience.company"
               label="Nombre de la empresa"
+              :disable="loading"
               outlined
             />
             <q-input
-              :rules="[Rules.required]"
+              :rules="[Rules.required, Rules.maxLength]"
               rows="2"
               class="col-12"
               v-model="experience.description"
               type="textarea"
               label="Descripción del cargo"
+              :disable="loading"
               outlined
             />
 
             <q-input
-              :rules="[Rules.required]"
+              :rules="[Rules.required, Rules.maxShortLength]"
               placeholder="Ej. 123 Main St, Anytown USA 12345"
               class="col-12"
               v-model="experience.location"
               label="Ubicación"
+              :disable="loading"
               outlined
             />
-
             <q-input
               class="col-12 col-md-6"
               outlined
               v-model="experience.start_date"
               mask="date"
               :rules="['date', Rules.required]"
+              :disable="loading"
               label="Fecha de inicio"
             >
               <template v-slot:append>
@@ -177,8 +238,14 @@ function filterFn(val: string, update: any) {
               class="col-12 col-md-6"
               label="Fecha de finalización"
               outlined
+              :disable="
+                loading ||
+                !experience.start_date ||
+                experience.currently_working == 1
+              "
               v-model="experience.end_date"
               mask="date"
+              :rules="['date']"
             >
               <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
@@ -187,7 +254,10 @@ function filterFn(val: string, update: any) {
                     transition-show="scale"
                     transition-hide="scale"
                   >
-                    <q-date v-model="experience.end_date">
+                    <q-date
+                      v-model="experience.end_date"
+                      :options="minExperienceDate"
+                    >
                       <div class="row items-center justify-end">
                         <q-btn
                           unelevated
@@ -215,6 +285,14 @@ function filterFn(val: string, update: any) {
               @filter="filterFn"
               hint="Skills seleccionadas: "
               counter
+              :disable="loading"
+            />
+            <q-checkbox
+              class="col-12 col-md-6"
+              v-model="experience.currently_working"
+              label="¿Trabajo actualmente aquí?"
+              :true-value="1"
+              :false-value="0"
             />
           </div>
 
@@ -229,8 +307,16 @@ function filterFn(val: string, update: any) {
               rounded
               class="q-ml-sm"
               @click="resetDialog"
+              :disable="loading"
             />
-            <q-btn unelevated no-caps type="submit" color="primary" rounded>
+            <q-btn
+              unelevated
+              no-caps
+              type="submit"
+              color="primary"
+              rounded
+              :loading="loading"
+            >
               <strong>Guardar</strong>
             </q-btn>
           </div>

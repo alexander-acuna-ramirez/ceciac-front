@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { onMounted, ref, reactive, watch, toRef } from 'vue';
 import { EventService } from 'src/services';
-import EventCard from 'src/pages/Events/components/EventCard.vue';
 import { Event } from 'src/models';
+import { useQuasar } from 'quasar';
+import EventCard from 'src/pages/Events/components/EventCard.vue';
 import EmptyResults from 'src/components/EmptyResults.vue';
+import LoadingCard from 'src/components/LoadingCard.vue';
 
 const props = defineProps({
   network: {
@@ -11,7 +13,8 @@ const props = defineProps({
     type: Number,
   },
 });
-
+const $q = useQuasar();
+const loading = ref(false);
 const eventService = new EventService();
 const events = reactive<Event[]>([]);
 const paginationData = reactive({
@@ -21,22 +24,32 @@ const paginationData = reactive({
 });
 const current = ref(1);
 async function loadNetwork(page = 1, perpage = 5) {
-  events.splice(0, events.length);
-  const response = await eventService.loadNetworkEvents(
-    page,
-    perpage,
-    null,
-    props.network
-  );
-  events.push(...response.data.data);
-  Object.assign(paginationData, response.data);
+  loading.value = true;
+  try {
+    events.splice(0, events.length);
+    const response = await eventService.loadNetworkEvents(
+      page,
+      perpage,
+      null,
+      props.network
+    );
+    events.push(...response.data.data);
+    Object.assign(paginationData, response.data);
+  } catch (e) {
+    $q.notify({
+      type: 'negative',
+      message: 'Ocurrió un error cargando los registros!',
+    });
+  } finally {
+    loading.value = false;
+  }
 }
 
 onMounted(() => {
   if (props.network != 0) loadNetwork();
 });
 
-watch(toRef(props, 'network'), (newNetwork) => {
+watch(toRef(props, 'network'), () => {
   loadNetwork();
 });
 
@@ -60,13 +73,22 @@ watch(current, (newX) => {
           unelevated
           color="primary"
           icon="add"
-          label="Crear"
           :to="{ name: 'EventCreate', params: { network: props.network } }"
           rounded
-        />
+        >
+          <strong>Crear</strong>
+        </q-btn>
       </div>
     </q-card-section>
-    <q-card-section v-if="events.length > 0" class="gallery">
+    <q-card-section v-if="loading" class="gallery">
+      <loading-card></loading-card>
+      <loading-card></loading-card>
+      <loading-card></loading-card>
+      <loading-card></loading-card>
+      <loading-card></loading-card>
+    </q-card-section>
+
+    <q-card-section v-if="events.length > 0 && !loading" class="gallery">
       <event-card
         v-for="event in events"
         :event="event"
@@ -74,13 +96,14 @@ watch(current, (newX) => {
         :key="event.id"
       ></event-card>
     </q-card-section>
-    <q-card-section v-if="events.length > 0">
+    <q-card-section v-if="events.length > 0 && !loading">
       <div class="q-pa-lg flex flex-center">
         <q-pagination v-model="current" :max="paginationData.last_page" />
       </div>
     </q-card-section>
-    <q-card-section v-else>
+    <q-card-section v-if="events.length == 0 && !loading">
       <empty-results
+        style="height: 250px"
         titulo="No existen eventos programados"
         descripcion="Puedes crear uno!"
       ></empty-results>

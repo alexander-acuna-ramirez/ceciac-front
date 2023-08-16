@@ -25,7 +25,7 @@ const tags = reactive<Tag[]>([]);
 const projectService = new ProjectService();
 function filterFn(val: string, update: any) {
   update(async () => {
-    if (val === '' || val.length < 3) {
+    if (val === '' || val.length < 2) {
       tags.splice(0, tags.length);
     } else {
       const needle = val.toLowerCase();

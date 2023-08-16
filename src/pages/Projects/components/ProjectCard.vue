@@ -2,6 +2,7 @@
 import { Project } from 'src/models';
 import { Functions } from 'src/utils';
 import { useRouter } from 'vue-router';
+import DefaultUserBanner from 'src/assets/img/app/user/user-profile-banner-default.jpg';
 
 const props = defineProps({
   project: {
@@ -21,11 +22,11 @@ function openSetting() {
 }
 </script>
 <template>
-  <q-card class="my-card rounded-corners" flat bordered>
+  <q-card class="my-card" flat bordered>
     <q-img
-      v-if="project.files?.length"
-      :src="project.files[0].fullpath"
-      :name="project.files[0].filename"
+      v-if="project.file"
+      :src="project.file.fullpath"
+      :name="project.file.filename"
       spinner-color="primary"
       spinner-size="82px"
       style="height: 45%"
@@ -52,7 +53,7 @@ function openSetting() {
     </q-img>
     <q-img
       v-else
-      src="~assets/img/app/default-image.jpg"
+      :src="DefaultUserBanner"
       spinner-color="primary"
       spinner-size="82px"
       style="height: 45%"

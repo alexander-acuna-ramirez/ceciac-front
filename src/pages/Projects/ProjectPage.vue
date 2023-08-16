@@ -84,24 +84,14 @@ onMounted(() => {
     <div class="row q-col-gutter-md">
       <div class="col-12">
         <q-card flat bordered>
-          <q-carousel
-            :swipeable="true"
-            :autoplay="true"
-            :vertical="true"
-            animated
-            v-model="slide"
-            arrows
-            navigation
-            infinite
-            style="max-height: 250px"
-          >
-            <q-carousel-slide
-              :key="idx"
-              v-for="(file, idx) in project.files"
-              :name="file.filename"
-              :img-src="file.fullpath"
-            />
-          </q-carousel>
+          <q-img
+            :src="project.file?.fullpath"
+            :ratio="16 / 9"
+            spinner-color="primary"
+            spinner-size="82px"
+            height="250px"
+            style="border-radius: 5px"
+          />
           <q-card-section>
             <div class="row q-py-md">
               <div class="col-12 col-md-12 flex column justify-center">

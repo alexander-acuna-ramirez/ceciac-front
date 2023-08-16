@@ -31,18 +31,14 @@ const project = reactive<Project>({
 });
 
 const projectTags = ref(null);
-
+const loading = ref(false);
 const stepper = ref();
 const firstStepForm = ref();
 const secondStepForm = ref();
 const thirdStepForm = ref();
-const files = reactive<File[]>([]);
-
-onMounted(() => {
-  loadProjectTypes();
-  //loadTags();
-  project.release_date = defaultReleaseDate();
-});
+const fourthStepForm = ref();
+//const files = reactive<File[]>([]);
+const projectFile = ref();
 
 async function loadProjectTypes() {
   try {
@@ -54,41 +50,38 @@ async function loadProjectTypes() {
   }
 }
 
-/*async function loadTags() {
-  try {
-    const response = await tagService.get();
-    const data: Tag[] = response.data;
-    tags.push(...data);
-
-    console.log(data);
-  } catch (e) {
-    console.error(e);
-  }
-}*/
-
 async function saveProject() {
-  if (route.params.network) {
-    let { network } = route.params as RouteParams;
-    project.id_network = parseInt(network as string);
-  }
-  const response = await projectService.store(project);
-  const projectCreated: Project = response.data;
-  const filesData = new FormData();
-  const dataFiles: File[] = files;
-  dataFiles.forEach((e) => filesData.append('project_images[]', e));
-  await projectService.uploadProjectFiles(
-    filesData,
-    projectCreated.id as number
-  );
-  let tagsId: number[] = projectTags.value ?? [];
-  await projectService.storeProjectTags(projectCreated.id as number, tagsId);
+  try {
+    loading.value = true;
+    if (route.params.network) {
+      let { network } = route.params as RouteParams;
+      project.id_network = parseInt(network as string);
+    }
+    const response = await projectService.store(project);
+    const projectCreated: Project = response.data;
 
-  router.push({
-    name: 'ProjectPage',
-    params: {
-      id: projectCreated.id,
-    },
-  });
+    const fileData = new FormData();
+    fileData.append('project_file', projectFile.value);
+    const eventId =
+      typeof projectCreated.id !== 'undefined' ? projectCreated.id : '';
+    await projectService.uploadProjectFile(fileData, eventId);
+    let tagsId: number[] = projectTags.value ?? [];
+    await projectService.storeProjectTags(projectCreated.id as number, tagsId);
+
+    router.push({
+      name: 'ProjectPage',
+      params: {
+        id: projectCreated.id,
+      },
+    });
+  } catch (e) {
+    $q.notify({
+      type: 'negative',
+      message: 'Ocurrió un error al guardar el proyecto, intentelo más tarde!',
+    });
+  } finally {
+    loading.value = false;
+  }
 }
 
 function nextStep() {
@@ -109,12 +102,13 @@ function nextStep() {
       break;
     case 3:
       thirdStepForm.value.validate().then((success: boolean) => {
-        console.log(success);
         if (success) stepper.value.next();
       });
       break;
     case 4:
-      saveProject();
+      fourthStepForm.value.validate().then((success: boolean) => {
+        if (success) saveProject();
+      });
       break;
     default:
       break;
@@ -138,6 +132,7 @@ function defaultReleaseDate() {
   return `${year}/${month}/${day}`;
 }
 
+/*
 function addFile(filesData: readonly File[]) {
   files.push(...filesData);
 }
@@ -149,19 +144,24 @@ function removeFile(filesData: readonly File[]) {
     }
   });
 }
+*/
 function filterFn(val: string, update: any) {
   update(async () => {
-    if (val === '' || val.length < 3) {
+    if (val === '' || val.length < 2) {
       tags.splice(0, tags.length);
     } else {
       const needle = val.toLowerCase();
-      //const response = await api.get('api/v1/filtered-tags?search=' + needle);
       const response = await tagService.get(needle);
       tags.splice(0, tags.length);
       tags.push(...response.data);
     }
   });
 }
+
+onMounted(() => {
+  loadProjectTypes();
+  project.release_date = defaultReleaseDate();
+});
 
 watch(
   () => project.release_date,
@@ -209,11 +209,9 @@ watch(
           </div>
         </q-banner>
         <q-banner v-else class="q-px-lg">
-          <div class="text-h5 text-bold text-primary">
-            Seleccionemos los recursos de su proyecto
-          </div>
+          <div class="text-h5 text-bold text-primary">Imagen</div>
           <div class="text-subtitle2 text-accent">
-            Seleccione las imagenes que describiran su proyecto
+            Seleccione la imagen que represente su proyecto
           </div>
         </q-banner>
       </template>
@@ -379,8 +377,8 @@ watch(
         </q-form>
       </q-step>
 
-      <q-step :name="4" title="Multimedia" icon="photo_library">
-        <q-uploader
+      <q-step :name="4" title="Imagen" icon="image">
+        <!--<q-uploader
           flat
           bordered
           label="Imagenes del proyecto"
@@ -391,7 +389,18 @@ watch(
           style="width: 100%; height: 450px"
           @added="addFile"
           @removed="removeFile"
-        />
+        />-->
+
+        <q-form ref="fourthStepForm">
+          <q-file
+            :disable="loading"
+            outlined
+            clearable
+            v-model="projectFile"
+            label="Imagen del proyecto"
+            :rules="[Rules.required, Rules.fileType, Rules.fileSize]"
+          />
+        </q-form>
       </q-step>
 
       <template v-slot:navigation>
@@ -406,10 +415,12 @@ watch(
             label="Atras"
             class="q-mr-sm"
             icon="chevron_left"
+            :disable="loading"
           />
 
           <q-btn
             unelevated
+            :loading="loading"
             @click="nextStep()"
             color="primary"
             :icon="step === 4 ? 'save' : 'chevron_right'"

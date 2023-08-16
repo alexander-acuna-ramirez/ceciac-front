@@ -3,9 +3,11 @@ import { ref, reactive, defineEmits } from 'vue';
 import { Education } from 'src/models';
 import { Rules } from 'src/utils';
 import { ProfileService } from 'src/services/ProfileService';
+import { useQuasar } from 'quasar';
 
+const $q = useQuasar();
 const emit = defineEmits(['created']);
-
+const loading = ref(false);
 const education = reactive<Education>({
   id_user: '',
   school: '',
@@ -30,9 +32,24 @@ function openCreationDialog() {
   creationDialog.value = true;
 }
 async function save() {
-  await profileService.createEducation(education);
-  emit('created', true);
-  resetDialog();
+  loading.value = true;
+  try {
+    await profileService.createEducation(education);
+    emit('created', true);
+    resetDialog();
+    $q.notify({
+      type: 'positive',
+      message: 'Se agrego el registró correctamente!',
+    });
+  } catch (e) {
+    $q.notify({
+      type: 'negative',
+      message: 'Ocurrió un error agregando el registro!',
+    });
+    console.error(e);
+  } finally {
+    loading.value = false;
+  }
 }
 async function resetDialog() {
   creationDialog.value = false;
@@ -65,6 +82,7 @@ async function resetDialog() {
               class="col-md-6 col-12"
               v-model="education.school"
               label="Institución"
+              :disable="loading"
               outlined
             />
 
@@ -73,6 +91,7 @@ async function resetDialog() {
               class="col-md-6 col-12"
               v-model="education.field_of_study"
               label="Campo de estudio"
+              :disable="loading"
               outlined
             />
             <q-input
@@ -82,6 +101,7 @@ async function resetDialog() {
               v-model="education.description"
               type="textarea"
               label="Descripción"
+              :disable="loading"
               outlined
             />
 
@@ -91,6 +111,7 @@ async function resetDialog() {
               class="col-12"
               v-model="education.degree"
               label="Grado"
+              :disable="loading"
               outlined
             />
 
@@ -101,6 +122,7 @@ async function resetDialog() {
               mask="date"
               :rules="['date', Rules.required]"
               label="Fecha de inicio"
+              :disable="loading"
             >
               <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
@@ -132,6 +154,7 @@ async function resetDialog() {
               outlined
               v-model="education.end_date"
               mask="date"
+              :disable="loading"
             >
               <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
@@ -168,8 +191,16 @@ async function resetDialog() {
               rounded
               class="q-ml-sm"
               @click="resetDialog"
+              :disable="loading"
             />
-            <q-btn unelevated no-caps type="submit" color="primary" rounded>
+            <q-btn
+              unelevated
+              no-caps
+              type="submit"
+              color="primary"
+              rounded
+              :loading="loading"
+            >
               <strong>Guardar</strong>
             </q-btn>
           </div>

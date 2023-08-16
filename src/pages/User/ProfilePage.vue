@@ -1,3 +1,156 @@
+<script lang="ts" setup>
+import { User, Country, Profession, UserProfileType } from 'src/models';
+import { onMounted, reactive, computed, ref } from 'vue';
+import { useRoute, RouteParams } from 'vue-router';
+import { ProfileService, RegisterService } from 'src/services';
+import { Loading, useQuasar } from 'quasar';
+import { Rules, Functions } from 'src/utils';
+import { useAuthStore } from 'src/stores/auth.store';
+
+const $q = useQuasar();
+const authStore = useAuthStore();
+const profileService = new ProfileService();
+const registerService = new RegisterService();
+const userProfileTypesSelection = ref<any>(null);
+const userData = reactive<User>({
+  name: '',
+  lastname: '',
+  orcid_code: '',
+  linkedin: null,
+  email: '',
+  professional_summary: '',
+  summary: '',
+  id_logo: null,
+  id_banner: null,
+  id_profession: null,
+  id_country: 0,
+});
+const loading = ref(false);
+const countries = reactive<Country[]>([]);
+const professions = reactive<Profession[]>([]);
+const userProfileTypes = reactive<UserProfileType[]>([]);
+const basicInfoDialog = ref(false);
+const aboutMeInfoDialog = ref(false);
+const editProfile = ref(false);
+const route = useRoute();
+async function loadProfile() {
+  if (route.params.user) {
+    let { user } = route.params as RouteParams;
+    const res = await profileService.loadProfile(user as string);
+    Object.assign(userData, res.data);
+  }
+}
+function openBannerChange() {
+  $q.dialog({
+    title: 'Banner',
+    message: 'Selecciona el banner de tu perfil',
+    prompt: {
+      model: '',
+      type: 'file',
+      outlined: true,
+    },
+    cancel: true,
+    persistent: true,
+  }).onOk(async (data) => {
+    const files = data as FileList;
+    const logo: File = files.item(0) ?? new File([], '');
+    const formData = new FormData();
+    formData.append('profile_banner', logo);
+    await profileService.uploadBanner(formData);
+    await loadProfile();
+  });
+}
+function openLogoChange() {
+  $q.dialog({
+    title: 'Logo',
+    message: 'Selecciona el logo de tu perfil',
+    prompt: {
+      model: '',
+      type: 'file',
+      outlined: true,
+    },
+    cancel: true,
+    persistent: true,
+  }).onOk(async (data) => {
+    const files = data as FileList;
+    const logo: File = files.item(0) ?? new File([], '');
+    const formData = new FormData();
+    formData.append('profile_logo', logo);
+    await profileService.uploadLogo(formData);
+    await loadProfile();
+  });
+}
+
+function openAboutMeDialog() {
+  userProfileTypesSelection.value = userData.profile_types?.map((e) => e.id);
+  aboutMeInfoDialog.value = !aboutMeInfoDialog.value;
+}
+
+async function loadCountries() {
+  const response = await registerService.countries();
+  countries.push(...response.data);
+}
+
+async function loadProfessions() {
+  const response = await registerService.professions();
+  professions.push(...response.data);
+}
+
+async function saveBasicInfo() {
+  loading.value = true;
+  try {
+    let data = {
+      name: userData.name,
+      lastname: userData.lastname,
+      id_country: userData.id_country,
+      id_profession: userData.id_profession,
+      professional_summary: userData.professional_summary,
+    };
+    await profileService.updateBasicInformation(data);
+    basicInfoDialog.value = false;
+    loadProfile();
+  } catch (e) {
+    console.error(e);
+    $q.notify({
+      type: 'negative',
+      message: 'Ocurrió un error actualizando la información!',
+    });
+  } finally {
+    loading.value = false;
+  }
+}
+
+async function updateAboutMe() {
+  let data = {
+    summary: userData.summary,
+    orcid_code: userData.orcid_code,
+    linkedin: userData.linkedin,
+    profile_types: userProfileTypesSelection.value,
+  };
+  await profileService.updateAboutMe(data);
+  aboutMeInfoDialog.value = false;
+  loadProfile();
+}
+async function loadUserProfileTypes() {
+  const response = await registerService.userTypeProfiles();
+  userProfileTypes.push(...response.data);
+}
+
+const fullName = computed(() => {
+  return `${userData.name} ${userData.lastname}`;
+});
+
+onMounted(() => {
+  let { user } = route.params as RouteParams;
+  if (authStore.getUser.id == user) {
+    editProfile.value = true;
+  }
+  loadProfile();
+  loadCountries();
+  loadProfessions();
+  loadUserProfileTypes();
+});
+</script>
 <template>
   <q-page padding>
     <q-card flat bordered>
@@ -245,6 +398,7 @@
           <q-form @submit="saveBasicInfo">
             <div class="row q-col-gutter-sm">
               <q-input
+                :disable="loading"
                 class="col-12"
                 dense
                 v-model="userData.name"
@@ -255,6 +409,7 @@
                 :rules="[Rules.required]"
               />
               <q-input
+                :disable="loading"
                 class="col-12"
                 dense
                 v-model="userData.lastname"
@@ -265,6 +420,7 @@
                 :rules="[Rules.required]"
               />
               <q-select
+                :disable="loading"
                 class="col-12 col-sm-12 col-md-6"
                 dense
                 outlined
@@ -278,6 +434,7 @@
                 :rules="[Rules.required]"
               />
               <q-select
+                :disable="loading"
                 class="col-12 col-sm-12 col-md-6"
                 dense
                 outlined
@@ -291,6 +448,7 @@
                 :rules="[Rules.required]"
               />
               <q-input
+                :disable="loading"
                 rows="2"
                 placeholder="Ej. Ingeniero de Sistemas | Analista de datos"
                 class="col-12"
@@ -315,10 +473,18 @@
                 type="reset"
                 color="primary"
                 flat
+                :disable="loading"
                 rounded
                 class="q-ml-sm"
               />
-              <q-btn unelevated no-caps type="submit" color="primary" rounded>
+              <q-btn
+                :loading="loading"
+                unelevated
+                no-caps
+                type="submit"
+                color="primary"
+                rounded
+              >
                 <strong>Guardar</strong>
               </q-btn>
             </div>
@@ -421,147 +587,7 @@
     </q-dialog>
   </q-page>
 </template>
-<script lang="ts" setup>
-import { User, Country, Profession, UserProfileType } from 'src/models';
-import { onMounted, reactive, computed, ref } from 'vue';
-import { useRoute, RouteParams } from 'vue-router';
-import { ProfileService, RegisterService } from 'src/services';
-import { useQuasar } from 'quasar';
-import { Rules, Functions } from 'src/utils';
-import { useAuthStore } from 'src/stores/auth.store';
 
-const $q = useQuasar();
-const authStore = useAuthStore();
-const profileService = new ProfileService();
-const registerService = new RegisterService();
-const userProfileTypesSelection = ref<any>(null);
-const userData = reactive<User>({
-  name: '',
-  lastname: '',
-  orcid_code: '',
-  linkedin: null,
-  email: '',
-  professional_summary: '',
-  summary: '',
-  id_logo: null,
-  id_banner: null,
-  id_profession: null,
-  id_country: 0,
-});
-const countries = reactive<Country[]>([]);
-const professions = reactive<Profession[]>([]);
-const userProfileTypes = reactive<UserProfileType[]>([]);
-const basicInfoDialog = ref(false);
-const aboutMeInfoDialog = ref(false);
-const editProfile = ref(false);
-const route = useRoute();
-async function loadProfile() {
-  if (route.params.user) {
-    let { user } = route.params as RouteParams;
-    const res = await profileService.loadProfile(user as string);
-    Object.assign(userData, res.data);
-  }
-}
-function openBannerChange() {
-  $q.dialog({
-    title: 'Banner',
-    message: 'Selecciona el banner de tu perfil',
-    prompt: {
-      model: '',
-      type: 'file',
-      outlined: true,
-    },
-    cancel: true,
-    persistent: true,
-  }).onOk(async (data) => {
-    const files = data as FileList;
-    const logo: File = files.item(0) ?? new File([], '');
-    const formData = new FormData();
-    formData.append('profile_banner', logo);
-    await profileService.uploadBanner(formData);
-    await loadProfile();
-  });
-}
-function openLogoChange() {
-  $q.dialog({
-    title: 'Logo',
-    message: 'Selecciona el logo de tu perfil',
-    prompt: {
-      model: '',
-      type: 'file',
-      outlined: true,
-    },
-    cancel: true,
-    persistent: true,
-  }).onOk(async (data) => {
-    const files = data as FileList;
-    const logo: File = files.item(0) ?? new File([], '');
-    const formData = new FormData();
-    formData.append('profile_logo', logo);
-    await profileService.uploadLogo(formData);
-    await loadProfile();
-  });
-}
-
-function openAboutMeDialog() {
-  userProfileTypesSelection.value = userData.profile_types?.map((e) => e.id);
-  aboutMeInfoDialog.value = !aboutMeInfoDialog.value;
-}
-
-async function loadCountries() {
-  const response = await registerService.countries();
-  countries.push(...response.data);
-}
-
-async function loadProfessions() {
-  const response = await registerService.professions();
-  professions.push(...response.data);
-}
-
-async function saveBasicInfo() {
-  let data = {
-    name: userData.name,
-    lastname: userData.lastname,
-    id_country: userData.id_country,
-    id_profession: userData.id_profession,
-    professional_summary: userData.professional_summary,
-  };
-  await profileService.updateBasicInformation(data);
-  basicInfoDialog.value = false;
-  loadProfile();
-}
-
-async function updateAboutMe() {
-  let data = {
-    summary: userData.summary,
-    orcid_code: userData.orcid_code,
-    linkedin: userData.linkedin,
-    profile_types: userProfileTypesSelection.value,
-  };
-  await profileService.updateAboutMe(data);
-  aboutMeInfoDialog.value = false;
-  loadProfile();
-}
-async function loadUserProfileTypes() {
-  const response = await registerService.userTypeProfiles();
-  userProfileTypes.push(...response.data);
-}
-
-const fullName = computed(() => {
-  return `${userData.name} ${userData.lastname}`;
-});
-
-onMounted(() => {
-  let { user } = route.params as RouteParams;
-  if (authStore.getUser.id == user) {
-    editProfile.value = true;
-  }
-  loadProfile();
-  loadCountries();
-  loadProfessions();
-  loadUserProfileTypes();
-});
-</script>
 <style lang="scss" scoped>
 .overlapping {
   border: 2px solid white;

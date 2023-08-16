@@ -1,241 +1,101 @@
 <script setup lang="ts">
-import { defineProps, reactive, defineEmits } from 'vue';
-import { File as UploadFile } from 'src/models';
+import { ref, watch, PropType } from 'vue';
+import { Rules } from 'src/utils';
+import { defineProps } from 'vue';
 import { ProjectService } from 'src/services';
-import { useRoute, RouteParams } from 'vue-router';
-import { useQuasar, QRejectedEntry } from 'quasar';
+import { useQuasar } from 'quasar';
+import { Project, File as UploadFile } from 'src/models';
 
 const props = defineProps({
-  files: {
+  file: {
+    type: Object as PropType<UploadFile>,
     required: true,
-    type: Array,
+  },
+  project: {
+    type: Object as PropType<Project>,
+    required: true,
   },
 });
+const projectFile = ref();
+const imagePreview = ref('');
 const emit = defineEmits(['updated']);
-const route = useRoute();
+const loading = ref(false);
 const projectService = new ProjectService();
-const storedFiles = reactive<UploadFile[]>(props.files as UploadFile[]);
-const deletedStoredFiles = reactive<UploadFile[]>([]);
-const toUploadFiles = reactive<File[]>([]);
 const $q = useQuasar();
 
-function deleteStoredFile(file: UploadFile, idx: number) {
-  deletedStoredFiles.push(file);
-  storedFiles.splice(idx, 1);
+function getPreview(file: File) {
+  imagePreview.value = URL.createObjectURL(file);
 }
 
-function addNotUploadedFile(filesData: readonly File[]) {
-  toUploadFiles.push(...filesData);
-  console.log(toUploadFiles);
-}
-function removeNotUploadedFile(filesData: readonly File[]) {
-  filesData.forEach((fileToRemove) => {
-    const index = toUploadFiles.findIndex((file) => file === fileToRemove);
-    if (index !== -1) {
-      toUploadFiles.splice(index, 1);
-    }
-  });
-}
-
-function rejectedFiles(rejectedEntries: QRejectedEntry[]) {
-  console.log(rejectedEntries, 'rejected');
-  rejectedEntries.forEach((e) => {
+async function save() {
+  loading.value = true;
+  try {
+    const formData = new FormData();
+    formData.append('project_file', projectFile.value);
+    await projectService.uploadProjectFile(formData, props.project.id ?? '');
+    emit('updated');
+    $q.notify({
+      type: 'positive',
+      message: 'Imagen actualizada correctamente!',
+    });
+  } catch (e) {
     $q.notify({
       type: 'negative',
-      message: 'El archivo ' + e.file.name + ' no es un archivo valido!',
+      message: 'Ocurrio un error mientras se actualizaba la imagen!',
     });
-  });
-}
-
-async function updateFiles() {
-  console.log('working');
-  $q.loading.show();
-  try {
-    let { id } = route.params as RouteParams;
-    console.log(toUploadFiles);
-    console.log(deletedStoredFiles);
-
-    if (toUploadFiles.length > 0) {
-      const filesData = new FormData();
-      const dataFiles: File[] = toUploadFiles;
-      dataFiles.forEach((e) => filesData.append('project_images[]', e));
-      await projectService.uploadProjectFiles(filesData, id as string);
-    }
-    if (deletedStoredFiles.length > 0) {
-      const toDelete = deletedStoredFiles.map((e) => Number(e.id));
-      await projectService.deleteProjectFiles(id as string, toDelete);
-    }
-    toUploadFiles.splice(0, toUploadFiles.length);
-    deletedStoredFiles.splice(0, deletedStoredFiles.length);
-    emit('updated');
-  } catch (e) {
-    console.error(e);
   } finally {
-    $q.loading.hide();
+    loading.value = false;
   }
 }
+
+watch(projectFile, (val: File) => {
+  getPreview(val);
+});
 </script>
 <template>
   <div class="row q-col-gutter-md">
     <div class="col-12 col-md-12">
       <div class="text-subtitle1 text-bold text-primary">
-        Recursos de su proyecto
+        Imagen del proyecto
       </div>
       <div class="text-subtitle2 text-accent">
-        Aqui puedes a gestionar las imagenes relacionadas a su proyecto!
+        Define la imagen principal de este proyecto
       </div>
     </div>
-    <div class="col-12 col-md-12 q-pa-md">
-      <q-uploader
-        style="
-          width: 100%;
-          height: auto;
-          min-height: 350px;
-          border-style: dashed;
-          max-height: none;
-        "
-        :hide-upload-btn="true"
-        label="Imagenes"
-        multiple
-        bordered
-        flat
-        accept=".jpg, image/*"
-        max-file-size="204800"
-        color="accent"
-        @added="addNotUploadedFile"
-        @removed="removeNotUploadedFile"
-        @rejected="rejectedFiles"
-        class="uploader"
-      >
-        <!-- Header -->
-        <template v-slot:header="scope">
-          <div class="row no-wrap items-center text-accent bg-white q-pa-sm">
-            <q-spinner v-if="scope.isUploading" class="q-uploader__spinner" />
-            <div class="col">
-              <div class="q-uploader__title text-uppercase"></div>
-            </div>
-            <q-btn
-              v-if="scope.canAddFiles"
-              type="a"
-              icon="add"
-              @click="scope.pickFiles"
-              rounded
-              unelevated
-              color="secondary"
-              no-caps
-            >
-              Agregar imagenes
-              <q-uploader-add-trigger />
-              <q-tooltip>Agregar imagenes</q-tooltip>
-            </q-btn>
-          </div>
-        </template>
-        <!-- List -->
-        <template v-slot:list="scope">
-          <div class="gallery">
-            <div
-              v-for="(file, idx) in storedFiles"
-              :key="idx"
-              :style="'background-image: url(' + file.fullpath + ')'"
-              class="rounded-borders galleryItem"
-            >
+    <div class="col-12 col-md-12">
+      <q-card flat>
+        <q-card-section>
+          <q-form ref="form" @submit.prevent="save">
+            <q-img
+              :src="imagePreview !== '' ? imagePreview : project.file?.fullpath"
+              :ratio="16 / 9"
+              class="rounded-borders q-mb-md"
+              spinner-color="primary"
+              spinner-size="82px"
+              height="250px"
+            />
+            <q-file
+              accept=".jpg, image/*"
+              outlined
+              v-model="projectFile"
+              label="Imagen de evento"
+              :rules="[Rules.required, Rules.fileType, Rules.fileSize]"
+            />
+            <div class="flex justify-end">
               <q-btn
-                color="red"
-                icon="clear"
-                size="sm"
-                round
-                @click="deleteStoredFile(file, idx)"
+                color="primary"
+                icon="sync"
+                label="Actualizar"
+                type="submit"
+                unelevated
+                rounded
+                :loading="loading"
+                no-caps
               />
             </div>
-            <div
-              v-for="file in scope.files"
-              :key="file.__key"
-              :style="'background-image: url(' + file.__img.src + ')'"
-              class="rounded-borders galleryItem"
-            >
-              <q-btn
-                color="red"
-                icon="clear"
-                size="sm"
-                round
-                @click="scope.removeFile(file)"
-              />
-            </div>
-
-            <div
-              class="rounded-borders galleryItem galleryItemAdd"
-              @click="scope.pickFiles"
-            >
-              <q-icon name="add" />
-            </div>
-          </div>
-
-          <div
-            v-if="scope.files.length == 0 && storedFiles.length == 0"
-            class="w-full flex justify-center items-center"
-            style="height: 300px"
-          >
-            <span class="text-accent text-center text-secondary"
-              ><span>
-                <a @click="scope.pickFiles" class="text-primary"
-                  >Haz click aquí</a
-                >
-              </span>
-              o arrastra y suelta las imagenes relacionadas a su proyecto</span
-            >
-          </div>
-        </template>
-      </q-uploader>
-      <div class="flex justify-end q-mt-md">
-        <q-btn
-          color="primary"
-          icon="sync"
-          label="Actualizar"
-          no-caps
-          unelevated
-          rounded
-          @click="updateFiles()"
-        />
-      </div>
+          </q-form>
+        </q-card-section>
+      </q-card>
     </div>
   </div>
 </template>
-
-<style scoped lang="scss">
-.gallery {
-  display: grid;
-  gap: 1rem;
-  grid-auto-rows: 12rem;
-  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
-}
-.galleryItem {
-  height: 100%;
-  width: 100%;
-  background-size: cover;
-  border: 1px #9e9e9e solid;
-  background-position: center;
-  padding: 5px;
-}
-.galleryItemAdd {
-  border-style: dashed;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #9e9e9e;
-}
-.galleryItemAdd:hover {
-  background-color: #eeeeee;
-  color: white;
-}
-
-@media (max-width: $breakpoint-xs-max) {
-  .gallery {
-    display: grid;
-    gap: 1rem;
-    grid-auto-rows: 12rem;
-    grid-template-columns: 1fr;
-  }
-}
-</style>
