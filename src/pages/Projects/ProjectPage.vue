@@ -127,6 +127,7 @@ onMounted(() => {
               label="Descripción"
               no-caps
             />
+            <!--
             <q-tab name="alarms" icon="groups" label="Participantes" no-caps />
             <q-tab
               name="movies"
@@ -134,6 +135,7 @@ onMounted(() => {
               label="Actualizaciones"
               no-caps
             />
+            -->
           </q-tabs>
         </q-card>
       </div>

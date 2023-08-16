@@ -3,9 +3,10 @@ import { User, Country, Profession, UserProfileType } from 'src/models';
 import { onMounted, reactive, computed, ref } from 'vue';
 import { useRoute, RouteParams } from 'vue-router';
 import { ProfileService, RegisterService } from 'src/services';
-import { Loading, useQuasar } from 'quasar';
+import { useQuasar } from 'quasar';
 import { Rules, Functions } from 'src/utils';
 import { useAuthStore } from 'src/stores/auth.store';
+import ProfileHeaderLoading from './components/ProfileHeaderLoading.vue';
 
 const $q = useQuasar();
 const authStore = useAuthStore();
@@ -25,6 +26,21 @@ const userData = reactive<User>({
   id_profession: null,
   id_country: 0,
 });
+
+const userDataEdit = reactive<User>({
+  name: '',
+  lastname: '',
+  orcid_code: '',
+  linkedin: null,
+  email: '',
+  professional_summary: '',
+  summary: '',
+  id_logo: null,
+  id_banner: null,
+  id_profession: null,
+  id_country: 0,
+});
+
 const loading = ref(false);
 const countries = reactive<Country[]>([]);
 const professions = reactive<Profession[]>([]);
@@ -34,10 +50,17 @@ const aboutMeInfoDialog = ref(false);
 const editProfile = ref(false);
 const route = useRoute();
 async function loadProfile() {
-  if (route.params.user) {
-    let { user } = route.params as RouteParams;
-    const res = await profileService.loadProfile(user as string);
-    Object.assign(userData, res.data);
+  loading.value = true;
+  try {
+    if (route.params.user) {
+      let { user } = route.params as RouteParams;
+      const res = await profileService.loadProfile(user as string);
+      Object.assign(userData, res.data);
+    }
+  } catch (e) {
+    console.error(e);
+  } finally {
+    loading.value = false;
   }
 }
 function openBannerChange() {
@@ -83,7 +106,13 @@ function openLogoChange() {
 
 function openAboutMeDialog() {
   userProfileTypesSelection.value = userData.profile_types?.map((e) => e.id);
+  Object.assign(userDataEdit, userData);
   aboutMeInfoDialog.value = !aboutMeInfoDialog.value;
+}
+
+function openUserDialog() {
+  Object.assign(userDataEdit, userData);
+  basicInfoDialog.value = !basicInfoDialog.value;
 }
 
 async function loadCountries() {
@@ -100,11 +129,11 @@ async function saveBasicInfo() {
   loading.value = true;
   try {
     let data = {
-      name: userData.name,
-      lastname: userData.lastname,
-      id_country: userData.id_country,
-      id_profession: userData.id_profession,
-      professional_summary: userData.professional_summary,
+      name: userDataEdit.name,
+      lastname: userDataEdit.lastname,
+      id_country: userDataEdit.id_country,
+      id_profession: userDataEdit.id_profession,
+      professional_summary: userDataEdit.professional_summary,
     };
     await profileService.updateBasicInformation(data);
     basicInfoDialog.value = false;
@@ -122,9 +151,9 @@ async function saveBasicInfo() {
 
 async function updateAboutMe() {
   let data = {
-    summary: userData.summary,
-    orcid_code: userData.orcid_code,
-    linkedin: userData.linkedin,
+    summary: userDataEdit.summary,
+    orcid_code: userDataEdit.orcid_code,
+    linkedin: userDataEdit.linkedin,
     profile_types: userProfileTypesSelection.value,
   };
   await profileService.updateAboutMe(data);
@@ -153,7 +182,14 @@ onMounted(() => {
 </script>
 <template>
   <q-page padding>
-    <q-card flat bordered>
+    <q-card class="my-card" flat bordered v-if="loading">
+      <q-skeleton size="250px" style="width: 100%" animation="fade" />
+      <q-card-section>
+        <profile-header-loading></profile-header-loading>
+      </q-card-section>
+    </q-card>
+
+    <q-card flat bordered v-else>
       <div>
         <q-img
           v-if="userData.banner"
@@ -255,8 +291,16 @@ onMounted(() => {
                 </div>
 
                 <div class="flex items-center">
-                  <img :src="'https://flagcdn.com/w20/' + 'pe' + '.png'" />
-                  <small class="q-ml-sm">PERÚ</small>
+                  <img
+                    :src="
+                      'https://flagcdn.com/w20/' +
+                      userData.country?.iso.toLocaleLowerCase() +
+                      '.png'
+                    "
+                  />
+                  <small class="q-ml-sm">{{
+                    userData.country?.nicename
+                  }}</small>
                 </div>
               </div>
             </div>
@@ -270,7 +314,7 @@ onMounted(() => {
               round
               flat
               rounded
-              @click="basicInfoDialog = !basicInfoDialog"
+              @click="openUserDialog"
             />
           </div>
         </div>
@@ -401,7 +445,7 @@ onMounted(() => {
                 :disable="loading"
                 class="col-12"
                 dense
-                v-model="userData.name"
+                v-model="userDataEdit.name"
                 type="text"
                 label="Nombre"
                 outlined
@@ -412,7 +456,7 @@ onMounted(() => {
                 :disable="loading"
                 class="col-12"
                 dense
-                v-model="userData.lastname"
+                v-model="userDataEdit.lastname"
                 type="text"
                 label="Apellidos"
                 outlined
@@ -424,7 +468,7 @@ onMounted(() => {
                 class="col-12 col-sm-12 col-md-6"
                 dense
                 outlined
-                v-model="userData.id_country"
+                v-model="userDataEdit.id_country"
                 :options="countries"
                 label="Pais"
                 emit-value
@@ -438,7 +482,7 @@ onMounted(() => {
                 class="col-12 col-sm-12 col-md-6"
                 dense
                 outlined
-                v-model="userData.id_profession"
+                v-model="userDataEdit.id_profession"
                 :options="professions"
                 label="Profesión"
                 emit-value
@@ -452,7 +496,7 @@ onMounted(() => {
                 rows="2"
                 placeholder="Ej. Ingeniero de Sistemas | Analista de datos"
                 class="col-12"
-                v-model="userData.professional_summary"
+                v-model="userDataEdit.professional_summary"
                 type="textarea"
                 label="Titular"
                 outlined
@@ -524,7 +568,7 @@ onMounted(() => {
                 mask="NNNN-NNNN-NNNN-NNNN"
                 outlined
                 class="col-12 col-md-6"
-                v-model="userData.orcid_code"
+                v-model="userDataEdit.orcid_code"
                 label="Código Orcid"
                 :rules="[Rules.orcid]"
               >
@@ -539,7 +583,7 @@ onMounted(() => {
                 :rules="[Rules.optionalLinkedin]"
                 outlined
                 class="col-12 col-md-6"
-                v-model="userData.linkedin"
+                v-model="userDataEdit.linkedin"
                 label="Linkedin"
               >
                 <template v-slot:append>
@@ -550,13 +594,14 @@ onMounted(() => {
               </q-input>
 
               <q-input
-                rows="2"
+                rows="3"
                 placeholder="Ej. Ingeniero de Sistemas | Analista de datos"
                 class="col-12"
-                v-model="userData.summary"
+                v-model="userDataEdit.summary"
                 type="textarea"
                 label="Acerca de mí"
                 outlined
+                :rules="[Rules.maxLength]"
               />
             </div>
 

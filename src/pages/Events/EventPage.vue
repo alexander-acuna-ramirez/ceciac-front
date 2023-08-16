@@ -63,6 +63,19 @@ async function loadParticipation() {
   }
 }
 
+function getEventDate() {
+  const date = event.date_time ? new Date(event.date_time) : new Date();
+  return {
+    month: date
+      .toLocaleString('es-ES', {
+        month: 'long',
+      })
+      .toUpperCase(),
+    day: date.getDate(),
+    year: date.getFullYear(),
+  };
+}
+
 onMounted(() => {
   loadEvent();
   loadParticipation();
@@ -82,8 +95,16 @@ onMounted(() => {
             style="border-radius: 5px"
           />
           <q-card-section>
-            <div class="row q-py-md">
-              <div class="col-12 col-md-12 flex column justify-center">
+            <div class="row q-py-md q-col-gutter-lg">
+              <div class="col-12 col-md-2">
+                <div class="bg-secondary dateContainer text-white">
+                  <div class="text-h5">{{ getEventDate().month }}</div>
+                  <div class="text-h2">{{ getEventDate().day }}</div>
+
+                  <div class="text-h5">{{ getEventDate().year }}</div>
+                </div>
+              </div>
+              <div class="col-12 col-md-10 flex column justify-center">
                 <div class="text-h4 text-secondary text-bold q-mt-md">
                   {{ event.title }}
                 </div>
@@ -131,13 +152,14 @@ onMounted(() => {
               label="Descripción"
               no-caps
             />
+            <!--
             <q-tab name="alarms" icon="groups" label="Participantes" no-caps />
             <q-tab
               name="movies"
               icon="update"
               label="Actualizaciones"
               no-caps
-            />
+            />-->
           </q-tabs>
         </q-card>
       </div>
@@ -228,5 +250,17 @@ onMounted(() => {
 <style scoped>
 .full-width {
   width: 100%;
+}
+
+.dateContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  border-radius: 15px;
+  text-align: center;
+  min-height: 200px;
 }
 </style>
