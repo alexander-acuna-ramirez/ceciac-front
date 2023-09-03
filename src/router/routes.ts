@@ -54,6 +54,12 @@ const routes: RouteRecordRaw[] = [
             meta: { requiresAuth: true },
             component: () => import('pages/Blog/PostCreate.vue'),
           },
+          {
+            path: 'settings/:id',
+            name: 'PostSettings',
+            meta: { requiresAuth: true },
+            component: () => import('pages/Blog/PostSettings.vue'),
+          },
 
           {
             path: 'detail/:id',
@@ -91,6 +97,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'feed',
         name: 'Feed',
+        meta: { requiresAuth: true },
         component: () => import('pages/Feed/FeedPage.vue'),
       },
       {

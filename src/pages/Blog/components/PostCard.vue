@@ -17,6 +17,16 @@
         "
       >
         <q-chip :label="post.category?.name" />
+
+        <q-btn
+          color="accent"
+          icon="settings"
+          flat
+          size="md"
+          round
+          v-if="settings"
+          @click="openSetting"
+        />
       </div>
     </q-img>
     <q-img
@@ -35,6 +45,16 @@
         "
       >
         <q-chip :label="post.category?.name" />
+
+        <q-btn
+          color="accent"
+          icon="settings"
+          flat
+          size="md"
+          round
+          v-if="settings"
+          @click="openSetting"
+        />
       </div>
     </q-img>
     <q-card-section style="height: 35%">
@@ -79,15 +99,24 @@
 
 <script lang="ts" setup>
 import { BlogPost } from 'src/models';
-import { ref } from 'vue';
 import { Functions } from 'src/utils';
-const slide = ref(1);
-defineProps({
+import { useRouter } from 'vue-router';
+const props = defineProps({
   post: {
     required: true,
     type: Object as () => BlogPost,
   },
+  settings: {
+    required: false,
+    type: Boolean,
+    default: false,
+  },
 });
+
+const router = useRouter();
+function openSetting() {
+  router.push('/blog/settings/' + props.post.id);
+}
 </script>
 <style scoped lang="scss">
 .my-card {

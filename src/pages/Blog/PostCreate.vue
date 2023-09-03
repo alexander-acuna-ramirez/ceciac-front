@@ -6,7 +6,7 @@ import { TagService, BlogService } from 'src/services';
 import { Rules } from 'src/utils';
 import { useRoute, RouteParams, useRouter } from 'vue-router';
 import { useToolbarConfig } from 'src/composables/useToolbarConfig';
-import { api } from 'src/boot/axios';
+//import { api } from 'src/boot/axios';
 
 const tagService = new TagService();
 const blogService = new BlogService();
@@ -36,13 +36,15 @@ const blogPost = reactive<BlogPost>({
 const postTags = ref();
 const categories = reactive<BlogCategory[]>([]);
 const loading = ref(false);
+
 function filterFn(val: string, update: any) {
   update(async () => {
     if (val === '' || val.length < 2) {
       tags.splice(0, tags.length);
     } else {
       const needle = val.toLowerCase();
-      const response = await api.get('api/v1/filtered-tags?search=' + needle);
+      const response = await tagService.get(needle);
+      //const response = await api.get('api/v1/filtered-tags?search=' + needle);
       tags.splice(0, tags.length);
       tags.push(...response.data);
     }
@@ -182,6 +184,7 @@ onMounted(() => {
                 label="Descripción"
                 type="textarea"
                 lazy-rules
+                rows="3"
                 :rules="[
                   Rules.required,
                   (value) =>

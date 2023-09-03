@@ -18,7 +18,7 @@ function logout() {
 }
 </script>
 <template>
-  <q-layout view="lHh lpR fFf" style="background-color: #f6f7f8">
+  <q-layout view="lHh lpR fFf" style="background-color: #eeeeeed8">
     <navbar-component @menu-open="handleMenu()"></navbar-component>
     <q-drawer
       v-model="leftDrawerOpen"

@@ -2,9 +2,11 @@
   <q-page padding class="q-px-xl">
     <div class="row q-col-gutter-md">
       <div class="col-3">
-        <q-card flat>
+        <q-card flat bordered>
           <q-card-section>
-            <q-item-label header class="text text-h6 text-bold text-primary"> Proyectos Populares </q-item-label>
+            <q-item-label header class="text text-h6 text-bold text-primary">
+              Proyectos Populares
+            </q-item-label>
           </q-card-section>
           <q-separator />
           <q-card-section>
@@ -37,13 +39,20 @@
             </q-item>
           </q-card-section>
           <q-card-section>
-            <q-btn unelevated color="primary" to="/project/create" style="width: 100%;" class="q-mt-md w-full"
-              label="Publica un proyecto" flat />
+            <q-btn
+              unelevated
+              color="primary"
+              to="/project/create"
+              style="width: 100%"
+              class="q-mt-md w-full"
+              label="Publica un proyecto"
+              flat
+            />
           </q-card-section>
         </q-card>
       </div>
       <div class="col-6">
-        <!--<q-card flat class="post-card q-mb-sm" v-for="card in 5" :key="card">
+        <!--<q-card flat bordered class="post-card q-mb-sm" v-for="card in 5" :key="card">
         <q-card-section>
           <div class="row items-center q-col-gutter-md">
             <q-avatar>
@@ -74,7 +83,7 @@
           </div>
         </q-card-section>
         </q-card>-->
-        <q-card flat class="q-mb-sm" v-for="card in 3" :key="card">
+        <q-card flat bordered class="q-mb-sm" v-for="card in 3" :key="card">
           <q-card-section>
             <div class="row items-center">
               <div class="col-auto">
@@ -83,20 +92,17 @@
                 </q-avatar>
               </div>
               <div class="col">
-                <q-item-label header>
-                  John Doe
-                </q-item-label>
-                <q-item-label caption>
-                  Hace 5 minutos
-                </q-item-label>
+                <q-item-label header> John Doe </q-item-label>
+                <q-item-label caption> Hace 5 minutos </q-item-label>
               </div>
             </div>
           </q-card-section>
 
           <q-card-section>
             <q-item-label>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vel eros vitae elit dictum hendrerit. In
-              porttitor augue sit amet ipsum consequat aliquam. Sed vel lorem odio.
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
+              vel eros vitae elit dictum hendrerit. In porttitor augue sit amet
+              ipsum consequat aliquam. Sed vel lorem odio.
             </q-item-label>
           </q-card-section>
 
@@ -108,9 +114,11 @@
         </q-card>
       </div>
       <div class="col-3">
-        <q-card flat>
+        <q-card flat bordered>
           <q-card-section>
-            <q-item-label header class="text text-h6 text-bold text-primary"> Próximos Eventos </q-item-label>
+            <q-item-label header class="text text-h6 text-bold text-primary">
+              Próximos Eventos
+            </q-item-label>
           </q-card-section>
           <q-separator />
           <q-card-section>
@@ -128,9 +136,11 @@
           </q-card-section>
         </q-card>
 
-        <q-card flat class="q-mt-sm">
+        <q-card flat bordered class="q-mt-sm">
           <q-card-section>
-            <q-item-label header class="text text-h6 text-bold text-primary"> Redes Recomendadas </q-item-label>
+            <q-item-label header class="text text-h6 text-bold text-primary">
+              Redes Recomendadas
+            </q-item-label>
           </q-card-section>
           <q-separator />
           <q-card-section>
@@ -180,8 +190,8 @@ async function getProjectTypes() {
 }
 
 onMounted(() => {
-  console.log("Please wORK")
-})
+  console.log('Please wORK');
+});
 </script>
 <style lang="scss">
 .post-card {

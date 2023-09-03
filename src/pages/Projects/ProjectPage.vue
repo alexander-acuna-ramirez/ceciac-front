@@ -12,7 +12,7 @@ const projectService = new ProjectService();
 const route = useRoute();
 const router = useRouter();
 const slide = ref(1);
-const participating = ref(false);
+const participationStatus = ref(1);
 const loading = ref(false);
 const project = reactive<Project>({
   name: '',
@@ -41,7 +41,7 @@ async function loadParticipation() {
     let { id } = route.params as RouteParams;
     const response = await projectService.projectParticipation(id as string);
     if (response.status == 200) {
-      participating.value = true;
+      participationStatus.value = response.data.participation_type;
     }
   } catch (e) {
     console.error(e);
@@ -64,7 +64,7 @@ async function enroll() {
     let { id } = route.params as RouteParams;
     const response = await projectService.participate(id as string);
     if (response.status == 200) {
-      participating.value = true;
+      participationStatus.value = -1;
     }
   } catch (e) {
     console.error(e);
@@ -103,17 +103,32 @@ onMounted(() => {
                 </div>
                 <div>
                   <q-btn
+                    v-if="participationStatus == -1"
                     unelevated
                     class="q-my-md"
-                    :disable="participating || loading"
-                    :loading="loading"
-                    :color="!participating ? 'primary' : 'accent'"
+                    color="primary"
                     rounded
                     no-caps
+                    to="/login"
+                    :loading="loading"
+                    @click="enroll"
+                  >
+                    Participar
+                  </q-btn>
+
+                  <q-btn
+                    v-else
+                    unelevated
+                    class="q-my-md"
+                    :color="participationStatus != 1 ? 'accent' : 'primary'"
+                    rounded
+                    no-caps
+                    :loading="loading"
+                    :disable="participationStatus != 1"
                     @click="enroll"
                   >
                     {{
-                      participating ? 'Ya estas inscrito' : 'Unirse al proyecto'
+                      participationStatus === 3 ? 'Participando' : 'Participar'
                     }}
                   </q-btn>
                 </div>

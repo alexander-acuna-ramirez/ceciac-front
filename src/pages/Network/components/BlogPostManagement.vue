@@ -5,6 +5,7 @@ import { BlogPost } from 'src/models/BlogPost';
 import { useQuasar } from 'quasar';
 import PostCard from 'src/pages/Blog/components/PostCard.vue';
 import LoadingCard from 'src/components/LoadingCard.vue';
+import EmptyResults from 'src/components/EmptyResults.vue';
 
 const props = defineProps({
   network: {
@@ -79,16 +80,18 @@ onMounted(() => {
         <loading-card></loading-card>
         <loading-card></loading-card>
       </div>
+
       <div v-if="posts.length > 0 && !loading" class="gallery">
         <post-card
           v-for="post in posts"
+          :settings="true"
           :post="post"
           :key="post.id"
           class="q-col-md-4 q-col-xs-12"
         ></post-card>
       </div>
 
-      <div v-if="posts.length == 0 && loading == false">
+      <div v-if="posts.length == 0 && !loading">
         <empty-results
           style="height: 250px"
           titulo="No existen posts"
