@@ -1,3 +1,4 @@
+import { accessCreationGuard, accessGuard } from 'src/guards/AccessGuard';
 import { RouteRecordRaw } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
@@ -27,12 +28,14 @@ const routes: RouteRecordRaw[] = [
           {
             path: 'create/:network?',
             name: 'ProjectCreate',
+            beforeEnter: accessCreationGuard,
             meta: { requiresAuth: true },
             component: () => import('pages/Projects/ProjectCreate.vue'),
           },
           {
             path: 'settings/:id?',
             name: 'ProjectSettings',
+            beforeEnter: accessGuard,
             meta: { requiresAuth: true },
             component: () => import('pages/Projects/ProjectSettings.vue'),
           },
@@ -51,12 +54,14 @@ const routes: RouteRecordRaw[] = [
           {
             path: 'create/:network?',
             name: 'PostCreate',
+            beforeEnter: accessCreationGuard,
             meta: { requiresAuth: true },
             component: () => import('pages/Blog/PostCreate.vue'),
           },
           {
             path: 'settings/:id',
             name: 'PostSettings',
+            beforeEnter: accessGuard,
             meta: { requiresAuth: true },
             component: () => import('pages/Blog/PostSettings.vue'),
           },
@@ -77,12 +82,14 @@ const routes: RouteRecordRaw[] = [
           {
             path: 'create/:network?',
             name: 'EventCreate',
+            beforeEnter: accessCreationGuard,
             meta: { requiresAuth: true },
             component: () => import('pages/Events/EventCreate.vue'),
           },
           {
             path: 'settings/:id',
             name: 'EventSettings',
+            beforeEnter: accessGuard,
             meta: { requiresAuth: true },
             component: () => import('pages/Events/EventSettings.vue'),
           },

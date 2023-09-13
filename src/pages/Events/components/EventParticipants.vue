@@ -1,20 +1,20 @@
 <script setup lang="ts">
 import { ProjectParticipant } from 'src/models';
 import { reactive, ref, onMounted } from 'vue';
-import { ProjectService } from 'src/services';
+import { EventService } from 'src/services';
 import { QTableColumn, QTableProps } from 'quasar';
 import { Functions } from 'src/utils';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 
 const props = defineProps({
-  project: {
+  event: {
     required: true,
     type: Number,
   },
 });
 const router = useRouter();
-const projectService = new ProjectService();
+const eventService = new EventService();
 const participants = reactive<ProjectParticipant[]>([]);
 const participantsPagination = ref({
   sortBy: 'desc',
@@ -65,8 +65,8 @@ async function loadParticipants(
 ) {
   try {
     loading.value = true;
-    const response = await projectService.projectParticipants(
-      props.project.toString(),
+    const response = await eventService.eventParticipants(
+      props.event.toString(),
       page,
       perpage,
       sortBy,

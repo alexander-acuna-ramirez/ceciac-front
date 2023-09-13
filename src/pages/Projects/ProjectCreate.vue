@@ -230,13 +230,13 @@ watch(
                 label="Titulo"
                 hint="El titulo de tu proyecto"
                 lazy-rules
-                outlined
+                filled
                 :rules="[Rules.required, Rules.maxLength]"
               />
             </div>
             <div class="col-12 col-md-6">
               <q-select
-                outlined
+                filled
                 v-model="project.type_id"
                 :options="projectTypes"
                 option-value="id"
@@ -249,7 +249,7 @@ watch(
             </div>
             <div class="col-12">
               <q-input
-                outlined
+                filled
                 type="textarea"
                 v-model="project.description"
                 label="Descripción"
@@ -261,7 +261,7 @@ watch(
             <div class="col-12">
               <q-select
                 label="Tags"
-                outlined
+                filled
                 v-model="projectTags"
                 use-input
                 use-chips
@@ -292,7 +292,7 @@ watch(
             v-model="project.synopsis"
             min-height="10prem"
             hint="Aqui puedes explicar todo tu proyecto"
-            outlined
+            filled
           />
         </q-form>
       </q-step>
@@ -307,7 +307,7 @@ watch(
           <div class="row q-col-gutter-md">
             <div class="col-12 col-md-6">
               <q-input
-                outlined
+                filled
                 v-model="project.release_date"
                 mask="date"
                 label="Fecha de lanzamiento"
@@ -341,7 +341,7 @@ watch(
             </div>
             <div class="col-12 col-md-6">
               <q-input
-                outlined
+                filled
                 v-model="project.end_date"
                 mask="date"
                 :rules="['date']"
@@ -394,7 +394,7 @@ watch(
         <q-form ref="fourthStepForm">
           <q-file
             :disable="loading"
-            outlined
+            filled
             clearable
             v-model="projectFile"
             label="Imagen del proyecto"

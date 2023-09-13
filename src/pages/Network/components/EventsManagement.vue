@@ -12,6 +12,10 @@ const props = defineProps({
     required: true,
     type: Number,
   },
+  rank: {
+    required: true,
+    type: Number,
+  },
 });
 const $q = useQuasar();
 const loading = ref(false);
@@ -60,13 +64,6 @@ watch(current, (newX) => {
 <template>
   <q-card flat>
     <q-card-section class="flex justify-between">
-      <!--
-            <q-input v-model="searchTerm" type="text" label="Buscar proyecto" outlined>
-                <template v-slot:append>
-                    <q-icon name="search" />
-                </template>
-            </q-input>
-            -->
       <q-space />
       <div>
         <q-btn
@@ -74,6 +71,7 @@ watch(current, (newX) => {
           color="primary"
           icon="add"
           :to="{ name: 'EventCreate', params: { network: props.network } }"
+          :disable="rank != 1 && rank != 2"
           rounded
         >
           <strong>Crear</strong>
@@ -92,7 +90,7 @@ watch(current, (newX) => {
       <event-card
         v-for="event in events"
         :event="event"
-        :settings="true"
+        :settings="rank == 1 || rank == 2"
         :key="event.id"
       ></event-card>
     </q-card-section>

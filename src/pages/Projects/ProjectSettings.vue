@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoute, RouteParams, useRouter } from 'vue-router';
 import { ProjectService, ProjectTypeService } from 'src/services';
-import { File, Project, ProjectType } from 'src/models';
+import { File, NetworkRepresentative, Project, ProjectType } from 'src/models';
 import { reactive, onMounted, ref, watch } from 'vue';
 import { useQuasar } from 'quasar';
 
@@ -9,6 +9,7 @@ import ProjectBasicInfo from './components/ProjectBasicInfo.vue';
 import ProjectContent from './components/ProjectContent.vue';
 import ProjectParticipants from './components/ProjectParticipants.vue';
 import ProjectUploads from './components/ProjectUploads.vue';
+import { AxiosError } from 'axios';
 
 const route = useRoute();
 const router = useRouter();
@@ -16,7 +17,6 @@ const $q = useQuasar();
 const projectService = new ProjectService();
 const tab = ref('info');
 const splitterModel = ref(20);
-
 const projectTypeService = new ProjectTypeService();
 const projectTypes = reactive<ProjectType[]>([]);
 const project = reactive<Project>({
@@ -28,7 +28,11 @@ const project = reactive<Project>({
   id_network: null,
   type_id: null,
 });
-
+const userRank = reactive<NetworkRepresentative>({
+  id_user: 0,
+  id_network: 0,
+  rank: 0,
+});
 const projectEdit = reactive<Project>({
   name: '',
   description: '',
@@ -58,6 +62,7 @@ async function getProject() {
     const response = await projectService.show(id as string);
     Object.assign(project, response.data);
     Object.assign(projectEdit, response.data);
+
     Object.assign(projectFile, response.data.file);
     Object.assign(projectFileEdit, response.data.file);
   } catch (e) {
@@ -80,32 +85,51 @@ async function loadProjectTypes() {
 async function checkOwnership() {
   try {
     let { id } = route.params as RouteParams;
-    await projectService.checkOwnership(id as string);
+    const response = await projectService.checkOwnership(id as string);
+    Object.assign(userRank, response.data);
   } catch (e) {
-    router.push('/not-found');
+    router.push({
+      name: 'Unauthorized',
+    });
   }
 }
 
 async function deleteProject() {
-  $q.dialog({
+  const confirmationDialog = $q.dialog({
     title: 'Archivar Proyecto',
-    message: '¿Esta realmente seguro de archivar este proyecto?',
+    message: '¿Está realmente seguro de archivar este proyecto?',
     cancel: true,
     persistent: true,
-  }).onOk(async () => {
+  });
+
+  confirmationDialog.onOk(async () => {
     try {
       $q.loading.show();
-      if (project.id) await projectService.deleteProject(project.id);
+
+      if (project.id) {
+        await projectService.deleteProject(project.id);
+      }
+
       $q.notify({
         type: 'positive',
         message: 'Proyecto archivado!',
       });
+
       router.push('/network-management/projects');
     } catch (e) {
-      $q.notify({
-        type: 'negative',
-        message: 'No se pudo archivar!',
-      });
+      if ((e as AxiosError)?.response?.status === 403) {
+        $q.notify({
+          color: 'info',
+          message: 'No tiene permiso para realizar esta acción!',
+          icon: 'info',
+        });
+      } else {
+        $q.notify({
+          color: 'negative',
+          message: 'Ocurrió un problema!',
+          icon: 'report_problem',
+        });
+      }
     } finally {
       $q.loading.hide();
     }
@@ -152,6 +176,7 @@ watch(tab, (newValue) => {
           label="Archivar"
           unelevated
           no-caps
+          :disable="userRank.rank != 1"
           @click="deleteProject()"
           class="q-ml-md"
         />

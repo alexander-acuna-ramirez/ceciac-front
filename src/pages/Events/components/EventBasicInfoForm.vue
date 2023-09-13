@@ -105,7 +105,7 @@ const updateEventBasicInfo = async () => {
             <div class="row q-col-gutter-md">
               <div class="col-12 col-md-6">
                 <q-input
-                  outlined
+                  filled
                   v-model="localEvent.title"
                   label="Titulo"
                   hint="El titulo de tu evento"
@@ -116,7 +116,7 @@ const updateEventBasicInfo = async () => {
               </div>
               <div class="col-12 col-md-6">
                 <q-select
-                  outlined
+                  filled
                   v-model="localEvent.is_public"
                   :options="eventConfig"
                   option-value="value"
@@ -135,7 +135,7 @@ const updateEventBasicInfo = async () => {
               <div class="col-12">
                 <q-input
                   type="textarea"
-                  outlined
+                  filled
                   v-model="localEvent.description"
                   label="Descripción"
                   hint="Una descripción breve de tu evento"
@@ -150,7 +150,7 @@ const updateEventBasicInfo = async () => {
                 <q-select
                   :disable="loading"
                   label="Tags"
-                  outlined
+                  filled
                   v-model="localEvent.tags"
                   use-input
                   use-chips
@@ -167,7 +167,7 @@ const updateEventBasicInfo = async () => {
 
               <div class="col-12 col-md-6">
                 <q-input
-                  outlined
+                  filled
                   v-model="localEvent.date_time"
                   label="Inicio del evento"
                   :rules="[Rules.required]"
@@ -229,7 +229,7 @@ const updateEventBasicInfo = async () => {
 
               <div class="col-12 col-md-6">
                 <q-input
-                  outlined
+                  filled
                   v-model="localEvent.end_date_time"
                   label="Fin del evento"
                   :rules="[Rules.required]"
@@ -292,7 +292,7 @@ const updateEventBasicInfo = async () => {
 
               <div class="col-12 col-md-6">
                 <q-select
-                  outlined
+                  filled
                   v-model="localEvent.is_online"
                   :options="eventType"
                   option-value="value"
@@ -311,7 +311,7 @@ const updateEventBasicInfo = async () => {
 
               <div class="col-12 col-md-6" v-if="event.is_online == 0">
                 <q-input
-                  outlined
+                  filled
                   v-model="localEvent.location"
                   label="Ubicación"
                   lazy-rules

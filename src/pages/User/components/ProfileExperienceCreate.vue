@@ -171,7 +171,7 @@ watch(
               v-model="experience.title"
               label="Titulo"
               :disable="loading"
-              outlined
+              filled
             />
 
             <q-input
@@ -180,7 +180,7 @@ watch(
               v-model="experience.company"
               label="Nombre de la empresa"
               :disable="loading"
-              outlined
+              filled
             />
             <q-input
               :rules="[Rules.required, Rules.maxLength]"
@@ -190,7 +190,7 @@ watch(
               type="textarea"
               label="Descripción del cargo"
               :disable="loading"
-              outlined
+              filled
             />
 
             <q-input
@@ -200,11 +200,11 @@ watch(
               v-model="experience.location"
               label="Ubicación"
               :disable="loading"
-              outlined
+              filled
             />
             <q-input
               class="col-12 col-md-6"
-              outlined
+              filled
               v-model="experience.start_date"
               mask="date"
               :rules="['date', Rules.required]"
@@ -237,7 +237,7 @@ watch(
             <q-input
               class="col-12 col-md-6"
               label="Fecha de finalización"
-              outlined
+              filled
               :disable="
                 loading ||
                 !experience.start_date ||
@@ -274,7 +274,7 @@ watch(
             </q-input>
             <q-select
               class="col-12"
-              outlined
+              filled
               v-model="experience.skills"
               use-input
               use-chips

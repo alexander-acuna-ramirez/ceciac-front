@@ -238,7 +238,7 @@ onMounted(() => {
             <span class="text-subtitle1 text-accent text-bold">Fechas</span>
             <div class="row q-col-gutter-md">
               <q-input
-                outlined
+                filled
                 v-model="searchData.start_date"
                 mask="date"
                 :rules="['date']"
@@ -268,7 +268,7 @@ onMounted(() => {
                 </template>
               </q-input>
               <q-input
-                outlined
+                filled
                 v-model="searchData.end_date"
                 mask="date"
                 :rules="['date']"
@@ -304,7 +304,7 @@ onMounted(() => {
               >Instituciones</span
             >
             <q-select
-              outlined
+              filled
               v-model="searchData.institutions"
               :options="networks"
               label="Institución"
@@ -383,7 +383,7 @@ onMounted(() => {
               v-model="searchData.searchTerm"
               type="text"
               label="Buscar"
-              outlined
+              filled
             >
               <template v-slot:append>
                 <q-icon v-if="searchData.searchTerm === ''" name="search" />
@@ -405,7 +405,7 @@ onMounted(() => {
               option-label="label"
               option-value="value"
               label="Numero de elementos"
-              outlined
+              filled
               style="min-width: 200px"
               map-options
               emit-value
@@ -417,7 +417,7 @@ onMounted(() => {
               option-label="label"
               option-value="value"
               label="Ordenar por"
-              outlined
+              filled
               style="min-width: 200px"
               class="q-ml-sm"
               map-options
@@ -430,7 +430,7 @@ onMounted(() => {
               option-label="label"
               option-value="value"
               label="Orden"
-              outlined
+              filled
               style="min-width: 200px"
               class="q-ml-sm"
               map-options

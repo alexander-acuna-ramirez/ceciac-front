@@ -29,6 +29,15 @@ function logout() {
     >
       <div class="q-pa-md" style="max-width: 95%; margin: auto">
         <q-list padding class="rounded-borders text-accent">
+          <q-item style="display: flex; justify-content: end">
+            <q-btn
+              color="primary"
+              flat
+              icon="close"
+              round
+              @click="leftDrawerOpen = !leftDrawerOpen"
+            />
+          </q-item>
           <q-item
             clickable
             v-ripple

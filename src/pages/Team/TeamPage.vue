@@ -282,27 +282,30 @@ const membersSelected = computed(() => {
   </q-page>
 </template>
 <style lang="scss">
+/* Estilos para .main-card-container */
 .main-card-container {
   position: relative;
   height: 100%;
   width: 100%;
-
   border-radius: 15px;
 }
 
+/* Estilos para .card-flip */
 .card-flip {
   width: 100%;
-  position: absolute;
+  position: relative;
   border-radius: 15px;
   height: 100%;
   transform-style: preserve-3d;
-  transition: all 0.5s ease;
+  transition: all 1s ease;
 }
 
+/* Estilos para la rotación al pasar el mouse */
 .card-flip:hover {
   transform: rotateY(180deg);
 }
 
+/* Estilos para la cara frontal */
 .front {
   width: 100%;
   height: 100%;
@@ -310,16 +313,17 @@ const membersSelected = computed(() => {
   backface-visibility: hidden;
 }
 
+/* Estilos para la cara trasera */
 .back {
   width: 100%;
   height: 100%;
   position: absolute;
   backface-visibility: hidden;
   transform: rotateY(180deg);
-
   padding: 25px;
 }
 
+/* Estilos para la cuadrícula de tarjetas */
 .gallery {
   display: grid;
   gap: 5rem;
@@ -327,6 +331,7 @@ const membersSelected = computed(() => {
   grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
 }
 
+/* Estilos para pantallas pequeñas */
 @media (max-width: $breakpoint-md-min) {
   .gallery {
     display: grid;

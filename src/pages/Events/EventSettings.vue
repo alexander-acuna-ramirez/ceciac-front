@@ -1,9 +1,11 @@
 <script lang="ts" setup>
-import { Event } from 'src/models';
+import { Event, NetworkRepresentative } from 'src/models';
 import { EventService } from 'src/services';
 import { onMounted, reactive, ref, watch } from 'vue';
 import { useRoute, RouteParams, useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
+import { AxiosError } from 'axios';
+import EventParticipants from './components/EventParticipants.vue';
 import EventBasicInfoForm from './components/EventBasicInfoForm.vue';
 import EventContentSettings from './components/EventContentSettings.vue';
 import EventMedia from './components/EventMedia.vue';
@@ -40,6 +42,11 @@ const eventEdit = reactive<Event>({
   is_public: 0,
   is_online: 0,
 });
+const userRank = reactive<NetworkRepresentative>({
+  id_user: 0,
+  id_network: 0,
+  rank: 0,
+});
 
 const eventTitle = ref('');
 const tab = ref('info');
@@ -50,8 +57,9 @@ async function loadEvent() {
     loading.value = true;
     const { id } = route.params as RouteParams;
     const response = await eventService.checkAccess(id as string);
-    Object.assign(event, response.data);
-    Object.assign(eventEdit, response.data);
+    Object.assign(event, response.data.event);
+    Object.assign(eventEdit, response.data.event);
+    Object.assign(userRank, response.data.rank);
     eventTitle.value = event.title;
   } catch (e) {
     router.push({
@@ -80,10 +88,19 @@ async function deleteEvent() {
         icon: 'check',
       });
     } catch (e) {
-      $q.notify({
-        type: 'negative',
-        message: 'No se pudo archivar!',
-      });
+      if ((e as AxiosError)?.response?.status === 403) {
+        $q.notify({
+          color: 'info',
+          message: 'No tiene permiso para realizar esta acción!',
+          icon: 'info',
+        });
+      } else {
+        $q.notify({
+          color: 'negative',
+          message: 'Ocurrió un problema!',
+          icon: 'report_problem',
+        });
+      }
     } finally {
       $q.loading.hide();
     }
@@ -120,6 +137,7 @@ onMounted(() => {
           label="Archivar"
           unelevated
           no-caps
+          :disable="userRank.rank != 1"
           @click="deleteEvent()"
           class="q-ml-md"
         />
@@ -138,6 +156,7 @@ onMounted(() => {
           <q-tab name="info" icon="info" label="Información General" no-caps />
           <q-tab name="content" icon="collections" label="Contenido" no-caps />
           <q-tab name="image" icon="image" label="Imagenes" no-caps />
+          <q-tab name="people" icon="people" label="Inscritos" no-caps />
         </q-tabs>
         <q-tab-panels v-model="tab" animated>
           <q-tab-panel name="info">
@@ -154,6 +173,11 @@ onMounted(() => {
           </q-tab-panel>
           <q-tab-panel name="image">
             <EventMedia :event="event" @update="loadEvent"></EventMedia>
+          </q-tab-panel>
+          <q-tab-panel name="people">
+            <EventParticipants
+              :event="(event.id as number)"
+            ></EventParticipants>
           </q-tab-panel>
         </q-tab-panels>
       </div>
@@ -181,6 +205,7 @@ onMounted(() => {
               no-caps
             />
             <q-tab name="image" icon="images" label="Imagenes" no-caps />
+            <q-tab name="people" icon="people" label="Inscritos" no-caps />
           </q-tabs>
         </template>
 
@@ -200,6 +225,11 @@ onMounted(() => {
             </q-tab-panel>
             <q-tab-panel name="image">
               <EventMedia :event="event" @update="loadEvent"></EventMedia>
+            </q-tab-panel>
+            <q-tab-panel name="people">
+              <EventParticipants
+                :event="(event.id as number)"
+              ></EventParticipants>
             </q-tab-panel>
           </q-tab-panels>
         </template>

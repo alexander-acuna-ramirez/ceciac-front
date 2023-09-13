@@ -70,7 +70,7 @@ function openBannerChange() {
     prompt: {
       model: '',
       type: 'file',
-      outlined: true,
+      filled: true,
     },
     cancel: true,
     persistent: true,
@@ -90,7 +90,7 @@ function openLogoChange() {
     prompt: {
       model: '',
       type: 'file',
-      outlined: true,
+      filled: true,
     },
     cancel: true,
     persistent: true,
@@ -290,7 +290,7 @@ onMounted(() => {
                   {{ userData.professional_summary }}
                 </div>
 
-                <div class="flex items-center">
+                <div class="flex items-center" v-if="userData.country">
                   <img
                     :src="
                       'https://flagcdn.com/w20/' +
@@ -448,7 +448,7 @@ onMounted(() => {
                 v-model="userDataEdit.name"
                 type="text"
                 label="Nombre"
-                outlined
+                filled
                 lazy-rules
                 :rules="[Rules.required]"
               />
@@ -459,7 +459,7 @@ onMounted(() => {
                 v-model="userDataEdit.lastname"
                 type="text"
                 label="Apellidos"
-                outlined
+                filled
                 lazy-rules
                 :rules="[Rules.required]"
               />
@@ -467,7 +467,7 @@ onMounted(() => {
                 :disable="loading"
                 class="col-12 col-sm-12 col-md-6"
                 dense
-                outlined
+                filled
                 v-model="userDataEdit.id_country"
                 :options="countries"
                 label="Pais"
@@ -481,7 +481,7 @@ onMounted(() => {
                 :disable="loading"
                 class="col-12 col-sm-12 col-md-6"
                 dense
-                outlined
+                filled
                 v-model="userDataEdit.id_profession"
                 :options="professions"
                 label="Profesión"
@@ -499,7 +499,7 @@ onMounted(() => {
                 v-model="userDataEdit.professional_summary"
                 type="textarea"
                 label="Titular"
-                outlined
+                filled
               />
             </div>
 
@@ -550,7 +550,7 @@ onMounted(() => {
               <q-select
                 class="col-12"
                 label="¿Qué eres?"
-                outlined
+                filled
                 v-model="userProfileTypesSelection"
                 use-input
                 use-chips
@@ -566,7 +566,7 @@ onMounted(() => {
 
               <q-input
                 mask="NNNN-NNNN-NNNN-NNNN"
-                outlined
+                filled
                 class="col-12 col-md-6"
                 v-model="userDataEdit.orcid_code"
                 label="Código Orcid"
@@ -581,7 +581,7 @@ onMounted(() => {
 
               <q-input
                 :rules="[Rules.optionalLinkedin]"
-                outlined
+                filled
                 class="col-12 col-md-6"
                 v-model="userDataEdit.linkedin"
                 label="Linkedin"
@@ -600,7 +600,7 @@ onMounted(() => {
                 v-model="userDataEdit.summary"
                 type="textarea"
                 label="Acerca de mí"
-                outlined
+                filled
                 :rules="[Rules.maxLength]"
               />
             </div>

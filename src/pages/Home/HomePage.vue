@@ -23,7 +23,7 @@
               <q-select
                 v-model="contentType"
                 :options="options"
-                outlined
+                filled
                 label="¿Que Buscas?"
                 option-label="label"
                 option-value="value"
@@ -35,7 +35,7 @@
                 v-model="searchTerm"
                 type="text"
                 label="Comenzar a buscar"
-                outlined
+                filled
                 class="col-12 col-md-9"
               >
                 <template v-slot:prepend>

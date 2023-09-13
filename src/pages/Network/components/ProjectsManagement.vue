@@ -12,6 +12,10 @@ const props = defineProps({
     required: true,
     type: Number,
   },
+  rank: {
+    required: true,
+    type: Number,
+  },
 });
 const projectService = new ProjectService();
 const projects = reactive<Project[]>([]);
@@ -55,6 +59,7 @@ watch(current, (newX) => {
       <div>
         <q-btn
           unelevated
+          :disable="rank != 1 && rank != 2"
           color="primary"
           icon="add"
           :to="{ name: 'ProjectCreate', params: { network: props.network } }"
@@ -79,7 +84,7 @@ watch(current, (newX) => {
         v-for="project in projects"
         :project="project"
         :key="project.id"
-        :settings="true"
+        :settings="rank == 1 || rank == 2"
       ></project-card>
     </q-card-section>
 

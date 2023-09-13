@@ -205,7 +205,7 @@ watch(eventFile, (file: File) => {
           <div class="row q-col-gutter-md">
             <div class="col-12 col-md-6">
               <q-input
-                outlined
+                filled
                 v-model="event.title"
                 label="Titulo"
                 hint="El titulo de tu evento"
@@ -215,7 +215,7 @@ watch(eventFile, (file: File) => {
             </div>
             <div class="col-12 col-md-6">
               <q-select
-                outlined
+                filled
                 v-model="event.is_public"
                 :options="eventConfig"
                 option-value="value"
@@ -229,7 +229,7 @@ watch(eventFile, (file: File) => {
             <div class="col-12">
               <q-input
                 type="textarea"
-                outlined
+                filled
                 v-model="event.description"
                 label="Descripción"
                 hint="Una descripción breve de tu evento"
@@ -241,7 +241,7 @@ watch(eventFile, (file: File) => {
             <div class="col-12">
               <q-select
                 label="Tags"
-                outlined
+                filled
                 v-model="eventTags"
                 use-input
                 use-chips
@@ -259,7 +259,7 @@ watch(eventFile, (file: File) => {
 
             <div class="col-12 col-md-6">
               <q-select
-                outlined
+                filled
                 v-model="event.is_online"
                 :options="eventType"
                 option-value="value"
@@ -273,7 +273,7 @@ watch(eventFile, (file: File) => {
 
             <div class="col-12 col-md-6" v-if="event.is_online == 0">
               <q-input
-                outlined
+                filled
                 v-model="event.location"
                 label="Ubicación"
                 lazy-rules
@@ -304,7 +304,7 @@ watch(eventFile, (file: File) => {
         <q-form ref="thirdStepForm" class="q-gutter-md">
           <div class="col-12 col-md-6">
             <q-input
-              outlined
+              filled
               v-model="event.date_time"
               label="Inicio del evento"
               :rules="[Rules.required]"
@@ -366,7 +366,7 @@ watch(eventFile, (file: File) => {
           <div class="col-12 col-md-6">
             <q-input
               :disable="event.date_time == null || event.date_time == ''"
-              outlined
+              filled
               v-model="event.end_date_time"
               label="Fin del evento"
               :rules="[Rules.required]"
@@ -431,7 +431,7 @@ watch(eventFile, (file: File) => {
         <q-form ref="fourthStepForm">
           <q-file
             :disable="loading"
-            outlined
+            filled
             clearable
             v-model="eventFile"
             label="Imagen del evento"

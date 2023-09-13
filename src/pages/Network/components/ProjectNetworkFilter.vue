@@ -72,7 +72,7 @@ const searchData = reactive({
             <span class="text-subtitle1 text-accent text-bold">Fechas</span>
             <div class="row q-col-gutter-md">
               <q-input
-                outlined
+                filled
                 v-model="searchData.start_date"
                 mask="date"
                 :rules="['date']"
@@ -102,7 +102,7 @@ const searchData = reactive({
                 </template>
               </q-input>
               <q-input
-                outlined
+                filled
                 v-model="searchData.end_date"
                 mask="date"
                 :rules="['date']"

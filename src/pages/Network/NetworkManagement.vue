@@ -259,7 +259,11 @@ onMounted(() => {
     <div class="row q-col-gutter-md q-mt-xs">
       <div class="col-12 col-md-12">
         <q-card flat bordered>
-          <RouterView :network="network.id" v-if="isLoaded"></RouterView>
+          <RouterView
+            :network="network.id"
+            :rank="networkRepresentative.rank"
+            v-if="isLoaded"
+          ></RouterView>
         </q-card>
       </div>
     </div>
@@ -291,7 +295,7 @@ onMounted(() => {
             >
               <q-file
                 v-model="fileCrop"
-                outlined
+                filled
                 label="Imagen"
                 accept=".jpg, image/*"
                 max-file-size="2048000"

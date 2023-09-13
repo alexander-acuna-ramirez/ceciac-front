@@ -82,7 +82,7 @@ async function deletePost() {
       $q.loading.show();
       const { id } = route.params as RouteParams;
       await blogService.delete(id as string);
-      router.push('/network-management/events');
+      router.push('/network-management/blog');
       $q.notify({
         color: 'positive',
         message: 'Post archivado correctamente!',

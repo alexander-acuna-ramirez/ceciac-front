@@ -83,7 +83,7 @@ async function resetDialog() {
               v-model="education.school"
               label="Institución"
               :disable="loading"
-              outlined
+              filled
             />
 
             <q-input
@@ -92,7 +92,7 @@ async function resetDialog() {
               v-model="education.field_of_study"
               label="Campo de estudio"
               :disable="loading"
-              outlined
+              filled
             />
             <q-input
               :rules="[Rules.required]"
@@ -102,7 +102,7 @@ async function resetDialog() {
               type="textarea"
               label="Descripción"
               :disable="loading"
-              outlined
+              filled
             />
 
             <q-input
@@ -112,12 +112,12 @@ async function resetDialog() {
               v-model="education.degree"
               label="Grado"
               :disable="loading"
-              outlined
+              filled
             />
 
             <q-input
               class="col-12 col-md-6"
-              outlined
+              filled
               v-model="education.start_date"
               mask="date"
               :rules="['date', Rules.required]"
@@ -151,7 +151,7 @@ async function resetDialog() {
               :rules="[]"
               class="col-12 col-md-6"
               label="Fecha de finalización"
-              outlined
+              filled
               v-model="education.end_date"
               mask="date"
               :disable="loading"

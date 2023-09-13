@@ -12,6 +12,10 @@ const props = defineProps({
     required: true,
     type: Number,
   },
+  rank: {
+    required: true,
+    type: Number,
+  },
 });
 const paginationData = reactive({
   current_page: 1,
@@ -68,6 +72,7 @@ onMounted(() => {
         icon="add"
         :to="'/blog/create/' + props.network"
         rounded
+        :disable="rank != 1 && rank != 2"
       >
         <strong>Crear</strong>
       </q-btn>
@@ -84,7 +89,7 @@ onMounted(() => {
       <div v-if="posts.length > 0 && !loading" class="gallery">
         <post-card
           v-for="post in posts"
-          :settings="true"
+          :settings="rank == 1 || rank == 2"
           :post="post"
           :key="post.id"
           class="q-col-md-4 q-col-xs-12"

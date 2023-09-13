@@ -10,7 +10,7 @@
           duro para poder darte la mejor experiencia.
         </div>
         <div>
-          <q-input v-model="email" type="text" label="Tu correo" outlined>
+          <q-input v-model="email" type="text" label="Tu correo" filled>
             <template v-slot:append>
               <q-btn unelevated color="primary" icon="send" flat rounded />
             </template>

@@ -9,7 +9,12 @@ const props = defineProps({
     required: true,
     type: Number,
   },
+  rank: {
+    required: true,
+    type: Number,
+  },
 });
+
 const networkService = new NetworkService();
 const members = reactive<NetworkRepresentative[]>([]);
 const membersAddDialog = ref(false);
@@ -99,17 +104,20 @@ onMounted(() => {
       <q-btn
         color="primary"
         icon="add"
-        label="Agregar"
         @click="membersAddDialog = true"
+        :disable="rank != 1"
         rounded
         unelevated
-      />
+      >
+        <strong>Unir</strong>
+      </q-btn>
     </q-card-section>
     <q-card-section class="gallery">
       <profile-management-card
         @reload="loadMembers(1)"
         v-for="member in members"
         :member="member"
+        :settings="rank == 1"
         :key="member.id"
       ></profile-management-card>
     </q-card-section>
@@ -125,7 +133,7 @@ onMounted(() => {
         <q-card-section class="row q-col-gutter-md">
           <q-select
             class="col-12"
-            outlined
+            filled
             v-model="memberAddRequest.user"
             use-input
             input-debounce="0"
@@ -177,7 +185,7 @@ onMounted(() => {
             v-model="memberAddRequest.rank"
             :options="ranks"
             label="Rango"
-            outlined
+            filled
             option-label="label"
             option-value="value"
             emit-value

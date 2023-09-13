@@ -89,7 +89,7 @@ onMounted(() => {
             v-model="password"
             type="password"
             label="Contraseña"
-            outlined
+            filled
             lazy-rules
             :rules="[Rules.required]"
           >
@@ -103,7 +103,7 @@ onMounted(() => {
             v-model="confirmPassword"
             type="password"
             label="Confirmar Contraseña"
-            outlined
+            filled
             lazy-rules
             :rules="[
               Rules.required,

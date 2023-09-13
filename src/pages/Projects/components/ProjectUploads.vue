@@ -76,7 +76,7 @@ watch(projectFile, (val: File) => {
             />
             <q-file
               accept=".jpg, image/*"
-              outlined
+              filled
               v-model="projectFile"
               label="Imagen de evento"
               :rules="[Rules.required, Rules.fileType, Rules.fileSize]"

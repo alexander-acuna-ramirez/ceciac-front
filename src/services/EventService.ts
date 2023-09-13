@@ -59,4 +59,30 @@ export class EventService {
   public participation(event: string | number) {
     return api.get('api/v1/event/event-participation/' + event);
   }
+
+  public eventParticipants(
+    event: string,
+    page = 1,
+    perpage = 10,
+    sortBy = '',
+    sortOrder = 'desc',
+    searchTerm = '',
+    start_date = '',
+    end_date = ''
+  ) {
+
+    const queryParams = new URLSearchParams({
+      page: page.toString(),
+      perpage: perpage.toString(),
+      sortBy,
+      sortOrder,
+      start_date,
+      end_date,
+      searchTerm,
+    });
+
+
+    return api.get('api/v1/event/participants/' + event + '?' + queryParams.toString());
+
+  }
 }

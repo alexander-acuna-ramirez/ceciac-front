@@ -52,7 +52,6 @@ export class ProjectService {
     return api.put('api/v1/project/' + project, data);
   }
 
-
   public projectParticipants(
     project: string,
     page = 1,

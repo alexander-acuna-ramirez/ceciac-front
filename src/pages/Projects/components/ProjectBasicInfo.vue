@@ -85,7 +85,7 @@ function save() {
             label="Titulo"
             hint="El titulo de tu proyecto"
             lazy-rules
-            outlined
+            filled
             :disable="loading"
             :rules="[Rules.required, Rules.maxLength]"
           />
@@ -93,7 +93,7 @@ function save() {
         <div class="col-12 col-md-6">
           <q-select
             :disable="loading"
-            outlined
+            filled
             v-model="projectData.type_id"
             :options="projectTypes"
             option-value="id"
@@ -107,7 +107,7 @@ function save() {
         <div class="col-12">
           <q-input
             :disable="loading"
-            outlined
+            filled
             type="textarea"
             v-model="projectData.description"
             label="Descripción"
@@ -120,7 +120,7 @@ function save() {
           <q-select
             :disable="loading"
             label="Tags"
-            outlined
+            filled
             v-model="projectData.tags"
             use-input
             use-chips

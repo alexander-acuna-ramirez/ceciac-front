@@ -27,11 +27,16 @@ const event = reactive<Event>({
 const participationStatus = ref(0);
 const loading = ref(false);
 async function participate() {
-  loading.value = true;
-  let { id } = route.params as RouteParams;
-  await eventService.participate(id as string);
-  loadParticipation();
-  loading.value = false;
+  try {
+    loading.value = true;
+    let { id } = route.params as RouteParams;
+    await eventService.participate(id as string);
+  } catch (e) {
+    console.error(e);
+  } finally {
+    loadParticipation();
+    loading.value = false;
+  }
 }
 async function loadEvent() {
   try {

@@ -156,7 +156,7 @@ onMounted(() => {
           <div class="row q-col-gutter-md">
             <div class="col-12 col-md-6">
               <q-input
-                outlined
+                filled
                 v-model="blogPost.title"
                 label="Titulo"
                 hint="El titulo de tu evento"
@@ -166,7 +166,7 @@ onMounted(() => {
             </div>
             <div class="col-12 col-md-6">
               <q-select
-                outlined
+                filled
                 v-model="blogPost.id_category"
                 :options="categories"
                 option-value="id"
@@ -179,7 +179,7 @@ onMounted(() => {
             </div>
             <div class="col-12">
               <q-input
-                outlined
+                filled
                 v-model="blogPost.short_description"
                 label="Descripción"
                 type="textarea"
@@ -196,7 +196,7 @@ onMounted(() => {
             <div class="col-12">
               <q-select
                 label="Tags"
-                outlined
+                filled
                 v-model="postTags"
                 use-input
                 use-chips
@@ -241,7 +241,7 @@ onMounted(() => {
           <q-file
             v-model="postFile"
             label="Imagen del Post"
-            outlined
+            filled
             :rules="[Rules.required, Rules.fileSize, Rules.fileType]"
             :disable="loading"
             accept=".jpg, image/*"

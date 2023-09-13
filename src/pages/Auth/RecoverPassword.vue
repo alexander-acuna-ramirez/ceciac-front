@@ -7,8 +7,15 @@ const email = ref('');
 const step = ref(false);
 
 async function sendRecoverRequest() {
-  await authService.recoverPassword(email.value);
-  step.value = true;
+  try {
+    await authService.recoverPassword(email.value);
+    //step.value = true;
+  } catch (e) {
+    console.error(e);
+  } finally {
+    console.error('end');
+    step.value = true;
+  }
 }
 </script>
 <template>
@@ -30,7 +37,7 @@ async function sendRecoverRequest() {
           v-model="email"
           type="text"
           label="E-mail"
-          outlined
+          filled
           lazy-rules
           v-if="!step"
         >
@@ -39,7 +46,9 @@ async function sendRecoverRequest() {
           </template>
         </q-input>
 
-        <div v-else>Se ha enviado un e-mail al correo que ingresaste</div>
+        <div v-else>
+          Se ha enviado un e-mail al correo ingresado, si este esta registrado
+        </div>
       </q-card-section>
       <q-card-actions align="right" v-if="!step">
         <q-btn
@@ -50,6 +59,11 @@ async function sendRecoverRequest() {
           @click="sendRecoverRequest"
         >
           <strong> Recuperar Contraseña </strong>
+        </q-btn>
+      </q-card-actions>
+      <q-card-actions align="right" v-else>
+        <q-btn unelevated rounded color="primary" no-caps to="/home">
+          <strong> Ir al inicio </strong>
         </q-btn>
       </q-card-actions>
     </q-card>

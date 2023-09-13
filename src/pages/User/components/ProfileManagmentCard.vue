@@ -3,12 +3,19 @@ import { NetworkRepresentative } from 'src/models';
 import { Functions } from 'src/utils';
 import { ref, onMounted } from 'vue';
 import { NetworkService } from 'src/services/NetworkService';
+import { useQuasar } from 'quasar';
+import { AxiosError } from 'axios';
 
 const slide = ref(1);
 const props = defineProps({
   member: {
     required: true,
     type: Object as () => NetworkRepresentative,
+  },
+  settings: {
+    required: false,
+    type: Boolean,
+    default: false,
   },
 });
 const emit = defineEmits(['reload']);
@@ -20,6 +27,7 @@ const ranks = [
 ];
 const networkService = new NetworkService();
 const selectedRank = ref(1);
+const $q = useQuasar();
 
 function formatDate(date: string) {
   const fecha = new Date('2003-07-02');
@@ -31,6 +39,7 @@ function formatDate(date: string) {
   return fechaFormateada;
 }
 
+/*
 async function deleteMember() {
   loadingDelete.value = true;
   try {
@@ -39,8 +48,65 @@ async function deleteMember() {
       emit('reload');
     }
   } catch (e) {
-    console.error(e);
+    if ((e as AxiosError)?.response?.status === 403) {
+      const response = (e as AxiosError)?.response;
+      const responseData: any = response;
+      if (response) {
+        $q.notify({
+          color: 'info',
+          message: responseData.msg,
+          icon: 'info',
+        });
+      }
+    } else {
+      $q.notify({
+        color: 'negative',
+        message: 'No se pudo concluir con el registro, intente más tarde!',
+        icon: 'report_problem',
+      });
+    }
   } finally {
+    loadingDelete.value = false;
+  }
+}*/
+async function deleteMember() {
+  try {
+    loadingDelete.value = true;
+    if (!props.member.id) {
+      return; // No hay ID, no se puede eliminar
+    }
+
+    await networkService.deleteUserNetwork(props.member.id);
+    emit('reload');
+
+    // Notificar éxito
+    $q.notify({
+      color: 'info',
+      message: 'Miembro eliminado exitosamente',
+      icon: 'info',
+    });
+  } catch (error) {
+    // Manejar errores
+    if (error instanceof AxiosError && error.response?.status === 403) {
+      // Error 403: Prohibido
+      const responseData = error.response.data;
+
+      // Notificar error con detalles
+      $q.notify({
+        color: 'info',
+        message: responseData.msg,
+        icon: 'info',
+      });
+    } else {
+      // Otro error no manejado
+      $q.notify({
+        color: 'negative',
+        message: 'No se pudo concluir con la operación, intente más tarde',
+        icon: 'report_problem',
+      });
+    }
+  } finally {
+    // Finalizar carga
     loadingDelete.value = false;
   }
 }
@@ -58,10 +124,18 @@ onMounted(() => {
       spinner-color="primary"
       spinner-size="82px"
       style="height: 45%"
-    >
-      <q-chip label="Administrador" v-if="member.rank == 1" size="sm" />
-      <q-chip label="Gestor de contenido" v-if="member.rank == 2" size="sm" />
-      <q-chip label="Miembro" v-if="member.rank == 3" size="sm" />
+      ><div
+        style="
+          width: 100%;
+          background-color: transparent;
+          display: flex;
+          justify-content: space-between;
+        "
+      >
+        <q-chip label="Administrador" v-if="member.rank == 1" size="sm" />
+        <q-chip label="Gestor de contenido" v-if="member.rank == 2" size="sm" />
+        <q-chip label="Miembro" v-if="member.rank == 3" size="sm" />
+      </div>
     </q-img>
     <q-img
       v-else
@@ -70,9 +144,18 @@ onMounted(() => {
       spinner-size="82px"
       style="height: 45%"
     >
-      <q-chip label="Administrador" v-if="member.rank == 1" size="sm" />
-      <q-chip label="Gestor de contenido" v-if="member.rank == 2" size="sm" />
-      <q-chip label="Miembro" v-if="member.rank == 3" size="sm" />
+      <div
+        style="
+          width: 100%;
+          background-color: transparent;
+          display: flex;
+          justify-content: space-between;
+        "
+      >
+        <q-chip label="Administrador" v-if="member.rank == 1" size="sm" />
+        <q-chip label="Gestor de contenido" v-if="member.rank == 2" size="sm" />
+        <q-chip label="Miembro" v-if="member.rank == 3" size="sm" />
+      </div>
     </q-img>
 
     <q-card-section style="height: 35%">
@@ -91,8 +174,27 @@ onMounted(() => {
               member.user?.name + ' ' + member.user?.lastname
             }}</router-link>
           </div>
-          <div class="text-subtitle2 text-accent">
+          <div class="text-subtitle2 text-accent" v-if="settings">
             Asignación {{ Functions.formatDate(member.created_at ?? '') }}
+          </div>
+          <div
+            class="text-subtitle2 text-accent"
+            v-if="member && member.user && member.user.country"
+          >
+            <div>
+              <span>
+                <img
+                  :src="
+                    'https://flagcdn.com/w20/' +
+                    member.user?.country.iso.toLowerCase() +
+                    '.png'
+                  "
+                />
+                <small class="q-ml-sm">{{
+                  member.user?.country.name
+                }}</small></span
+              >
+            </div>
           </div>
         </div>
       </div>
@@ -110,6 +212,16 @@ onMounted(() => {
     >
       <q-space />
       <q-btn
+        color="primary"
+        flat
+        rounded
+        :to="'/profile/' + member.id_user"
+        no-caps
+      >
+        <span>Ver Perfil</span>
+      </q-btn>
+      <q-btn
+        v-if="settings"
         color="primary"
         flat
         rounded

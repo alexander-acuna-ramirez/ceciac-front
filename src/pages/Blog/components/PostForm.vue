@@ -92,7 +92,7 @@ onMounted(() => {
             <div class="row q-col-gutter-md">
               <div class="col-12 col-md-6">
                 <q-input
-                  outlined
+                  filled
                   :disable="loading"
                   v-model="blogPost.title"
                   label="Titulo"
@@ -103,7 +103,7 @@ onMounted(() => {
               </div>
               <div class="col-12 col-md-6">
                 <q-select
-                  outlined
+                  filled
                   :disable="loading"
                   v-model="blogPost.id_category"
                   :options="categories"
@@ -117,7 +117,7 @@ onMounted(() => {
               </div>
               <div class="col-12">
                 <q-input
-                  outlined
+                  filled
                   :disable="loading"
                   v-model="blogPost.short_description"
                   label="Descripción"
@@ -135,7 +135,7 @@ onMounted(() => {
               <div class="col-12">
                 <q-select
                   label="Tags"
-                  outlined
+                  filled
                   :disable="loading"
                   v-model="blogPost.tags"
                   use-input

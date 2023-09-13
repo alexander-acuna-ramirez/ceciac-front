@@ -71,7 +71,7 @@ watch(postFile, (val: File) => {
             />
             <q-file
               accept=".jpg, image/*"
-              outlined
+              filled
               v-model="postFile"
               label="Imagen de evento"
               :rules="[Rules.required, Rules.fileType, Rules.fileSize]"
