@@ -2,6 +2,7 @@ export * from './AuthService';
 export * from './BlogService';
 export * from './EventService';
 export * from './ExploreService';
+export * from './LoggerService';
 export * from './NetworkService';
 export * from './ProfileService';
 export * from './ProjectService';

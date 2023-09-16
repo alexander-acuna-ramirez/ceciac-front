@@ -1,5 +1,11 @@
 <template>
-  <q-card class="my-card" flat bordered>
+  <q-card
+    class="my-card"
+    flat
+    bordered
+    @mouseover="increaseSize"
+    @mouseout="resetSize"
+  >
     <q-img
       v-if="event.file"
       :src="event.file.fullpath"
@@ -105,9 +111,12 @@
 </template>
 
 <script lang="ts" setup>
-import { Event } from 'src/models';
+import { Event, UserInteraction } from 'src/models';
 import { Functions } from 'src/utils';
 import { useRouter } from 'vue-router';
+import { reactive } from 'vue';
+import { LoggerService } from 'src/services';
+import { useAuthStore } from 'src/stores/auth.store';
 
 const props = defineProps({
   event: {
@@ -119,11 +128,41 @@ const props = defineProps({
     default: false,
   },
 });
-
+const authStore = useAuthStore();
 const router = useRouter();
-
+let hoverTimeout: any = null;
+const loggerService = new LoggerService();
+const loggerData = reactive<UserInteraction>({
+  content_id: 0,
+  content_type: 'Event',
+  event: 'EventFocused',
+});
 function openSetting() {
   router.push('/event/settings/' + props.event.id);
+}
+
+function increaseSize() {
+  const card = document.querySelector('.my-card') as HTMLElement;
+  if (card) {
+    card.style.transform = 'scale(1.01)';
+    hoverTimeout = setTimeout(() => {
+      emitLoggerEvent();
+    }, 2000);
+  }
+}
+
+function resetSize() {
+  const card = document.querySelector('.my-card') as HTMLElement;
+  if (card) {
+    card.style.transform = 'scale(1)';
+    clearTimeout(hoverTimeout);
+  }
+}
+
+function emitLoggerEvent() {
+  if (!authStore.isAuthenticated) return;
+  loggerData.content_id = props.event.id ?? 0;
+  loggerService.registerEvent(loggerData);
 }
 </script>
 <style scoped lang="scss">
@@ -132,6 +171,13 @@ function openSetting() {
   height: 100%;
   text-overflow: ellipsis;
   overflow-y: hidden;
+  transition: transform 0.2s; /* Agrega una transición suave */
+}
+
+.my-card:hover {
+  transform: scale(
+    1.05
+  ); /* Aumenta el tamaño al 105% cuando el mouse está encima */
 }
 
 a {

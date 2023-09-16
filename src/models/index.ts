@@ -14,4 +14,6 @@ export * from './ProjectParticipant';
 export * from './ProjectType';
 export * from './Tag';
 export * from './User';
+export * from './UserInteraction';
+export * from './UserInteractionDuration';
 export * from './UserProfileType';

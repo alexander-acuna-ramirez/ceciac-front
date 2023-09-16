@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue';
-import { EventService } from 'src/services';
+import { onMounted, reactive, ref, watch } from 'vue';
+import { EventService, LoggerService } from 'src/services';
 import { RouteParams, useRoute } from 'vue-router';
-import { Event } from 'src/models/Event';
+import { Event, UserInteraction, ProjectParticipant } from 'src/models';
 import { Functions } from 'src/utils';
 import { AxiosError } from 'axios';
 import { useQuasar } from 'quasar';
+import ProfileCard from '../User/components/ProfileCard.vue';
+import { User } from 'src/models';
 
 const $q = useQuasar();
 const tab = ref('description');
@@ -24,13 +26,22 @@ const event = reactive<Event>({
   is_public: 1,
   is_online: 1,
 });
+const participants = reactive<ProjectParticipant[]>([]);
 const participationStatus = ref(0);
 const loading = ref(false);
+const loggerService = new LoggerService();
+
 async function participate() {
   try {
     loading.value = true;
     let { id } = route.params as RouteParams;
     await eventService.participate(id as string);
+    const loggerData: UserInteraction = {
+      content_id: event.id ?? 0,
+      content_type: 'Event',
+      event: 'EventEnrollment',
+    };
+    loggerService.registerEvent(loggerData);
   } catch (e) {
     console.error(e);
   } finally {
@@ -38,11 +49,18 @@ async function participate() {
     loading.value = false;
   }
 }
+
 async function loadEvent() {
   try {
     let { id } = route.params as RouteParams;
     const response = await eventService.show(id as string);
     Object.assign(event, response.data);
+    const loggerData: UserInteraction = {
+      content_id: event.id ?? 0,
+      content_type: 'Event',
+      event: 'EventEntered',
+    };
+    loggerService.registerEvent(loggerData);
   } catch (e) {
     console.error(e);
   }
@@ -81,9 +99,60 @@ function getEventDate() {
   };
 }
 
+const participantsPagination = ref({
+  sortBy: 'desc',
+  descending: false,
+  page: 1,
+  rowsPerPage: 10,
+  rowsNumber: 0,
+});
+
+async function loadParticipants(
+  page = 1,
+  perpage = 10,
+  sortBy = 'created_at',
+  sortOrder = 'desc',
+  searchTerm = '',
+  start_date = '',
+  end_date = ''
+) {
+  try {
+    let { id } = route.params as RouteParams;
+    loading.value = true;
+    const response = await eventService.eventParticipants(
+      id as string,
+      page,
+      perpage,
+      sortBy,
+      sortOrder,
+      searchTerm,
+      start_date,
+      end_date
+    );
+    participants.splice(0, participants.length);
+    participants.push(...response.data.data);
+    participantsPagination.value.rowsNumber = response.data.total;
+  } catch (e) {
+    $q.notify({
+      type: 'negative',
+      message: 'No se pudieron cargar los participantes',
+    });
+  } finally {
+    loading.value = false;
+  }
+}
+
+watch(
+  () => participantsPagination.value.page,
+  (page) => {
+    loadParticipants(page);
+  }
+);
+
 onMounted(() => {
   loadEvent();
   loadParticipation();
+  loadParticipants(1);
 });
 </script>
 <template>
@@ -157,14 +226,13 @@ onMounted(() => {
               label="Descripción"
               no-caps
             />
-            <!--
-            <q-tab name="alarms" icon="groups" label="Participantes" no-caps />
+
             <q-tab
-              name="movies"
-              icon="update"
-              label="Actualizaciones"
+              name="participants"
+              icon="groups"
+              label="Participantes"
               no-caps
-            />-->
+            />
           </q-tabs>
         </q-card>
       </div>
@@ -240,19 +308,27 @@ onMounted(() => {
           </div>
         </div>
       </q-tab-panel>
-      <q-tab-panel name="alarms">
-        <div class="text-h6">Alarms</div>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-      </q-tab-panel>
-      <q-tab-panel name="movies">
-        <div class="text-h6">Movies</div>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+      <q-tab-panel name="participants">
+        <div class="gallery">
+          <profile-card
+            v-for="user in participants"
+            :key="user.id"
+            :member="(user.user as User)"
+          ></profile-card>
+        </div>
+
+        <div style="width: 100%; display: flex; justify-content: center">
+          <q-pagination
+            v-model="participantsPagination.page"
+            :max="participantsPagination.rowsNumber"
+          />
+        </div>
       </q-tab-panel>
     </q-tab-panels>
   </q-page>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .full-width {
   width: 100%;
 }
@@ -267,5 +343,21 @@ onMounted(() => {
   border-radius: 15px;
   text-align: center;
   min-height: 200px;
+}
+
+.gallery {
+  display: grid;
+  gap: 3rem;
+  grid-auto-rows: 27rem;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+}
+
+@media (max-width: $breakpoint-md-min) {
+  .gallery {
+    display: grid;
+    gap: 1rem;
+    grid-auto-rows: 30rem;
+    grid-template-columns: 1fr;
+  }
 }
 </style>

@@ -1,8 +1,11 @@
 <script lang="ts" setup>
-import { Project } from 'src/models';
+import { Project, UserInteraction } from 'src/models';
 import { Functions } from 'src/utils';
 import { useRouter } from 'vue-router';
 import DefaultUserBanner from 'src/assets/img/app/user/user-profile-banner-default.jpg';
+import { reactive } from 'vue';
+import { LoggerService } from 'src/services';
+import { useAuthStore } from 'src/stores/auth.store';
 
 const props = defineProps({
   project: {
@@ -14,15 +17,51 @@ const props = defineProps({
     default: false,
   },
 });
-
+const authStore = useAuthStore();
+let hoverTimeout: any = null;
 const router = useRouter();
-
+const loggerService = new LoggerService();
+const loggerData = reactive<UserInteraction>({
+  content_id: 0,
+  content_type: 'Project',
+  event: 'ProjectFocused',
+});
 function openSetting() {
   router.push('/project/settings/' + props.project.id);
 }
+
+function increaseSize() {
+  const card = document.querySelector('.my-card') as HTMLElement;
+  if (card) {
+    card.style.transform = 'scale(1.01)';
+    hoverTimeout = setTimeout(() => {
+      emitLoggerEvent();
+    }, 2000);
+  }
+}
+
+function resetSize() {
+  const card = document.querySelector('.my-card') as HTMLElement;
+  if (card) {
+    card.style.transform = 'scale(1)';
+    clearTimeout(hoverTimeout);
+  }
+}
+
+function emitLoggerEvent() {
+  if (!authStore.isAuthenticated) return;
+  loggerData.content_id = props.project.id ?? 0;
+  loggerService.registerEvent(loggerData);
+}
 </script>
 <template>
-  <q-card class="my-card" flat bordered>
+  <q-card
+    class="my-card"
+    flat
+    bordered
+    @mouseover="increaseSize"
+    @mouseout="resetSize"
+  >
     <q-img
       v-if="project.file"
       :src="project.file.fullpath"
@@ -126,6 +165,13 @@ function openSetting() {
   height: 100%;
   text-overflow: ellipsis;
   overflow-y: hidden;
+  transition: transform 0.2s; /* Agrega una transición suave */
+}
+
+.my-card:hover {
+  transform: scale(
+    1.05
+  ); /* Aumenta el tamaño al 105% cuando el mouse está encima */
 }
 
 a {
