@@ -83,7 +83,21 @@ function logout() {
             clickable
             v-ripple
             active-class="text-secondary"
-            to="/under-construction"
+            to="/portfolio-create"
+            v-if="authStore.getUser.network"
+          >
+            <q-item-section avatar>
+              <q-icon name="folder" />
+            </q-item-section>
+
+            <q-item-section>Publicaciones CECIAC</q-item-section>
+          </q-item>
+
+          <q-item
+            clickable
+            v-ripple
+            active-class="text-secondary"
+            to="/portfolio"
           >
             <q-item-section avatar>
               <q-icon name="folder" />

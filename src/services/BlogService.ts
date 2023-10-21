@@ -21,7 +21,7 @@ export class BlogService {
     return api.post('api/v1/blog/image/create/' + post, data);
   }
 
-  public async update(post: number | string, data) {
+  public async update(post: number | string, data:any) {
     return api.put('/api/v1/blog/' + post, data);
   }
 

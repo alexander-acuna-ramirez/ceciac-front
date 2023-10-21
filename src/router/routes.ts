@@ -1,4 +1,4 @@
-import { accessCreationGuard, accessGuard } from 'src/guards/AccessGuard';
+import { accessCeciacGuard, accessCreationGuard, accessGuard } from 'src/guards/AccessGuard';
 import { RouteRecordRaw } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
@@ -100,12 +100,16 @@ const routes: RouteRecordRaw[] = [
           },
         ],
       },
-
       {
-        path: 'feed',
-        name: 'Feed',
-        meta: { requiresAuth: true },
-        component: () => import('pages/Feed/FeedPage.vue'),
+        path: 'portfolio',
+        name: 'portfolio',
+        component: () => import('pages/Portfolio/PortfolioPage.vue'),
+      },
+      {
+        path: 'portfolio-create',
+        name: 'PortfolioCreate',
+        beforeEnter: accessCeciacGuard,
+        component: () => import('pages/publications/PublicationsPage.vue'),
       },
       {
         path: 'profile/:user',
@@ -125,6 +129,33 @@ const routes: RouteRecordRaw[] = [
           },
         ],
         component: () => import('pages/User/ProfilePage.vue'),
+      },
+      {
+        path: 'network/:network',
+        name: 'NetworkPage',
+        component: () => import('pages/Network/NetworkPage.vue'),
+        children: [
+          {
+            path: '',
+            name: 'NetworkProjects',
+            component: () => import('pages/Network/components/show/NetworkProjects.vue')
+          },
+          {
+            path: 'events',
+            name: 'NetworkEvents',
+            component: () => import('pages/Network/components/show/NetworkEvents.vue')
+          },
+          {
+            path: 'blog',
+            name: 'NetworkBlog',
+            component: () => import('pages/Network/components/show/NetworkBlog.vue')
+          },/*
+          {
+            path: 'members',
+            name: 'NetworkMember',
+            component: () => import('pages/Network/components/MembersManagement.vue')
+          }*/
+        ]
       },
       {
         path: 'network-management',

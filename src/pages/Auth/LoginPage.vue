@@ -293,6 +293,12 @@ onMounted(() => {
               >Recuperala Aquí</router-link
             ></span
           >
+          <span class="text-subtitle2"
+            >¿Aún no tienes una cuenta?
+            <a href="#" @click="panel = !panel" class="text-secondary"
+              >Creala Aquí</a
+            ></span
+          >
           <button type="submit" class="bg-primary q-mt-sm" :disabled="loading">
             Iniciar sesión
           </button>

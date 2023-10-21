@@ -1,4 +1,4 @@
-import { NetworkService } from 'src/services';
+import { NetworkService, CeciacService } from 'src/services';
 import { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
 
 async function accessGuard(
@@ -40,4 +40,22 @@ async function accessCreationGuard(
 
 }
 
-export { accessGuard, accessCreationGuard };
+async function accessCeciacGuard(
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalized,
+  next: NavigationGuardNext
+) {
+  try {
+    const ceciacService = new CeciacService();
+    const response = await ceciacService.check();
+    if (response.data.success) {
+      next();
+    }
+    next({ name: 'Unauthorized' });
+  } catch (e) {
+    next({ name: 'Unauthorized' });
+  }
+
+}
+
+export { accessGuard, accessCreationGuard, accessCeciacGuard };

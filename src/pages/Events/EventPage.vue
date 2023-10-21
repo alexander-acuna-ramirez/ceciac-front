@@ -1,18 +1,32 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref, watch } from 'vue';
+import { onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 import { EventService, LoggerService } from 'src/services';
 import { RouteParams, useRoute } from 'vue-router';
-import { Event, UserInteraction, ProjectParticipant } from 'src/models';
+import {
+  Event,
+  UserInteraction,
+  ProjectParticipant,
+  UserInteractionDuration,
+} from 'src/models';
 import { Functions } from 'src/utils';
 import { AxiosError } from 'axios';
 import { useQuasar } from 'quasar';
 import ProfileCard from '../User/components/ProfileCard.vue';
 import { User } from 'src/models';
+import { useAuthStore } from 'src/stores/auth.store';
+import { useRouter } from 'vue-router';
+import { send } from 'process';
 
+const router = useRouter();
 const $q = useQuasar();
 const tab = ref('description');
 const eventService = new EventService();
 const route = useRoute();
+const participants = reactive<ProjectParticipant[]>([]);
+const participationStatus = ref(0);
+const loading = ref(false);
+const loggerService = new LoggerService();
+const authStore = useAuthStore();
 const event = reactive<Event>({
   title: '',
   description: '',
@@ -26,22 +40,27 @@ const event = reactive<Event>({
   is_public: 1,
   is_online: 1,
 });
-const participants = reactive<ProjectParticipant[]>([]);
-const participationStatus = ref(0);
-const loading = ref(false);
-const loggerService = new LoggerService();
+const interactionDuration: UserInteractionDuration = {
+  content_id: 0,
+  start_time: new Date().getTime().toString(),
+  end_time: '',
+  content_type: 'Event',
+};
+
+const scrollThreshold = 200; // Puedes ajustar este valor según tus necesidades
+const isScrolledDown = ref(false);
 
 async function participate() {
   try {
     loading.value = true;
     let { id } = route.params as RouteParams;
-    await eventService.participate(id as string);
     const loggerData: UserInteraction = {
       content_id: event.id ?? 0,
       content_type: 'Event',
       event: 'EventEnrollment',
     };
     loggerService.registerEvent(loggerData);
+    await eventService.participate(id as string);
   } catch (e) {
     console.error(e);
   } finally {
@@ -50,16 +69,23 @@ async function participate() {
   }
 }
 
+function sendDuration() {
+  interactionDuration.end_time = new Date().getTime().toString();
+  loggerService.registerDuration(interactionDuration);
+}
+
 async function loadEvent() {
   try {
     let { id } = route.params as RouteParams;
     const response = await eventService.show(id as string);
     Object.assign(event, response.data);
+    if (!authStore.isAuthenticated) return;
     const loggerData: UserInteraction = {
       content_id: event.id ?? 0,
       content_type: 'Event',
       event: 'EventEntered',
     };
+    interactionDuration.content_id = event.id ?? 0;
     loggerService.registerEvent(loggerData);
   } catch (e) {
     console.error(e);
@@ -131,7 +157,7 @@ async function loadParticipants(
     );
     participants.splice(0, participants.length);
     participants.push(...response.data.data);
-    participantsPagination.value.rowsNumber = response.data.total;
+    participantsPagination.value.rowsNumber = response.data.last_page;
   } catch (e) {
     $q.notify({
       type: 'negative',
@@ -142,6 +168,33 @@ async function loadParticipants(
   }
 }
 
+function handleScroll() {
+  if (
+    window.scrollY > scrollThreshold &&
+    authStore.isAuthenticated &&
+    !isScrolledDown.value
+  ) {
+    const loggerData: UserInteraction = {
+      content_id: event.id ?? 0,
+      content_type: 'Event',
+      event: 'EventMoreDetails',
+    };
+    loggerService.registerEvent(loggerData);
+    isScrolledDown.value = true;
+  }
+}
+function visitNetwork() {
+  if (authStore.isAuthenticated) {
+    const loggerData: UserInteraction = {
+      content_id: event.id ?? 0,
+      content_type: 'Event',
+      event: 'EventNetwork',
+    };
+    loggerService.registerEvent(loggerData);
+  }
+  router.push('/network/' + event.network?.id);
+}
+
 watch(
   () => participantsPagination.value.page,
   (page) => {
@@ -149,10 +202,26 @@ watch(
   }
 );
 
+watch(tab, (tab) => {
+  if (authStore.isAuthenticated && tab == 'participants') {
+    const loggerData: UserInteraction = {
+      content_id: event.id ?? 0,
+      content_type: 'Event',
+      event: 'EventParticipants',
+    };
+    loggerService.registerEvent(loggerData);
+  }
+});
+
 onMounted(() => {
   loadEvent();
   loadParticipation();
   loadParticipants(1);
+  window.addEventListener('scroll', handleScroll);
+});
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
+  sendDuration();
 });
 </script>
 <template>
@@ -274,7 +343,14 @@ onMounted(() => {
                       spinner-size="82px"
                     />
                   </q-avatar>
-                  {{ event.network?.name }}
+
+                  <span
+                    class="text-accent q-ml-md"
+                    @click="visitNetwork"
+                    style="cursor: pointer"
+                  >
+                    {{ event.network?.name }}
+                  </span>
                 </div>
               </q-card-section>
               <q-separator inset />
@@ -296,7 +372,13 @@ onMounted(() => {
                 </span>
                 <span class="col-6 text-accent">
                   <q-icon name="science" />
-                  {{ event.is_online }}
+                  {{ event.is_online == 1 ? 'Virtual' : 'Presencial' }}
+                </span>
+              </q-card-section>
+
+              <q-card-section class="row" v-if="event.is_online == 0">
+                <span class="col-12 text-accent">
+                  <strong>Ubicación: </strong>{{ event.location }}
                 </span>
               </q-card-section>
               <q-card-section>
@@ -309,7 +391,7 @@ onMounted(() => {
         </div>
       </q-tab-panel>
       <q-tab-panel name="participants">
-        <div class="gallery">
+        <div class="gallery" v-if="participants.length > 0">
           <profile-card
             v-for="user in participants"
             :key="user.id"
@@ -317,7 +399,19 @@ onMounted(() => {
           ></profile-card>
         </div>
 
-        <div style="width: 100%; display: flex; justify-content: center">
+        <div style="width: 100%" v-else>
+          <span>No existen usuarios registrados</span>
+        </div>
+
+        <div
+          style="
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 5px;
+          "
+          v-if="participantsPagination.rowsNumber < 1"
+        >
           <q-pagination
             v-model="participantsPagination.page"
             :max="participantsPagination.rowsNumber"

@@ -17,8 +17,8 @@ declare module '@vue/runtime-core' {
 //const api = axios.create({ baseURL: 'https://api.example.com' });
 const api = axios.create({
 
-  baseURL: 'https://ceciac-back.test/',
-  //baseURL: 'https://api.ceciac.org/',
+  //baseURL: 'https://ceciac-back.test/',
+  baseURL: 'https://api.ceciac.org/',
   withCredentials: true,
 });
 

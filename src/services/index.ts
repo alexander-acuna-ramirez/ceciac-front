@@ -1,5 +1,6 @@
 export * from './AuthService';
 export * from './BlogService';
+export * from './CeciacService';
 export * from './EventService';
 export * from './ExploreService';
 export * from './LoggerService';

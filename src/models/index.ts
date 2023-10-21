@@ -1,6 +1,7 @@
 export * from './Auth';
 export * from './BlogCategory';
 export * from './BlogPost';
+export * from './CeciacPublication';
 export * from './Country';
 export * from './Education';
 export * from './Event';

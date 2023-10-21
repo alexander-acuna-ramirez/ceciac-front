@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { User } from 'src/models';
+import { useAuthStore } from 'src/stores/auth.store';
 
 defineProps({
   member: {
@@ -7,6 +8,7 @@ defineProps({
     type: Object as () => User,
   },
 });
+const authStore = useAuthStore();
 </script>
 <template>
   <q-card flat bordered>
@@ -94,7 +96,17 @@ defineProps({
       class="flex row items-center justify-end q-pb-none"
     >
       <q-space />
-      <q-btn color="primary" flat rounded :to="'/profile/' + member.id" no-caps>
+      <q-btn
+        v-if="authStore.isAuthenticated"
+        color="primary"
+        flat
+        rounded
+        :to="'/profile/' + member.id"
+        no-caps
+      >
+        <span>Ver Perfil</span>
+      </q-btn>
+      <q-btn v-else color="primary" flat rounded to="/login" no-caps>
         <span>Ver Perfil</span>
       </q-btn>
     </q-card-section>

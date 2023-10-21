@@ -34,7 +34,7 @@ function openMenu() {
         class="q-ml-xs q-gutter-md text-body2 text-weight-bold row items-center no-wrap"
       >
         <router-link
-          to="/under-construction"
+          to="/portfolio"
           class="text-primary text-bold"
           style="text-decoration: none"
           >Portafolio</router-link
@@ -143,12 +143,19 @@ function openMenu() {
                 </q-item-section>
                 <q-item-section>Gestionar Red</q-item-section>
               </q-item>
-              <q-item clickable v-close-popup>
+
+              <q-item
+                clickable
+                v-close-popup
+                to="/portfolio-create"
+                v-if="authStore.getUser.network"
+              >
                 <q-item-section avatar>
-                  <q-icon name="settings" />
+                  <q-icon name="groups" />
                 </q-item-section>
-                <q-item-section>Configuraciones</q-item-section>
+                <q-item-section>Publicaciones CECIAC</q-item-section>
               </q-item>
+
               <q-separator />
               <q-item clickable v-close-popup @click="logout()">
                 <q-item-section avatar>

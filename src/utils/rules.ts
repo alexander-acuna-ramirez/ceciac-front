@@ -33,4 +33,11 @@ export const Rules = {
     const strongPasswordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
     return strongPasswordRegex.test(value) || 'La contraseña debe contener al menos una letra mayúscula, una letra minúscula, un dígito y un carácter especial.';
   },
+  optionalUrl: (value: string) => {
+    if (!value || value.trim() === '') {
+      return true;
+    }
+    const urlRegex = /^(?:(?:(?:https?|ftp):\/\/)?(?:www\d?\.)?)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/\S*)?$/;
+    return urlRegex.test(value) || 'El enlace no es válido';
+  },
 };

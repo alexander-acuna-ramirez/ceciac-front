@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref, watch } from 'vue';
 import { NetworkService } from 'src/services';
 import { NetworkRepresentative } from 'src/models';
 import ProfileManagementCard from 'src/pages/User/components/ProfileManagmentCard.vue';
@@ -23,7 +23,7 @@ const pagination = reactive({
   sortBy: 'id',
   descending: false,
   page: 1,
-  rowsPerPage: 1,
+  rowsPerPage: 10,
   rowsNumber: 0,
 });
 
@@ -51,7 +51,7 @@ async function loadMembers(page = 1) {
     props.network as number,
     {
       page,
-      perpage: pagination.rowsNumber,
+      perpage: pagination.rowsPerPage,
       searchTerm: searchData.searchTerm,
       rank: searchData.rank,
       sortOrder: pagination.descending ? 'desc' : 'asc',
@@ -60,8 +60,8 @@ async function loadMembers(page = 1) {
   );
 
   members.splice(0, members.length);
-  members.push(...response.data);
-  //pagination.rowsNumber = response.data.total;
+  members.push(...response.data.data);
+  pagination.rowsNumber = response.data.last_page;
 }
 
 function filterUser(val: string, update: any, abort: any) {
@@ -97,6 +97,10 @@ async function addMember() {
 onMounted(() => {
   loadMembers(1);
 });
+watch(
+  () => pagination.page,
+  (val) => loadMembers(val as unknown as number)
+);
 </script>
 <template>
   <q-card>
@@ -121,8 +125,8 @@ onMounted(() => {
         :key="member.id"
       ></profile-management-card>
     </q-card-section>
-    <q-card-section>
-      <!--<q-pagination v-model="pagination.page" :max="pagination.rowsNumber" />-->
+    <q-card-section class="flex justify-center">
+      <q-pagination v-model="pagination.page" :max="pagination.rowsNumber" />
     </q-card-section>
 
     <q-dialog v-model="membersAddDialog">
